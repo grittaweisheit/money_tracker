@@ -10,7 +10,21 @@ void main() async {
   Hive.registerAdapter(RecurringTransactionAdapter());
   Hive.registerAdapter(OneTimeTransactionAdapter());
   Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(RuleAdapter());
+  Hive.registerAdapter(PeriodAdapter());
+  //var tagBox = await Hive.openBox("tag");
+  //var categoryBox = await Hive.openBox("category");
+  //var oneTimeTransactionBox = await Hive.openBox("oneTimeTransaction");
+  //var recurringTransactionBox = await Hive.openBox("recurringTransaction");
+
+  //categoryBox.clear();
+  //oneTimeTransactionBox.clear();
+  //recurringTransactionBox.clear();
+
+  //tagBox.add(Tag("defaultTame", true));
+  //categoryBox.add(Category("defaultSpendingCategory", true));
+  //categoryBox.add(Category("defaultIncomeCategory", false));
   runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();
 }
@@ -33,7 +47,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'Overview'),
+      home: HomeView(),
     );
   }
 }

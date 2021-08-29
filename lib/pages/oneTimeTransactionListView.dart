@@ -3,37 +3,37 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import '../models/Transactions.dart';
+import '../models/Transactions.dart' as Transactions;
 
-String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-class RecurringTransactionListView extends StatefulWidget {
-  RecurringTransactionListView();
+class OneTimeTransactionListView extends StatefulWidget {
+  OneTimeTransactionListView();
 
   @override
-  _RecurringTransactionListViewState createState() =>
-      _RecurringTransactionListViewState();
+  _OneTimeTransactionListViewState createState() =>
+      _OneTimeTransactionListViewState();
 }
 
-class _RecurringTransactionListViewState
-    extends State<RecurringTransactionListView> {
-  List<RecurringTransaction> transactions = [];
+class _OneTimeTransactionListViewState
+    extends State<OneTimeTransactionListView> {
+  List<Transactions.OneTimeTransaction> transactions = [];
   int count = 0;
 
-  _RecurringTransactionListViewState();
+  _OneTimeTransactionListViewState();
 
   @override
   void initState() {
     super.initState();
+    Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox).then((value) => value.clear());
     getTransactions();
   }
 
   getTransactions() async {
     final box =
-        await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+        await Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
     setState(() {
       transactions = box.values.toList();
       count = transactions.length;
@@ -41,18 +41,18 @@ class _RecurringTransactionListViewState
   }
 
   void _addTransaction() async {
-    var box = await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-    box.add(RecurringTransaction("description", true, 1.11, Category("category", true), [],
-        Rule(2, Period.day), DateTime(2021, 1, 1)));
+    var box = await Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
+    box.add(Transactions.OneTimeTransaction("description", true, 1.11, Transactions.Category("category", true), [],
+        DateTime(2021, 1, 1)));
+    getTransactions();
   }
-
 
   @override
   Widget build(BuildContext context) {
     //this.getTransactions();
     return Scaffold(
         appBar: AppBar(
-          title: Text("Recurring Transactions"),
+          title: Text("OneTime Transactions"),
         ),
         body: Column(children: [Expanded(child: getTransactionsList())]),
         floatingActionButton: FloatingActionButton(
@@ -80,7 +80,7 @@ class _RecurringTransactionListViewState
             ),
             title: Text(transaction.description,
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(onlyDate.format(transaction.nextExecution)),
+            subtitle: Text(onlyDate.format(transaction.date)),
             trailing: Text(transaction.amount.toString()),
             onTap: () {
               debugPrint("ListTile Tapped");

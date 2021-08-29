@@ -4,15 +4,13 @@ import 'package:english_words/english_words.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/pages/oneTimeTransactionListView.dart';
 import 'recurringTransactionListView.dart';
 import '../models/Transactions.dart';
-import 'createTransactionView.dart';
+import 'createOneTimeTransactionView.dart';
 
-String recurringTransactionBox = "recurringTransaction";
-String oneTimeTransactionBox = "oneTimeTransaction";
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomeView extends StatefulWidget {
+  HomeView({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -23,25 +21,13 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-
   @override
-  _MyHomePageState createState() {
-    return _MyHomePageState();
+  _HomeViewState createState() {
+    return _HomeViewState();
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _decrementCounter() async {
-    var box = await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-    box.clear();
-    setState(() {
-      _counter--;
-    });
-  }
-
+class _HomeViewState extends State<HomeView> {
   void addTransaction(bool isIncome) {
     Navigator.push(
         context,
@@ -51,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final wordPair = WordPair.random();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -59,15 +44,23 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: Center(
-          child: TextButton(
-              child: Text("Press Me"),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return RecurringTransactionsOverview();
-                }));
-              })),
+      appBar: AppBar(title: Text("Home")),
+      body: Center( child: Column(children: [
+        TextButton(
+            child: Text("Recurring Transaction List"),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return RecurringTransactionListView();
+              }));
+            }),
+        TextButton(
+            child: Text("One Time Transaction List"),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return OneTimeTransactionListView();
+              }));
+            }),
+      ])),
       floatingActionButton: Column(children: <Widget>[
         Spacer(),
         Padding(
