@@ -25,6 +25,7 @@ class _CreateOneTimeTransactionViewState
   double amount;
   String category;
   List<Tag> tags;
+  List<bool> selectedTags;
   DateTime date;
 
   @override
@@ -34,6 +35,7 @@ class _CreateOneTimeTransactionViewState
     amount = 0.0;
     category = "default cat";
     tags = [];
+    selectedTags = [];
     date = DateTime.now();
   }
 
@@ -49,11 +51,15 @@ class _CreateOneTimeTransactionViewState
     }));
   }
 
-  void _changeTags(List<Tag> newTags) {
-    tags = newTags;
+  void _saveTags(List<Tag> newTags, List<bool> newTagSelection) {
+    debugPrint("submitted tags $newTagSelection");
+    setState(() {
+      tags = newTags;
+      selectedTags = newTagSelection;
+    });
   }
 
-  void _changeAmount(String inputString) {
+  void _saveAmount(String inputString) {
     var newAmount = double.tryParse(inputString);
     if (newAmount != null)
       setState(() {
@@ -74,15 +80,17 @@ class _CreateOneTimeTransactionViewState
           key: _formKey,
           child: Column(children: [
             IntrinsicWidth(
-              child: AmountInputFormField(_changeAmount, amount, isIncome),
+              child: AmountInputFormField(_saveAmount, amount, isIncome),
             ),
             TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
                     value.length <= 0 ? "Please provide a description." : null,
                 decoration: InputDecoration(hintText: "Description"),
-                onChanged: (value) {
-                  description = value;
+                onSaved: (value) {
+                  setState(() {
+                    description = value;
+                  });
                 }),
             TextButton(
                 child: Text(targetDateFormat.format(date)),
@@ -92,7 +100,7 @@ class _CreateOneTimeTransactionViewState
                       minTime: DateTime.now().subtract(Duration(days: 700)),
                       maxTime: DateTime.now().add(Duration(days: 700)),
                       onConfirm: (newDate) {
-                    context.fin
+                    _formKey.currentState.save();
                     setState(() {
                       date = newDate;
                     });
@@ -101,7 +109,7 @@ class _CreateOneTimeTransactionViewState
             Padding(padding: EdgeInsets.only(bottom: 5)),
             Expanded(
                 //padding: EdgeInsets.only(top: 5),
-                child: TagSelection(_changeTags, isIncome))
+                child: TagSelection(_saveTags, selectedTags, isIncome))
           ])),
       floatingActionButton: Column(
         children: [

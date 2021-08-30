@@ -8,7 +8,7 @@ String tagBox = "tag";
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-String targetDateFormatString = ("dd.MM.y");
+String targetDateFormatString = ("dd. MMM y");
 DateFormat targetDateFormat = DateFormat(targetDateFormatString);
 
 final List<TextInputFormatter> defaultFormatters = [
