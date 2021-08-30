@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -42,10 +40,15 @@ class _RecurringTransactionListViewState
 
   void _addTransaction() async {
     var box = await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-    box.add(RecurringTransaction("description", true, 1.11, Category("category", true), [],
-        Rule(2, Period.day), DateTime(2021, 1, 1)));
+    box.add(RecurringTransaction(
+        "description",
+        true,
+        1.11,
+        Category("category", true),
+        [],
+        Rule(2, Period.day),
+        DateTime(2021, 1, 1)));
   }
-
 
   @override
   Widget build(BuildContext context) {

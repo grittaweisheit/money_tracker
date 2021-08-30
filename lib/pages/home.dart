@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:english_words/english_words.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money_tracker/models/Transactions.dart';
 import 'package:money_tracker/pages/oneTimeTransactionListView.dart';
 import 'recurringTransactionListView.dart';
-import '../models/Transactions.dart';
 import 'createOneTimeTransactionView.dart';
 
 class HomeView extends StatefulWidget {

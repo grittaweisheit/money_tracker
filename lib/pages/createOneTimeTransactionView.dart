@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelection.dart';
 import 'package:money_tracker/pages/home.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class CreateOneTimeTransactionView extends StatefulWidget {
   final bool isIncome;
@@ -18,20 +20,27 @@ class CreateOneTimeTransactionView extends StatefulWidget {
 
 class _CreateOneTimeTransactionViewState
     extends State<CreateOneTimeTransactionView> {
-  String description = "defaultDescription";
+  String description;
   bool isIncome;
-  double amount = 0;
-  String category = "defaultCategory";
-  List<Tag> tags = [];
-  DateTime date = DateTime.now();
+  double amount;
+  String category;
+  List<Tag> tags;
+  DateTime date;
 
-  _CreateOneTimeTransactionViewState(this.isIncome) {
-    debugPrint("Description");
-    debugPrint(description);
+  @override
+  void initState() {
+    super.initState();
+    description = "default description";
+    amount = 0.0;
+    category = "default cat";
+    tags = [];
+    date = DateTime.now();
   }
 
+  _CreateOneTimeTransactionViewState(this.isIncome);
+
   void submitTransaction() async {
-    debugPrint('sumbmitted transaction: $description $amount');
+    debugPrint('sumbmitted transaction: $description $amount $tags');
     var box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
     box.add(OneTimeTransaction(description, this.amount >= 0, this.amount,
         Category("category", true), [], DateTime.now()));
@@ -44,6 +53,14 @@ class _CreateOneTimeTransactionViewState
     tags = newTags;
   }
 
+  void _changeAmount(String inputString) {
+    var newAmount = double.tryParse(inputString);
+    if (newAmount != null)
+      setState(() {
+        amount = newAmount;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -54,27 +71,63 @@ class _CreateOneTimeTransactionViewState
         title: Text("Create Transaction"),
       ),
       body: Form(
-        key: _formKey,
-        child: CustomScrollView(slivers: <Widget>[
-          SliverAppBar(
-            forceElevated: true,
-              pinned: true,
-              excludeHeaderSemantics: true,
-              title: Column(children: [
+          key: _formKey,
+          child: Column(children: [
+            IntrinsicWidth(
+              child: AmountInputFormField(_changeAmount, amount, isIncome),
+            ),
             TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value.length <= 0 ? "Please provide a description." : null,
                 decoration: InputDecoration(hintText: "Description"),
-                onChanged: (value) => description = value),
-            AmountInputFormField((newAmount) {
-              debugPrint('new amount $newAmount');
-              this.amount = newAmount != null ? newAmount : this.amount;
-            })
+                onChanged: (value) {
+                  description = value;
+                }),
+            TextButton(
+                child: Text(targetDateFormat.format(date)),
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime.now().subtract(Duration(days: 700)),
+                      maxTime: DateTime.now().add(Duration(days: 700)),
+                      onConfirm: (newDate) {
+                    context.fin
+                    setState(() {
+                      date = newDate;
+                    });
+                  }, currentTime: DateTime.now());
+                }),
+            Padding(padding: EdgeInsets.only(bottom: 5)),
+            Expanded(
+                //padding: EdgeInsets.only(top: 5),
+                child: TagSelection(_changeTags, isIncome))
           ])),
-          TagSelection(_changeTags)
-        ])),
-      floatingActionButton: FloatingActionButton(
-          heroTag: "submitTransaction",
-          onPressed: submitTransaction,
-          child: Icon(Icons.check)),
+      floatingActionButton: Column(
+        children: [
+          Spacer(),
+          FloatingActionButton(
+              backgroundColor: Colors.blueGrey,
+              heroTag: "changePrefix",
+              onPressed: () {
+                _formKey.currentState.save();
+                setState(() {
+                  isIncome = !isIncome;
+                });
+              },
+              child: Icon(Icons.repeat)),
+          Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: FloatingActionButton(
+                heroTag: "submitTransaction",
+                onPressed: () {
+                  _formKey.currentState.save();
+                  submitTransaction();
+                },
+                child: Icon(Icons.check)),
+          )
+        ],
+      ),
     );
   }
 }

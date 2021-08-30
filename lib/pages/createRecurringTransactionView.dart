@@ -66,7 +66,7 @@ class _CreateRecurringTransactionViewState
               AmountInputFormField((newAmount) {
                 debugPrint('''new amount $newAmount''');
                 this.amount = newAmount != null ? newAmount : this.amount;
-              }),
+              },amount, isIncome),
               ElevatedButton(
                   onPressed: submitTransaction, child: Text("Submit"))
             ])));
