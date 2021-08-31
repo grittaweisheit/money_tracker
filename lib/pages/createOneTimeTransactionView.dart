@@ -23,7 +23,7 @@ class _CreateOneTimeTransactionViewState
   String description;
   bool isIncome;
   double amount;
-  String category;
+  Category category;
   List<Tag> tags;
   List<bool> selectedTags;
   DateTime date;
@@ -32,7 +32,6 @@ class _CreateOneTimeTransactionViewState
   void initState() {
     super.initState();
     amount = 0.0;
-    category = "default cat";
     tags = [];
     selectedTags = [];
     date = DateTime.now();
@@ -42,12 +41,10 @@ class _CreateOneTimeTransactionViewState
 
   void submitTransaction() async {
     var box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-    box.add(
-        OneTimeTransaction(description, isIncome, amount, null, tags, date));
+    box.add(OneTimeTransaction(
+        description, isIncome, amount, category, tags, date));
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return HomeView();
-    }));
+    Navigator.pop(context);
   }
 
   @override
@@ -64,7 +61,7 @@ class _CreateOneTimeTransactionViewState
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
-      if (newAmount != null)
+      if (newAmount != null && newAmount != amount)
         setState(() {
           amount = newAmount;
         });
@@ -129,7 +126,7 @@ class _CreateOneTimeTransactionViewState
               child: AmountInputFormField(_saveAmount, amount, isIncome),
             ),
             getDescriptionFormField(),
-            DatePickerButtonFormField(_saveDate, date),
+            DatePickerButtonFormField(true, date, _saveDate),
             Padding(padding: EdgeInsets.only(bottom: 5)),
             Expanded(child: TagSelection(_saveTags, selectedTags, isIncome))
           ])),

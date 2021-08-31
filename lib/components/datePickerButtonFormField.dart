@@ -7,8 +7,9 @@ import '../Consts.dart';
 class DatePickerButtonFormField extends StatelessWidget {
   final onConfirm;
   final date;
+  final pastAllowed;
 
-  DatePickerButtonFormField(this.onConfirm, this.date);
+  DatePickerButtonFormField(this.pastAllowed, this.date, this.onConfirm);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,9 @@ class DatePickerButtonFormField extends StatelessWidget {
         onPressed: () {
           DatePicker.showDatePicker(context,
               showTitleActions: true,
-              minTime: DateTime.now().subtract(Duration(days: 700)),
+              minTime: pastAllowed
+                  ? DateTime.now().subtract(Duration(days: 700))
+                  : DateTime.now(),
               maxTime: DateTime.now().add(Duration(days: 700)),
               onConfirm: onConfirm,
               currentTime: date);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:money_tracker/pages/oneTimeTransactionListView.dart';
+import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
+import 'package:money_tracker/components/overviewTab.dart';
+import 'package:money_tracker/components/statisticsTab.dart';
 import 'recurringTransactionListView.dart';
 import 'createOneTimeTransactionView.dart';
 
@@ -22,58 +24,39 @@ class HomeView extends StatefulWidget {
   }
 }
 
-class _HomeViewState extends State<HomeView> {
-  void addTransaction(bool isIncome) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CreateOneTimeTransactionView(isIncome)));
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  TabBar getTabBar(){
+    return TabBar(controller: _tabController, tabs: [
+      Center(child: Text("Overview")),
+      Center(
+        child: Text("Transactions"),
+      ),
+      Center(
+        child: Text("Statistics"),
+      )
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(title: Text("Home")),
-      body: Center( child: Column(children: [
-        TextButton(
-            child: Text("Recurring Transaction List"),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return RecurringTransactionListView();
-              }));
-            }),
-        TextButton(
-            child: Text("One Time Transaction List"),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OneTimeTransactionListView();
-              }));
-            }),
-      ])),
-      floatingActionButton: Column(children: <Widget>[
-        Spacer(),
-        Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: FloatingActionButton(
-              heroTag: "addIncome",
-              onPressed: () => addTransaction(true),
-              tooltip: 'add incoming transaction',
-              backgroundColor: Colors.blue,
-              child: Icon(Icons.add),
-            )),
-        FloatingActionButton(
-            heroTag: "addLoss",
-            onPressed: () => addTransaction(false),
-            tooltip: 'add outgoing transaction',
-            backgroundColor: Colors.red,
-            child: Icon(Icons.remove))
-      ]), // This trailing comma makes auto-formatting nicer for build methods.
+      appBar: AppBar(
+          title: Text("Home"),
+        bottom: getTabBar(),
+          ),
+      body: TabBarView(controller: _tabController, children: [
+        OverviewTab(),
+        OneTimeTransactionListTab(),
+        StatisticsTab()
+      ]),
     );
   }
 }

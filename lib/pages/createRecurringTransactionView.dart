@@ -8,42 +8,43 @@ import '../models/Transactions.dart';
 import '../Consts.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class CreateOneTimeTransactionView extends StatefulWidget {
+class CreateRecurringTransactionView extends StatefulWidget {
   final bool isIncome;
 
-  CreateOneTimeTransactionView(this.isIncome);
+  CreateRecurringTransactionView(this.isIncome);
 
   @override
-  _CreateOneTimeTransactionViewState createState() =>
-      _CreateOneTimeTransactionViewState(isIncome);
+  _CreateRecurringTransactionViewState createState() =>
+      _CreateRecurringTransactionViewState(isIncome);
 }
 
-class _CreateOneTimeTransactionViewState
-    extends State<CreateOneTimeTransactionView> {
+class _CreateRecurringTransactionViewState
+    extends State<CreateRecurringTransactionView> {
   String description;
   bool isIncome;
   double amount;
-  String category;
+  Category category;
   List<Tag> tags;
   List<bool> selectedTags;
-  DateTime date;
+  int every;
+  Period period;
+  DateTime nextExecution;
 
   @override
   void initState() {
     super.initState();
-    amount = 0.0;
-    category = "default cat";
+    amount = 0.00;
     tags = [];
     selectedTags = [];
-    date = DateTime.now();
+    nextExecution = DateTime.now();
   }
 
-  _CreateOneTimeTransactionViewState(this.isIncome);
+  _CreateRecurringTransactionViewState(this.isIncome);
 
   void submitTransaction() async {
-    var box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-    box.add(
-        OneTimeTransaction(description, isIncome, amount, null, tags, date));
+    var box = await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+    box.add(RecurringTransaction(description, isIncome, amount, category, tags,
+        Rule(every, period), nextExecution));
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return HomeView();
@@ -55,7 +56,6 @@ class _CreateOneTimeTransactionViewState
     final _formKey = GlobalKey<FormState>();
 
     void _saveTags(List<Tag> newTags, List<bool> newTagSelection) {
-      debugPrint("submitted tags $newTagSelection");
       setState(() {
         tags = newTags;
         selectedTags = newTagSelection;
@@ -64,17 +64,21 @@ class _CreateOneTimeTransactionViewState
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
-      if (newAmount != null)
-        setState(() {
-          amount = newAmount;
-        });
+      if (newAmount != null) amount = newAmount;
     }
 
     void _saveDate(DateTime newDate) {
       _formKey.currentState.save();
       setState(() {
-        date = newDate;
+        nextExecution = newDate;
       });
+    }
+
+    void _saveEvery(int newEvery) {
+      setState(() {
+        every = newEvery;
+      });
+      _formKey.currentState.save();
     }
 
     TextFormField getDescriptionFormField() {
@@ -82,12 +86,10 @@ class _CreateOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-          value.length <= 0 ? "Please provide a description." : null,
+              value.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
-            setState(() {
-              description = value;
-            });
+            description = value;
           });
     }
 
@@ -129,7 +131,45 @@ class _CreateOneTimeTransactionViewState
               child: AmountInputFormField(_saveAmount, amount, isIncome),
             ),
             getDescriptionFormField(),
-            DatePickerButtonFormField(_saveDate, date),
+            Wrap(children: [
+              Row(children: [
+                Text("First Execution"),
+                // don't allow past dates
+                DatePickerButtonFormField(false, nextExecution, _saveDate),
+              ]),
+            ]),
+            Wrap(
+              children: [
+                Row(
+                  children: [
+                    Text("Repeats every"),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                    IntrinsicWidth(
+                        child: DropdownButtonFormField<int>(
+                      items: List.generate(100, (index) => index)
+                          .map((number) => DropdownMenuItem(
+                              value: number, child: Text(number.toString())))
+                          .toList(),
+                      value: every,
+                      onChanged: _saveEvery,
+                    )),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                    IntrinsicWidth(
+                        child: DropdownButtonFormField<Period>(
+                      items: Period.values
+                          .map((periodEnum) => DropdownMenuItem(
+                              value: periodEnum,
+                              child: Text(every != null && every > 1
+                                  ? periodPluralStrings[periodEnum.index]
+                                  : periodSingularStrings[periodEnum.index])))
+                          .toList(),
+                      value: period,
+                      onChanged: (value) => period = value,
+                    )),
+                  ],
+                )
+              ],
+            ),
             Padding(padding: EdgeInsets.only(bottom: 5)),
             Expanded(child: TagSelection(_saveTags, selectedTags, isIncome))
           ])),

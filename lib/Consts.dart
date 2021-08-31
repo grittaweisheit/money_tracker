@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +11,12 @@ DateFormat onlyTime = DateFormat("HH:mm");
 
 String targetDateFormatString = ("dd. MMM y");
 DateFormat targetDateFormat = DateFormat(targetDateFormatString);
+
+List<String> periodSingularStrings = ["day", "week", "month", "year"];
+List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
+
+Padding topBottomSpace5 = Padding(padding: EdgeInsets.only(top: 5));
+Padding leftRigthSpace5 = Padding(padding: EdgeInsets.only(left: 5));
 
 final List<TextInputFormatter> defaultFormatters = [
   LengthLimitingTextInputFormatter(100),

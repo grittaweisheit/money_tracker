@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/pages/createRecurringTransactionView.dart';
 import '../models/Transactions.dart';
 
 String recurringTransactionBox = "recurringTransaction";
@@ -8,20 +9,20 @@ String oneTimeTransactionBox = "oneTimeTransaction";
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-class RecurringTransactionListView extends StatefulWidget {
-  RecurringTransactionListView();
+class RecurringTransactionListTab extends StatefulWidget {
+  RecurringTransactionListTab();
 
   @override
-  _RecurringTransactionListViewState createState() =>
-      _RecurringTransactionListViewState();
+  _RecurringTransactionListTabState createState() =>
+      _RecurringTransactionListTabState();
 }
 
-class _RecurringTransactionListViewState
-    extends State<RecurringTransactionListView> {
+class _RecurringTransactionListTabState
+    extends State<RecurringTransactionListTab> {
   List<RecurringTransaction> transactions = [];
   int count = 0;
 
-  _RecurringTransactionListViewState();
+  _RecurringTransactionListTabState();
 
   @override
   void initState() {
@@ -38,16 +39,11 @@ class _RecurringTransactionListViewState
     });
   }
 
-  void _addTransaction() async {
-    var box = await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-    box.add(RecurringTransaction(
-        "description",
-        true,
-        1.11,
-        Category("category", true),
-        [],
-        Rule(2, Period.day),
-        DateTime(2021, 1, 1)));
+  void _addTransaction(bool isIncome) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CreateRecurringTransactionView(isIncome)));
   }
 
   @override
@@ -59,7 +55,7 @@ class _RecurringTransactionListViewState
         ),
         body: Column(children: [Expanded(child: getTransactionsList())]),
         floatingActionButton: FloatingActionButton(
-          onPressed: _addTransaction,
+          onPressed:() => _addTransaction(true),
           tooltip: 'Increment',
           backgroundColor: Colors.blue,
           child: Icon(Icons.add),

@@ -1,64 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import '../Consts.dart';
 import '../models/Transactions.dart' as Transactions;
+import 'addOneTimeTransactionFloatingButtons.dart';
 
-String oneTimeTransactionBox = "oneTimeTransaction";
-DateFormat onlyDate = DateFormat("dd.MM.y");
-DateFormat onlyTime = DateFormat("HH:mm");
-
-class OneTimeTransactionListView extends StatefulWidget {
-  OneTimeTransactionListView();
+class OneTimeTransactionListTab extends StatefulWidget {
+  OneTimeTransactionListTab();
 
   @override
-  _OneTimeTransactionListViewState createState() =>
-      _OneTimeTransactionListViewState();
+  _OneTimeTransactionListTabState createState() =>
+      _OneTimeTransactionListTabState();
 }
 
-class _OneTimeTransactionListViewState
-    extends State<OneTimeTransactionListView> {
+class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   List<Transactions.OneTimeTransaction> transactions = [];
   int count = 0;
 
-  _OneTimeTransactionListViewState();
+  _OneTimeTransactionListTabState();
 
   @override
   void initState() {
     super.initState();
-    Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox).then((value) => value.clear());
+    Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
     getTransactions();
   }
 
   getTransactions() async {
-    final box =
-        await Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
+    final box = await Hive.openBox<Transactions.OneTimeTransaction>(
+        oneTimeTransactionBox);
     setState(() {
       transactions = box.values.toList();
       count = transactions.length;
     });
-  }
-
-  void _addTransaction() async {
-    var box = await Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
-    box.add(Transactions.OneTimeTransaction("description", true, 1.11, Transactions.Category("category", true), [],
-        DateTime(2021, 1, 1)));
-    getTransactions();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //this.getTransactions();
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("OneTime Transactions"),
-        ),
-        body: Column(children: [Expanded(child: getTransactionsList())]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _addTransaction,
-          tooltip: 'Increment',
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.add),
-        ));
   }
 
   ListView getTransactionsList() {
@@ -88,5 +62,13 @@ class _OneTimeTransactionListViewState
         );
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      getTransactionsList(),
+      AddOneTimeTransactionFloatingButtons()
+    ]);
   }
 }
