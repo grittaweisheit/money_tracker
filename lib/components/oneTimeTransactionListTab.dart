@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import '../Consts.dart';
-import '../models/Transactions.dart' as Transactions;
+import '../models/Transactions.dart';
 import 'addOneTimeTransactionFloatingButtons.dart';
 
 class OneTimeTransactionListTab extends StatefulWidget {
@@ -14,7 +14,7 @@ class OneTimeTransactionListTab extends StatefulWidget {
 }
 
 class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
-  List<Transactions.OneTimeTransaction> transactions = [];
+  List<OneTimeTransaction> transactions = [];
   int count = 0;
 
   _OneTimeTransactionListTabState();
@@ -22,43 +22,59 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   @override
   void initState() {
     super.initState();
-    Hive.openBox<Transactions.OneTimeTransaction>(oneTimeTransactionBox);
+    Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
     getTransactions();
   }
 
   getTransactions() async {
-    final box = await Hive.openBox<Transactions.OneTimeTransaction>(
-        oneTimeTransactionBox);
+    final box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
+    var newTransactions = box.values.toList();
+    newTransactions.sort((t1, t2) => t2.date.compareTo(t1.date));
     setState(() {
-      transactions = box.values.toList();
+      transactions = newTransactions;
       count = transactions.length;
     });
   }
 
+  Widget getListElement(OneTimeTransaction transaction) {
+    return Card(
+      color: Colors.grey,
+      elevation: 1.0,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.amber,
+          child: transaction.isIncome
+              ? Icon(Icons.add_circle_outline)
+              : Icon(Icons.remove_circle_outline),
+        ),
+        title: Text(transaction.description,
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(onlyDate.format(transaction.date)),
+        trailing: Text(transaction.amount.toString()),
+        onTap: () {
+          debugPrint("ListTile Tapped");
+          // TODO: open editing popup
+        },
+      ),
+    );
+  }
+
   ListView getTransactionsList() {
+    int currentMonth;
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
-        return Card(
-          color: Colors.grey,
-          elevation: 1.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.amber,
-              child: transaction.isIncome
-                  ? Icon(Icons.add_circle_outline)
-                  : Icon(Icons.remove_circle_outline),
-            ),
-            title: Text(transaction.description,
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(onlyDate.format(transaction.date)),
-            trailing: Text(transaction.amount.toString()),
-            onTap: () {
-              debugPrint("ListTile Tapped");
-              // TODO: open editing popup
-            },
-          ),
+        var children = [];
+        if (position == 0) {
+          children.add(topBottomSpace5);
+        }
+        if (transaction.date.month != currentMonth) {
+          currentMonth = transaction.date.month;
+          children.add(Text(DateFormat("MMMM y").format(transaction.date)));
+        }
+        return Column(
+          children: [...children, getListElement(transaction)],
         );
       },
     );
