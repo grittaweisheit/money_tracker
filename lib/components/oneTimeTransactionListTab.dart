@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
 import 'addOneTimeTransactionFloatingButtons.dart';
@@ -40,6 +41,14 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
       color: Colors.grey,
       elevation: 1.0,
       child: ListTile(
+        onLongPress: () {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditOneTimeTransactionView(transaction)))
+              .then((value) => refresh());
+        },
         leading: CircleAvatar(
           backgroundColor: Colors.amber,
           child: transaction.isIncome

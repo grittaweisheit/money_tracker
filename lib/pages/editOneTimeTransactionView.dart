@@ -1,11 +1,8 @@
-/*
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
 
 class EditOneTimeTransactionView extends StatefulWidget {
   final OneTimeTransaction transaction;
@@ -20,30 +17,29 @@ class EditOneTimeTransactionView extends StatefulWidget {
 class _EditOneTimeTransactionViewState
     extends State<EditOneTimeTransactionView> {
   String description;
-  bool isIncome;
   double amount;
-  Category category;
   List<Tag> tags;
-  List<bool> selectedTags;
   DateTime date;
+  bool isIncome;
+  Category category;
 
   @override
   void initState() {
     super.initState();
     amount = widget.transaction.amount;
     description = widget.transaction.description;
+    date = widget.transaction.date;
     tags = widget.transaction.tags;
-    selectedTags = [];
-    date = DateTime.now();
+    isIncome = widget.transaction.isIncome;
   }
 
-  _EditOneTimeTransactionViewState();
-
   void submitTransaction() async {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    box.add(OneTimeTransaction(
-        description, isIncome, amount, category, tags, date));
-
+    widget.transaction.amount = amount;
+    widget.transaction.description = description;
+    widget.transaction.date = date;
+    widget.transaction.tags = tags;
+    widget.transaction.isIncome = isIncome;
+    widget.transaction.save();
     Navigator.pop(context);
   }
 
@@ -51,11 +47,10 @@ class _EditOneTimeTransactionViewState
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
 
-    void _saveTags(List<Tag> newTags, List<bool> newTagSelection) {
-      debugPrint("submitted tags $newTagSelection");
+    void _saveTags(List<Tag> newTags) {
+      debugPrint("submitted tags $newTags");
       setState(() {
         tags = newTags;
-        selectedTags = newTagSelection;
       });
     }
 
@@ -79,7 +74,7 @@ class _EditOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-              value.length <= 0 ? "Please provide a description." : null,
+          value.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
@@ -129,7 +124,7 @@ class _EditOneTimeTransactionViewState
             getDescriptionFormField(),
             DatePickerButtonFormField(true, date, _saveDate),
             Padding(padding: EdgeInsets.only(bottom: 5)),
-            Expanded(child: TagSelection(_saveTags, selectedTags, isIncome))
+            Expanded(child: TagSelection(_saveTags, tags, isIncome))
           ])),
       floatingActionButton: Column(
         children: [
@@ -141,4 +136,4 @@ class _EditOneTimeTransactionViewState
       ),
     );
   }
-}*/
+}

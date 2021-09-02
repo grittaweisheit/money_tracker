@@ -23,7 +23,6 @@ class _CreateOneTimeTransactionViewState
   double amount;
   Category category;
   List<Tag> tags;
-  List<Tag> selectedTags;
   DateTime date;
 
   @override
@@ -31,7 +30,6 @@ class _CreateOneTimeTransactionViewState
     super.initState();
     amount = 0.0;
     tags = [];
-    selectedTags = [];
     date = DateTime.now();
   }
 
@@ -126,7 +124,7 @@ class _CreateOneTimeTransactionViewState
             getDescriptionFormField(),
             DatePickerButtonFormField(true, date, _saveDate),
             Padding(padding: EdgeInsets.only(bottom: 5)),
-            Expanded(child: TagSelection(_saveTags, selectedTags, isIncome))
+            Expanded(child: TagSelection(_saveTags, tags, isIncome))
           ])),
       floatingActionButton: Column(
         children: [
