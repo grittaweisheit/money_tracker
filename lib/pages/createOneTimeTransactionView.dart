@@ -23,7 +23,7 @@ class _CreateOneTimeTransactionViewState
   double amount;
   Category category;
   List<Tag> tags;
-  List<bool> selectedTags;
+  List<Tag> selectedTags;
   DateTime date;
 
   @override
@@ -49,11 +49,10 @@ class _CreateOneTimeTransactionViewState
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
 
-    void _saveTags(List<Tag> newTags, List<bool> newTagSelection) {
-      debugPrint("submitted tags $newTagSelection");
+    void _saveTags(List<Tag> newTags) {
+      debugPrint("submitted tags $newTags");
       setState(() {
         tags = newTags;
-        selectedTags = newTagSelection;
       });
     }
 

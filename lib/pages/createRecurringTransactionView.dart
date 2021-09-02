@@ -24,7 +24,6 @@ class _CreateRecurringTransactionViewState
   double amount;
   Category category;
   List<Tag> tags;
-  List<bool> selectedTags;
   int every;
   Period period;
   DateTime nextExecution;
@@ -34,7 +33,6 @@ class _CreateRecurringTransactionViewState
     super.initState();
     amount = 0.00;
     tags = [];
-    selectedTags = [];
     nextExecution = DateTime.now();
   }
 
@@ -54,10 +52,9 @@ class _CreateRecurringTransactionViewState
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
 
-    void _saveTags(List<Tag> newTags, List<bool> newTagSelection) {
+    void _saveTags(List<Tag> newTags) {
       setState(() {
         tags = newTags;
-        selectedTags = newTagSelection;
       });
     }
 
@@ -170,7 +167,7 @@ class _CreateRecurringTransactionViewState
               ],
             ),
             Padding(padding: EdgeInsets.only(bottom: 5)),
-            Expanded(child: TagSelection(_saveTags, selectedTags, isIncome))
+            Expanded(child: TagSelection(_saveTags, tags, isIncome))
           ])),
       floatingActionButton: Column(
         children: [

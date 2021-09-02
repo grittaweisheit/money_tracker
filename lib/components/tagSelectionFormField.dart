@@ -8,9 +8,9 @@ final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9][0-9])))$');
 class TagSelection extends StatefulWidget {
   final Function onSaved;
   final bool isIncome;
-  final List<bool> selected;
+  final List<Tag> selectedTags;
 
-  TagSelection(this.onSaved, this.selected, this.isIncome);
+  TagSelection(this.onSaved, this.selectedTags, this.isIncome);
 
   @override
   _TagSelectionState createState() => _TagSelectionState();
@@ -18,12 +18,12 @@ class TagSelection extends StatefulWidget {
 
 class _TagSelectionState extends State<TagSelection> {
   List<Tag> tags = []; // first income, then spending
-  List<bool> selected = [];
+  List<Tag> selectedTags = [];
   int countSpending = 0;
   int countIncome = 0;
 
   void initializeLists() async {
-    debugPrint('incoming tag selection ${widget.selected}');
+    debugPrint('incoming tag selection ${widget.selectedTags}');
     Box<Tag> box = Hive.box(tagBox);
     var incomeTags =
         box.values.where((element) => element.isIncomeTag).toList();
@@ -34,16 +34,13 @@ class _TagSelectionState extends State<TagSelection> {
       countSpending = spendingTags.length;
       incomeTags.addAll(spendingTags);
       tags = incomeTags;
-      selected = widget.selected.length == countSpending + countIncome
-          ? widget.selected
-          : List.filled(countIncome + countSpending, false);
+      selectedTags = widget.selectedTags;
     });
   }
 
-  void _handleSelection(int index, isIncome) async {
-    List<bool> newSelected = selected;
+  void _handleSelection(Tag tag) async {
     setState(() {
-      selected[index] = !newSelected[index];
+      if (!selectedTags.remove(tag)) selectedTags.add(tag);
     });
   }
 
@@ -58,15 +55,7 @@ class _TagSelectionState extends State<TagSelection> {
   @override
   Widget build(BuildContext context) {
     return FormField(onSaved: (value) {
-      debugPrint("SAVED Tag selection");
-      List<Tag> selectedTags = [];
-
-      for (int i = 0; i < countIncome + countSpending; i++) {
-        if (selected[i]) {
-          selectedTags.add(tags[i]);
-        }
-      }
-      widget.onSaved(selectedTags, selected);
+      widget.onSaved(selectedTags);
     }, builder: (FormFieldState state) {
       return CustomScrollView(
           shrinkWrap: true,
@@ -101,12 +90,12 @@ class _TagSelectionState extends State<TagSelection> {
         var tagIndex = income ? index : index + countIncome;
         if (!income && tagIndex >= countSpending) return null;
         Tag tag = tags[tagIndex];
-        bool isSelected = selected[tagIndex];
+        bool isSelected = selectedTags.contains(tag);
         return Container(
             color: isSelected ? Colors.amber : Colors.blue,
             child: IconButton(
               icon: Text(tag.name),
-              onPressed: () => _handleSelection(tagIndex, true),
+              onPressed: () => _handleSelection(tag),
             ));
       }, childCount: countIncome),
     );
