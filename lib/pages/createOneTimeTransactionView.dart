@@ -3,10 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
-import 'package:money_tracker/pages/home.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class CreateOneTimeTransactionView extends StatefulWidget {
   final bool isIncome;
@@ -40,7 +38,7 @@ class _CreateOneTimeTransactionViewState
   _CreateOneTimeTransactionViewState(this.isIncome);
 
   void submitTransaction() async {
-    var box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
+    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     box.add(OneTimeTransaction(
         description, isIncome, amount, category, tags, date));
 
@@ -109,6 +107,7 @@ class _CreateOneTimeTransactionViewState
             if (_formKey.currentState.validate()) {
               submitTransaction();
             } else {
+              debugPrint("The Transaction could not be submitted");
               //TODO: make snack bar
             }
           },

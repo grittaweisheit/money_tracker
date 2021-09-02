@@ -1,6 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+
+Color primaryColor = Colors.blueGrey.shade700;
+Color intensiveGreenColor = Colors.green;
+Color lightGreenColor = Colors.green.shade300;
+Color intensiveRedColor = Colors.red;
+Color lightRedColor = Colors.red.shade300;
 
 String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";

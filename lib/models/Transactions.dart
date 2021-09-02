@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 part 'Transactions.g.dart';
@@ -21,6 +22,11 @@ class RecurringTransaction extends HiveObject {
 
   RecurringTransaction(this.description, this.isIncome, this.amount,
       this.category, this.tags, this.repetitionRule, this.nextExecution);
+
+  getSignedAmountString() {
+    String omen = isIncome ? '+' : '-';
+    return '$omen ${amount.toString()} €';
+  }
 }
 
 @HiveType(typeId: 1)
@@ -40,6 +46,11 @@ class OneTimeTransaction extends HiveObject {
 
   OneTimeTransaction(this.description, this.isIncome, this.amount,
       this.category, this.tags, this.date);
+
+  getSignedAmountString() {
+    String omen = isIncome ? '+' : '-';
+    return '$omen ${amount.toString()} €';
+  }
 }
 
 @HiveType(typeId: 2)
@@ -52,6 +63,8 @@ class Tag extends HiveObject {
   List<double> limits = [-1, -1, -1, -1]; // 0-days, 1-weeks, 2-months, 3-years
   @HiveField(3)
   List<OneTimeTransaction> oneTimeTransactions = [];
+  @HiveField(4)
+  Icon icon;
 
   Tag(this.name, this.isIncomeTag);
 }

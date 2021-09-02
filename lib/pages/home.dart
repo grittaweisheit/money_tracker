@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
 import 'package:money_tracker/components/overviewTab.dart';
 import 'package:money_tracker/components/statisticsTab.dart';
@@ -26,35 +27,30 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     return TabBar(controller: _tabController, tabs: [
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.euro),
-            Text("Overview")]),
+          children: [Icon(Icons.euro), Text("Overview")]),
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.compare_arrows),
-            Text("Transactions")]),
+          children: [Icon(Icons.compare_arrows), Text("Transactions")]),
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.bar_chart),
-            Text("Statistics")]),
+          children: [Icon(Icons.bar_chart), Text("Statistics")]),
     ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Money Tracker"),
-        bottom: getTabBar(),
-      ),
-      body: TabBarView(controller: _tabController, children: [
-        OverviewTab(),
-        OneTimeTransactionListTab(),
-        StatisticsTab()
-      ]),
-    );
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Money Tracker"),
+        ),
+        body: TabBarView(controller: _tabController, children: [
+          OverviewTab(),
+          OneTimeTransactionListTab(),
+          StatisticsTab()
+        ]),
+        bottomNavigationBar: BottomAppBar(
+            child: Container(
+                height: 50, color: primaryColor, child: getTabBar())));
   }
 }

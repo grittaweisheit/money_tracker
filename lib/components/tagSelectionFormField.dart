@@ -24,7 +24,7 @@ class _TagSelectionState extends State<TagSelection> {
 
   void initializeLists() async {
     debugPrint('incoming tag selection ${widget.selected}');
-    var box = await Hive.openBox<Tag>(tagBox);
+    Box<Tag> box = Hive.box(tagBox);
     var incomeTags =
         box.values.where((element) => element.isIncomeTag).toList();
     var spendingTags =
@@ -45,7 +45,6 @@ class _TagSelectionState extends State<TagSelection> {
     setState(() {
       selected[index] = !newSelected[index];
     });
-    //widget.onSaved(selectedTags, selected);
   }
 
   _TagSelectionState();

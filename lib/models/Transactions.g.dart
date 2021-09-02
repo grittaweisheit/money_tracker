@@ -171,13 +171,14 @@ class TagAdapter extends TypeAdapter<Tag> {
       fields[1] as bool,
     )
       ..limits = (fields[2] as List)?.cast<double>()
-      ..oneTimeTransactions = (fields[3] as List)?.cast<OneTimeTransaction>();
+      ..oneTimeTransactions = (fields[3] as List)?.cast<OneTimeTransaction>()
+      ..icon = fields[4] as Icon;
   }
 
   @override
   void write(BinaryWriter writer, Tag obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -185,7 +186,9 @@ class TagAdapter extends TypeAdapter<Tag> {
       ..writeByte(2)
       ..write(obj.limits)
       ..writeByte(3)
-      ..write(obj.oneTimeTransactions);
+      ..write(obj.oneTimeTransactions)
+      ..writeByte(4)
+      ..write(obj.icon);
   }
 
   @override

@@ -31,8 +31,7 @@ class _RecurringTransactionListTabState
   }
 
   getTransactions() async {
-    final box =
-        await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+    final Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
     setState(() {
       transactions = box.values.toList();
       count = transactions.length;
@@ -55,7 +54,7 @@ class _RecurringTransactionListTabState
         ),
         body: Column(children: [Expanded(child: getTransactionsList())]),
         floatingActionButton: FloatingActionButton(
-          onPressed:() => _addTransaction(true),
+          onPressed: () => _addTransaction(true),
           tooltip: 'Increment',
           backgroundColor: Colors.blue,
           child: Icon(Icons.add),

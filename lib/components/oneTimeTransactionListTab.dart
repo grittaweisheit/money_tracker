@@ -22,13 +22,12 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   @override
   void initState() {
     super.initState();
-    Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-    getTransactions();
+    refresh();
   }
 
-  getTransactions() async {
-    final box = await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-    var newTransactions = box.values.toList();
+  refresh() async {
+    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
+    List<OneTimeTransaction> newTransactions = box.values.toList();
     newTransactions.sort((t1, t2) => t2.date.compareTo(t1.date));
     setState(() {
       transactions = newTransactions;
@@ -84,7 +83,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   Widget build(BuildContext context) {
     return Stack(children: [
       getTransactionsList(),
-      AddOneTimeTransactionFloatingButtons()
+      AddOneTimeTransactionFloatingButtons(refresh)
     ]);
   }
 }
