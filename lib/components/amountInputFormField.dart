@@ -2,13 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9][0-9])))$');
+final formatters = [
+  FilteringTextInputFormatter.deny(',', replacementString: '.'),
+  FilteringTextInputFormatter.deny('-'),
+];
+final inputType = TextInputType.numberWithOptions(signed: false, decimal: true);
+
+String validator(inputString) {
+  var amount = double.tryParse(inputString);
+  if (amount != null) {
+    return null;
+  }
+  return "Please enter a valid amount.";
+}
 
 class AmountInputFormField extends StatefulWidget {
   final onSaved;
   final bool isIncome;
   final double amount;
+  final bool withDecoration;
 
-  AmountInputFormField(this.onSaved, this.amount, this.isIncome);
+  AmountInputFormField(
+      this.onSaved, this.amount, this.isIncome, this.withDecoration);
 
   @override
   _AmountInputFormFieldState createState() => _AmountInputFormFieldState();
@@ -31,24 +46,16 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
       initialValue: widget.amount.toString(),
       style: TextStyle(fontSize: 20),
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (inputString) {
-        var amount = double.tryParse(inputString);
-        if (amount != null) {
-          return null;
-        }
-        return "Please enter a valid amount.";
-      },
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(',', replacementString: '.'),
-        FilteringTextInputFormatter.deny('-'),
-      ],
-      keyboardType:
-          TextInputType.numberWithOptions(signed: false, decimal: true),
+      validator: validator,
+      inputFormatters: formatters,
+      keyboardType: inputType,
       decoration: InputDecoration(
           hintText: "0.00",
           border: InputBorder.none,
-          prefixIcon: Icon(widget.isIncome ? Icons.add : Icons.remove),
-          suffixIcon: Icon(Icons.euro)),
+          prefixIcon: widget.withDecoration
+              ? Icon(widget.isIncome ? Icons.add : Icons.remove)
+              : null,
+          suffixIcon: widget.withDecoration ? Icon(Icons.euro) : null),
       onChanged: (value) {
         amountString = value;
       },

@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
 Color primaryColor = Colors.blueGrey.shade700;
+Color tabBackgroundColor = Colors.blueGrey.shade100;
+
 Color intensiveGreenColor = Colors.green;
 Color lightGreenColor = Colors.green.shade300;
 Color intensiveRedColor = Colors.red;

@@ -119,7 +119,7 @@ class _EditOneTimeTransactionViewState
           key: _formKey,
           child: Column(children: [
             IntrinsicWidth(
-              child: AmountInputFormField(_saveAmount, amount, isIncome),
+              child: AmountInputFormField(_saveAmount, amount, isIncome, true),
             ),
             getDescriptionFormField(),
             DatePickerButtonFormField(true, date, _saveDate),

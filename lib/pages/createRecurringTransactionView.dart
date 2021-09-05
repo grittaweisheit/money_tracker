@@ -124,7 +124,7 @@ class _CreateRecurringTransactionViewState
           key: _formKey,
           child: Column(children: [
             IntrinsicWidth(
-              child: AmountInputFormField(_saveAmount, amount, isIncome),
+              child: AmountInputFormField(_saveAmount, amount, isIncome, true),
             ),
             getDescriptionFormField(),
             Wrap(children: [

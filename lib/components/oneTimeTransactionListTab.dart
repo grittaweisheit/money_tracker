@@ -38,7 +38,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   Widget getListElement(OneTimeTransaction transaction) {
     return Card(
-      color: Colors.grey,
+      color: Colors.blueGrey.shade200,
       elevation: 1.0,
       child: ListTile(
         onLongPress: () {
@@ -90,7 +90,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return
+      Stack(children: [
       getTransactionsList(),
       AddOneTimeTransactionFloatingButtons(refresh)
     ]);

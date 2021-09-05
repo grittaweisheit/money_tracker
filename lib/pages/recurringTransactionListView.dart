@@ -9,20 +9,20 @@ String oneTimeTransactionBox = "oneTimeTransaction";
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-class RecurringTransactionListTab extends StatefulWidget {
-  RecurringTransactionListTab();
+class RecurringTransactionListView extends StatefulWidget {
+  RecurringTransactionListView();
 
   @override
-  _RecurringTransactionListTabState createState() =>
-      _RecurringTransactionListTabState();
+  _RecurringTransactionListViewState createState() =>
+      _RecurringTransactionListViewState();
 }
 
-class _RecurringTransactionListTabState
-    extends State<RecurringTransactionListTab> {
+class _RecurringTransactionListViewState
+    extends State<RecurringTransactionListView> {
   List<RecurringTransaction> transactions = [];
   int count = 0;
 
-  _RecurringTransactionListTabState();
+  _RecurringTransactionListViewState();
 
   @override
   void initState() {

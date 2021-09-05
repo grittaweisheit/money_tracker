@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:money_tracker/Consts.dart';
+import 'package:money_tracker/components/homeDrawer.dart';
 import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
 import 'package:money_tracker/components/overviewTab.dart';
 import 'package:money_tracker/components/statisticsTab.dart';
@@ -44,10 +45,12 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           centerTitle: true,
           title: Text("Money Tracker"),
         ),
+        drawer: HomeDrawer(),
         body: TabBarView(controller: _tabController, children: [
-          OverviewTab(),
-          OneTimeTransactionListTab(),
-          StatisticsTab()
+          Container(color: tabBackgroundColor, child: OverviewTab()),
+          Container(
+              color: tabBackgroundColor, child: OneTimeTransactionListTab()),
+          Container(color: tabBackgroundColor, child: StatisticsTab())
         ]),
         bottomNavigationBar: BottomAppBar(
             child: Container(
