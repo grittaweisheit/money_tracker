@@ -31,3 +31,7 @@ final List<TextInputFormatter> defaultFormatters = [
   LengthLimitingTextInputFormatter(100),
   FilteringTextInputFormatter.deny('\n')
 ];
+
+List<IconData> allIconData = [Icons.label, Icons.directions_boat_outlined];
+List<Icon> allIcons = allIconData.map((e) => Icon(e)).toList();
+Icon defaultIcon = Icon(Icons.label);

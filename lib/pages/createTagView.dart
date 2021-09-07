@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:icon_picker/icon_picker.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/pages/TagListView.dart';
 import '../models/Transactions.dart';
@@ -48,6 +49,13 @@ class _CreateTagViewState extends State<CreateTagView> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
+
+    void _handleSelection(Icon tappedIcon) {
+      _formKey.currentState.save();
+      setState(() {
+        icon = tappedIcon;
+      });
+    }
 
     TextFormField getDescriptionFormField() {
       return TextFormField(
@@ -137,15 +145,36 @@ class _CreateTagViewState extends State<CreateTagView> {
     }
 
     Widget getLimitSection() {
-      return Wrap(
-          alignment: WrapAlignment.center,
-          children: [
+      return Wrap(alignment: WrapAlignment.center, children: [
         Text("Limits",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children:
                 Period.values.map((period) => getLimitField(period)).toList()),
+      ]);
+    }
+
+    Widget getIconSelection() {
+      return CustomScrollView(shrinkWrap: true, slivers: [
+        SliverGrid(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 60,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+              childAspectRatio: 1),
+          delegate:
+              SliverChildBuilderDelegate((BuildContext context, int index) {
+            var currentIcon = allIcons[index];
+            bool isSelected = icon == currentIcon;
+            return Container(
+                color: isSelected ? Colors.amber : Colors.blue,
+                child: IconButton(
+                  icon: currentIcon,
+                  onPressed: () => _handleSelection(currentIcon),
+                ));
+          }, childCount: allIcons.length),
+        )
       ]);
     }
 
@@ -173,7 +202,8 @@ class _CreateTagViewState extends State<CreateTagView> {
           child: Column(children: [
             getDescriptionFormField(),
             getIncomeExpenseCheckboxes(),
-            if (!isIncome) getLimitSection()
+            if (!isIncome) getLimitSection(),
+            getIconSelection()
           ])),
       floatingActionButton: getSubmitButton(),
     );
