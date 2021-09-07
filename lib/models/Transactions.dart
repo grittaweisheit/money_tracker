@@ -66,7 +66,7 @@ class Tag extends HiveObject {
   @HiveField(4)
   Icon icon;
 
-  Tag(this.name, this.isIncomeTag, this.limits);
+  Tag(this.name, this.isIncomeTag, this.limits, this.icon);
 }
 
 @HiveType(typeId: 3)

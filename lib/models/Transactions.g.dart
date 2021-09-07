@@ -170,9 +170,8 @@ class TagAdapter extends TypeAdapter<Tag> {
       fields[0] as String,
       fields[1] as bool,
       (fields[2] as List)?.cast<double>(),
-    )
-      ..oneTimeTransactions = (fields[3] as List)?.cast<OneTimeTransaction>()
-      ..icon = fields[4] as Icon;
+      fields[4] as Icon,
+    )..oneTimeTransactions = (fields[3] as List)?.cast<OneTimeTransaction>();
   }
 
   @override

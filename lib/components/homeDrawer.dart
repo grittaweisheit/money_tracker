@@ -14,7 +14,7 @@ class HomeDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: Container(
-            color: tabBackgroundColor,
+            color: primaryColorLightTone,
             child: ListView(
               padding: EdgeInsets.zero,
               children: [

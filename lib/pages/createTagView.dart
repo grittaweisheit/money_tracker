@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:icon_picker/icon_picker.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/pages/TagListView.dart';
 import '../models/Transactions.dart';
@@ -39,7 +38,7 @@ class _CreateTagViewState extends State<CreateTagView> {
         limits[i] = -1;
       }
     }
-    box.add(Tag(name, isIncome, limits));
+    box.add(Tag(name, isIncome, limits, icon));
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return TagListView();
@@ -57,18 +56,21 @@ class _CreateTagViewState extends State<CreateTagView> {
       });
     }
 
-    TextFormField getDescriptionFormField() {
-      return TextFormField(
-          initialValue: name,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value) =>
-              value.length <= 0 ? "Please provide a name." : null,
-          decoration: InputDecoration(hintText: "Name..."),
-          onSaved: (value) {
-            setState(() {
-              name = value;
-            });
-          });
+    Widget getDescriptionFormField() {
+      return Row(children: [
+        Expanded(
+            child: TextFormField(
+                initialValue: name,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value.length <= 0 ? "Please provide a name." : null,
+                decoration: InputDecoration(hintText: "Name..."),
+                onSaved: (value) {
+                  setState(() {
+                    name = value;
+                  });
+                }))
+      ]);
     }
 
     Widget getIncomeExpenseCheckboxes() {
@@ -144,6 +146,17 @@ class _CreateTagViewState extends State<CreateTagView> {
           ]);
     }
 
+    Widget getOmenS() {
+      return Wrap(alignment: WrapAlignment.center, children: [
+        Text("Limits",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children:
+                Period.values.map((period) => getLimitField(period)).toList()),
+      ]);
+    }
+
     Widget getLimitSection() {
       return Wrap(alignment: WrapAlignment.center, children: [
         Text("Limits",
@@ -159,7 +172,7 @@ class _CreateTagViewState extends State<CreateTagView> {
       return CustomScrollView(shrinkWrap: true, slivers: [
         SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 60,
+              maxCrossAxisExtent: 70,
               mainAxisSpacing: 5,
               crossAxisSpacing: 5,
               childAspectRatio: 1),
@@ -168,7 +181,13 @@ class _CreateTagViewState extends State<CreateTagView> {
             var currentIcon = allIcons[index];
             bool isSelected = icon == currentIcon;
             return Container(
-                color: isSelected ? Colors.amber : Colors.blue,
+                decoration: BoxDecoration(
+                  borderRadius: isSelected ? BorderRadius.circular(5) : null,
+                  shape: isSelected ? BoxShape.rectangle : BoxShape.circle,
+                  border: Border.all(
+                      color: primaryColor, width: 2, style: BorderStyle.solid),
+                  color: isSelected ? Colors.white : Colors.transparent,
+                ),
                 child: IconButton(
                   icon: currentIcon,
                   onPressed: () => _handleSelection(currentIcon),
@@ -176,6 +195,22 @@ class _CreateTagViewState extends State<CreateTagView> {
           }, childCount: allIcons.length),
         )
       ]);
+    }
+
+    FloatingActionButton getSwapOmenButton() {
+      return FloatingActionButton(
+          heroTag: "swapTag",
+          backgroundColor: primaryColorMidTone,
+          onPressed: () {
+            _formKey.currentState.save();
+            setState(() {
+              isIncome = !isIncome;
+            });
+          },
+          child: Icon(
+            Icons.repeat,
+            color: Colors.white,
+          ));
     }
 
     FloatingActionButton getSubmitButton() {
@@ -194,6 +229,7 @@ class _CreateTagViewState extends State<CreateTagView> {
     }
 
     return Scaffold(
+      backgroundColor: primaryColorLightTone,
       appBar: AppBar(
         title: Text("Create Tag"),
       ),
@@ -205,7 +241,14 @@ class _CreateTagViewState extends State<CreateTagView> {
             if (!isIncome) getLimitSection(),
             getIconSelection()
           ])),
-      floatingActionButton: getSubmitButton(),
+      floatingActionButton: Column(
+        children: [
+          Spacer(),
+          getSwapOmenButton(),
+          Padding(padding: EdgeInsets.only(top: 5)),
+          getSubmitButton()
+        ],
+      ),
     );
   }
 }

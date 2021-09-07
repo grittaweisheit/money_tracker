@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icon_picker/material_icons%20all.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
 Color primaryColor = Colors.blueGrey.shade700;
-Color tabBackgroundColor = Colors.blueGrey.shade100;
+Color primaryColorMidTone = Colors.blueGrey;
+Color primaryColorLightTone = Colors.blueGrey.shade100;
 
 Color intensiveGreenColor = Colors.green;
 Color lightGreenColor = Colors.green.shade300;
@@ -32,6 +34,46 @@ final List<TextInputFormatter> defaultFormatters = [
   FilteringTextInputFormatter.deny('\n')
 ];
 
-List<IconData> allIconData = [Icons.label, Icons.directions_boat_outlined];
+List<IconData> allIconData = [
+  Icons.label,
+  Icons.local_offer_outlined,
+  Icons.directions_boat_outlined,
+  Icons.euro_outlined,
+  CupertinoIcons.gift,
+  Icons.sports_baseball_outlined,
+  Icons.shopping_basket_outlined,
+  Icons.headset_mic_outlined,
+  CupertinoIcons.music_note_2,
+  CupertinoIcons.music_mic,
+  CupertinoIcons.heart,
+  CupertinoIcons.gamecontroller,
+  Icons.tablet_android_outlined,
+  Icons.laptop_mac_outlined,
+  Icons.mouse_outlined,
+  Icons.desktop_windows,
+  CupertinoIcons.house,
+  CupertinoIcons.house_fill,
+  Icons.handyman_outlined,
+  Icons.chair_outlined,
+  Icons.palette_outlined,
+  CupertinoIcons.book,
+  Icons.menu_book_outlined,
+  CupertinoIcons.folder_open,
+  Icons.cable_outlined,
+  Icons.battery_std_outlined,
+  Icons.pedal_bike_outlined,
+  Icons.security_outlined,
+  Icons.local_dining_outlined,
+  Icons.bakery_dining_outlined,
+  Icons.local_florist,
+  Icons.local_hotel_outlined,
+  Icons.local_pharmacy_outlined,
+  Icons.phone_outlined,
+  Icons.local_bar,
+  Icons.local_cafe_outlined,
+  Icons.local_offer_outlined,
+  Icons.surfing_outlined,
+  CupertinoIcons.tortoise,
+  Icons.wb_sunny_outlined
+];
 List<Icon> allIcons = allIconData.map((e) => Icon(e)).toList();
-Icon defaultIcon = Icon(Icons.label);

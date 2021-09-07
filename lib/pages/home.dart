@@ -47,10 +47,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         ),
         drawer: HomeDrawer(),
         body: TabBarView(controller: _tabController, children: [
-          Container(color: tabBackgroundColor, child: OverviewTab()),
+          Container(color: primaryColorLightTone, child: OverviewTab()),
           Container(
-              color: tabBackgroundColor, child: OneTimeTransactionListTab()),
-          Container(color: tabBackgroundColor, child: StatisticsTab())
+              color: primaryColorLightTone, child: OneTimeTransactionListTab()),
+          Container(color: primaryColorLightTone, child: StatisticsTab())
         ]),
         bottomNavigationBar: BottomAppBar(
             child: Container(

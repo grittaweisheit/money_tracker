@@ -85,8 +85,8 @@ class _CreateOneTimeTransactionViewState
 
     FloatingActionButton getSwapOmenButton() {
       return FloatingActionButton(
-          backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
+          backgroundColor: primaryColorMidTone,
           onPressed: () {
             _formKey.currentState.save();
             setState(() {
@@ -99,6 +99,7 @@ class _CreateOneTimeTransactionViewState
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
           heroTag: "submitTransaction",
+          backgroundColor: primaryColor,
           onPressed: () {
             _formKey.currentState.save();
             if (_formKey.currentState.validate()) {

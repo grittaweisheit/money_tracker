@@ -67,6 +67,7 @@ class _TagListViewState extends State<TagListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColorLightTone,
         appBar: AppBar(
           title: Text("Tags"),
         ),
@@ -74,7 +75,7 @@ class _TagListViewState extends State<TagListView> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => _addTag(true),
           tooltip: 'Add Income Tag',
-          backgroundColor: Colors.blue,
+          backgroundColor: primaryColor,
           child: Icon(Icons.add),
         ));
   }
