@@ -29,6 +29,7 @@ class _CreateTagViewState extends State<CreateTagView> {
     isIncome = widget.isIncome;
     limits = List.filled(4, 0);
     activeLimits = List.filled(4, false);
+    icon = defaultIcon;
   }
 
   void submitTag() async {
@@ -57,14 +58,30 @@ class _CreateTagViewState extends State<CreateTagView> {
     }
 
     Widget getDescriptionFormField() {
-      return Row(children: [
+      return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+        Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            border: Border.all(
+                color: primaryColor, width: 2),
+          ),
+          child: icon,
+        ),
+        leftRightSpace5,
         Expanded(
             child: TextFormField(
+              style: TextStyle(fontSize: 20),
                 initialValue: name,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
                     value.length <= 0 ? "Please provide a name." : null,
-                decoration: InputDecoration(hintText: "Name..."),
+                decoration: InputDecoration(hintText: "Name...", border: InputBorder.none),
                 onSaved: (value) {
                   setState(() {
                     name = value;
@@ -73,28 +90,22 @@ class _CreateTagViewState extends State<CreateTagView> {
       ]);
     }
 
-    Widget getIncomeExpenseCheckboxes() {
+    Widget getIncomeExpenseSwitch() {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Income"),
-          Checkbox(
-              value: isIncome,
-              onChanged: (value) {
-                _formKey.currentState.save();
-                setState(() {
-                  isIncome = value;
-                });
-              }),
-          Checkbox(
+          Switch(
               value: !isIncome,
+              inactiveThumbColor: lightGreenColor,
+              activeColor: lightRedColor,
               onChanged: (value) {
                 _formKey.currentState.save();
                 setState(() {
                   isIncome = !value;
                 });
               }),
-          Text("Expense"),
+          Text("Expense")
         ],
       );
     }
@@ -107,6 +118,7 @@ class _CreateTagViewState extends State<CreateTagView> {
           inputFormatters: formatters,
           keyboardType: inputType,
           decoration: InputDecoration(
+              suffixText: '€',
               isDense: true,
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(bottom: -10, top: 10)),
@@ -146,17 +158,6 @@ class _CreateTagViewState extends State<CreateTagView> {
           ]);
     }
 
-    Widget getOmenS() {
-      return Wrap(alignment: WrapAlignment.center, children: [
-        Text("Limits",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children:
-                Period.values.map((period) => getLimitField(period)).toList()),
-      ]);
-    }
-
     Widget getLimitSection() {
       return Wrap(alignment: WrapAlignment.center, children: [
         Text("Limits",
@@ -172,7 +173,7 @@ class _CreateTagViewState extends State<CreateTagView> {
       return CustomScrollView(shrinkWrap: true, slivers: [
         SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 70,
+              maxCrossAxisExtent: 60,
               mainAxisSpacing: 5,
               crossAxisSpacing: 5,
               childAspectRatio: 1),
@@ -189,6 +190,7 @@ class _CreateTagViewState extends State<CreateTagView> {
                   color: isSelected ? Colors.white : Colors.transparent,
                 ),
                 child: IconButton(
+                  iconSize: 30,
                   icon: currentIcon,
                   onPressed: () => _handleSelection(currentIcon),
                 ));
@@ -233,19 +235,23 @@ class _CreateTagViewState extends State<CreateTagView> {
       appBar: AppBar(
         title: Text("Create Tag"),
       ),
-      body: Form(
-          key: _formKey,
-          child: Column(children: [
-            getDescriptionFormField(),
-            getIncomeExpenseCheckboxes(),
-            if (!isIncome) getLimitSection(),
-            getIconSelection()
-          ])),
-      floatingActionButton: Column(
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: Form(
+            key: _formKey,
+            child: Column(children: [
+              getDescriptionFormField(),
+              getIncomeExpenseSwitch(),
+              getIconSelection(),
+              if (!isIncome) topBottomSpace20,
+              if (!isIncome) getLimitSection(),
+            ])),
+      ),
+      floatingActionButton: Row(
         children: [
           Spacer(),
           getSwapOmenButton(),
-          Padding(padding: EdgeInsets.only(top: 5)),
+          leftRightSpace5,
           getSubmitButton()
         ],
       ),
