@@ -40,7 +40,12 @@ class _TagSelectionState extends State<TagSelection> {
 
   void _handleSelection(Tag tag) async {
     setState(() {
-      if (!selectedTags.remove(tag)) selectedTags.add(tag);
+      // select tag if it's not already selected
+      if (!selectedTags.remove(tag)) {
+        // ensure that only maxTags many tags are selected
+        if(selectedTags.length >= maxTags) selectedTags.removeLast();
+        selectedTags.add(tag);
+      }
     });
   }
 
@@ -76,25 +81,40 @@ class _TagSelectionState extends State<TagSelection> {
   }
 
   getTagHeader(String title) {
-    return SliverList(delegate: SliverChildListDelegate(<Widget>[Text(title)]));
+    return SliverList(
+        delegate: SliverChildListDelegate(
+            <Widget>[topBottomSpace5, Text(title), topBottomSpace5]));
   }
 
   getTagGrid(bool income) {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 100,
+          maxCrossAxisExtent: 110,
           mainAxisSpacing: 5,
           crossAxisSpacing: 5,
-          childAspectRatio: 1),
+          childAspectRatio: 1.6),
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         var tagIndex = income ? index : index + countIncome;
         if (!income && tagIndex >= countSpending) return null;
         Tag tag = tags[tagIndex];
         bool isSelected = selectedTags.contains(tag);
         return Container(
-            color: isSelected ? Colors.amber : Colors.blue,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                  color: primaryColor, width: 2, style: BorderStyle.solid),
+              color: isSelected ? Colors.white : Colors.transparent,
+            ),
             child: IconButton(
-              icon: Text(tag.name),
+              padding: EdgeInsets.all(0),
+              icon: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(allIconDataMap[tag.icon], size: 30),
+                  Text(tag.name)
+                ],
+              ),
               onPressed: () => _handleSelection(tag),
             ));
       }, childCount: countIncome),

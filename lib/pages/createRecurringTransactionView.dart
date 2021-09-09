@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
-import 'package:money_tracker/pages/home.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
@@ -42,9 +41,7 @@ class _CreateRecurringTransactionViewState
     box.add(RecurringTransaction(description, isIncome, amount,
         Rule(every, period), nextExecution, tags));
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return HomeView();
-    }));
+    Navigator.pop(context);
   }
 
   @override

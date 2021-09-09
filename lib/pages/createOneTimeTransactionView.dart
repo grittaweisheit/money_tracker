@@ -111,20 +111,26 @@ class _CreateOneTimeTransactionViewState
     }
 
     return Scaffold(
+      backgroundColor: primaryColorLightTone,
       appBar: AppBar(
         title: Text("Create Transaction"),
       ),
-      body: Form(
-          key: _formKey,
-          child: Column(children: [
-            IntrinsicWidth(
-              child: AmountInputFormField(_saveAmount, amount, isIncome, true),
-            ),
-            getDescriptionFormField(),
-            DatePickerButtonFormField(true, date, _saveDate),
-            Padding(padding: EdgeInsets.only(bottom: 5)),
-            Expanded(child: TagSelection(_saveTags, tags, isIncome))
-          ])),
+      body:
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Form(
+            key: _formKey,
+            child: Column(children: [
+              IntrinsicWidth(
+                child: AmountInputFormField(_saveAmount, amount, isIncome, true),
+              ),
+              getDescriptionFormField(),
+              DatePickerButtonFormField(true, date, _saveDate),
+              Padding(padding: EdgeInsets.only(bottom: 5)),
+              Expanded(child: TagSelection(_saveTags, tags, isIncome))
+            ])),
+      )
+      ,
       floatingActionButton: Column(
         children: [
           Spacer(),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/createRecurringTransactionView.dart';
+import 'package:money_tracker/pages/home.dart';
 import '../models/Transactions.dart';
 
 String recurringTransactionBox = "recurringTransaction";
@@ -40,9 +42,13 @@ class _RecurringTransactionListViewState
 
   void _addTransaction(bool isIncome) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CreateRecurringTransactionView(isIncome)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateRecurringTransactionView(isIncome)))
+        .then((value) {
+      HomeView.applyRecurringTransactions();
+      getTransactions();
+    });
   }
 
   @override
@@ -79,11 +85,7 @@ class _RecurringTransactionListViewState
             title: Text(transaction.description,
                 style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(onlyDate.format(transaction.nextExecution)),
-            trailing: Text(transaction.amount.toString()),
-            onTap: () {
-              debugPrint("ListTile Tapped");
-              // TODO: open editing popup
-            },
+            trailing:  getAmountText(transaction.amount, false),
           ),
         );
       },

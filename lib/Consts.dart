@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
+int maxTags = 1;
+
 Color primaryColor = Colors.blueGrey.shade700;
 Color primaryColorMidTone = Colors.blueGrey;
 Color primaryColorLightTone = Colors.blueGrey.shade100;

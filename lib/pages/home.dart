@@ -9,53 +9,53 @@ import 'package:money_tracker/components/overviewTab.dart';
 import 'package:money_tracker/components/statisticsTab.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
-void applyRecurringTransactions() {
-  Box<RecurringTransaction> recurringBox = Hive.box(recurringTransactionBox);
-  Box<OneTimeTransaction> oneTimeBox = Hive.box(oneTimeTransactionBox);
-  recurringBox.values.forEach((transaction) {
-    DateTime now = DateTime.now();
-    // apply if next execution is today or should have been before today
-    if (areAtSameDay(transaction.nextExecution, now) || transaction.nextExecution.isBefore(now)) {
-      // add one time transaction
-      oneTimeBox.add(OneTimeTransaction(
-          transaction.description,
-          transaction.isIncome,
-          transaction.amount,
-          transaction.nextExecution,
-          transaction.tags));
-
-      // update next execution date
-      DateTime next;
-      switch (transaction.repetitionRule.period) {
-        case Period.year:
-          next = DateTime(
-              now.year + transaction.repetitionRule.every, now.month, now.day);
-          break;
-        case Period.month:
-          next = DateTime(
-              now.year, now.month + transaction.repetitionRule.every, now.day);
-          break;
-        case Period.week:
-          next = DateTime(now.year + transaction.repetitionRule.every,
-              now.month, now.day + (transaction.repetitionRule.every * 7));
-          break;
-        case Period.day:
-          next = DateTime(now.year + transaction.repetitionRule.every,
-              now.month, now.day + transaction.repetitionRule.every);
-          break;
-      }
-      transaction.nextExecution = next;
-      transaction.save();
-    }
-  });
-}
-
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
 
   @override
   _HomeViewState createState() {
     return _HomeViewState();
+  }
+
+  static void applyRecurringTransactions() {
+    Box<RecurringTransaction> recurringBox = Hive.box(recurringTransactionBox);
+    Box<OneTimeTransaction> oneTimeBox = Hive.box(oneTimeTransactionBox);
+    recurringBox.values.forEach((transaction) {
+      DateTime now = DateTime.now();
+      // apply if next execution is today or should have been before today
+      if (areAtSameDay(transaction.nextExecution, now) || transaction.nextExecution.isBefore(now)) {
+        // add one time transaction
+        oneTimeBox.add(OneTimeTransaction(
+            transaction.description,
+            transaction.isIncome,
+            transaction.amount,
+            transaction.nextExecution,
+            transaction.tags));
+
+        // update next execution date
+        DateTime next;
+        switch (transaction.repetitionRule.period) {
+          case Period.year:
+            next = DateTime(
+                now.year + transaction.repetitionRule.every, now.month, now.day);
+            break;
+          case Period.month:
+            next = DateTime(
+                now.year, now.month + transaction.repetitionRule.every, now.day);
+            break;
+          case Period.week:
+            next = DateTime(now.year + transaction.repetitionRule.every,
+                now.month, now.day + (transaction.repetitionRule.every * 7));
+            break;
+          case Period.day:
+            next = DateTime(now.year + transaction.repetitionRule.every,
+                now.month, now.day + transaction.repetitionRule.every);
+            break;
+        }
+        transaction.nextExecution = next;
+        transaction.save();
+      }
+    });
   }
 }
 
@@ -67,7 +67,7 @@ class _HomeViewState extends State<HomeView>
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    applyRecurringTransactions();
+    HomeView.applyRecurringTransactions();
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -80,7 +80,7 @@ class _HomeViewState extends State<HomeView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if(state == AppLifecycleState.resumed){
-      applyRecurringTransactions();
+      HomeView.applyRecurringTransactions();
     }
   }
 
