@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
@@ -14,7 +13,10 @@ class DatePickerButtonFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        child: Text(targetDateFormat.format(date)),
+      style:TextButton.styleFrom(
+        primary: primaryColor,
+        textStyle: const TextStyle(fontSize: 18),
+      ),
         onPressed: () {
           DatePicker.showDatePicker(context,
               showTitleActions: true,
@@ -24,6 +26,7 @@ class DatePickerButtonFormField extends StatelessWidget {
               maxTime: DateTime.now().add(Duration(days: 700)),
               onConfirm: onConfirm,
               currentTime: date);
-        });
+        },
+        child: Text(targetDateFormat.format(date)));
   }
 }

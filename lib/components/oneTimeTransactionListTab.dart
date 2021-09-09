@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
@@ -38,8 +39,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   Widget getListElement(OneTimeTransaction transaction) {
     return Card(
-      color: Colors.blueGrey.shade200,
-      elevation: 1.0,
+      color: primaryColor,
       child: ListTile(
         onLongPress: () {
           Navigator.push(
@@ -50,15 +50,25 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
               .then((value) => refresh());
         },
         leading: CircleAvatar(
-          backgroundColor: Colors.amber,
-          child: transaction.isIncome
-              ? Icon(Icons.add_circle_outline)
-              : Icon(Icons.remove_circle_outline),
+          backgroundColor: primaryColorLightTone,
+          child: transaction.tags.length > 0
+              ? Icon(allIconDataMap[transaction.tags.first.icon],
+                  color: primaryColor)
+              : Text(
+                  transaction.description.characters.first,
+                  style: TextStyle(
+                      color: primaryColor, fontWeight: FontWeight.bold),
+                ),
         ),
         title: Text(transaction.description,
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(onlyDate.format(transaction.date)),
-        trailing: Text(transaction.amount.toString()),
+            style: TextStyle(color: Colors.white)),
+        subtitle: Text(
+          onlyDate.format(transaction.date),
+          style: TextStyle(color: primaryColorLightTone),
+        ),
+        trailing: getAmountText(
+            transaction.isIncome ? transaction.amount : -1 * transaction.amount,
+            false),
         onTap: () {
           debugPrint("ListTile Tapped");
           // TODO: open editing popup
@@ -90,8 +100,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Stack(children: [
+    return Stack(children: [
       getTransactionsList(),
       AddOneTimeTransactionFloatingButtons(refresh)
     ]);

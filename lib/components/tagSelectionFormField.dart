@@ -43,7 +43,7 @@ class _TagSelectionState extends State<TagSelection> {
       // select tag if it's not already selected
       if (!selectedTags.remove(tag)) {
         // ensure that only maxTags many tags are selected
-        if(selectedTags.length >= maxTags) selectedTags.removeLast();
+        if (selectedTags.length >= maxTags) selectedTags.removeLast();
         selectedTags.add(tag);
       }
     });
@@ -66,18 +66,42 @@ class _TagSelectionState extends State<TagSelection> {
           shrinkWrap: true,
           slivers: widget.isIncome
               ? [
+                  getChipSection(),
                   getTagHeader("Income"),
                   getTagGrid(true),
                   getTagHeader("Spending"),
                   getTagGrid(false),
                 ]
               : [
+                  getChipSection(),
                   getTagHeader("Spending"),
                   getTagGrid(false),
                   getTagHeader("Income"),
                   getTagGrid(true),
                 ]);
     });
+  }
+
+  getChipSection() {
+    return SliverAppBar(
+        pinned: true,
+        collapsedHeight: 30,
+        toolbarHeight: 30,
+        excludeHeaderSemantics: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: primaryColorLightTone,
+        title: Wrap(
+            children: selectedTags
+                .map((tag) => Chip(
+                      label: Text(
+                        tag.name,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      avatar: allIconsMap[tag.icon],
+                      backgroundColor: primaryColorMidTone,
+                      visualDensity: VisualDensity.compact
+                    ))
+                .toList()));
   }
 
   getTagHeader(String title) {

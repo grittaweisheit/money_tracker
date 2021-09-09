@@ -6,15 +6,17 @@ import '../Consts.dart';
 
 class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
   final onNavigatedTo;
+
   AddOneTimeTransactionFloatingButtons(this.onNavigatedTo);
 
   @override
   Widget build(BuildContext context) {
     void addTransaction(bool isIncome) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CreateOneTimeTransactionView(isIncome))).then((value) => onNavigatedTo());
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateOneTimeTransactionView(isIncome)))
+          .then((value) => onNavigatedTo());
     }
 
     return Container(

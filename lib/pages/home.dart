@@ -22,8 +22,10 @@ class HomeView extends StatefulWidget {
     Box<OneTimeTransaction> oneTimeBox = Hive.box(oneTimeTransactionBox);
     recurringBox.values.forEach((transaction) {
       DateTime now = DateTime.now();
-      // apply if next execution is today or should have been before today
-      if (areAtSameDay(transaction.nextExecution, now) || transaction.nextExecution.isBefore(now)) {
+      // apply if next execution is in this month or in the past
+      // do this til the next execution is in the future an not the past or this month
+      while (areInSameMonth(transaction.nextExecution, now) ||
+          transaction.nextExecution.isBefore(now)) {
         // add one time transaction
         oneTimeBox.add(OneTimeTransaction(
             transaction.description,
@@ -37,24 +39,37 @@ class HomeView extends StatefulWidget {
         switch (transaction.repetitionRule.period) {
           case Period.year:
             next = DateTime(
-                now.year + transaction.repetitionRule.every, now.month, now.day);
+                transaction.nextExecution.year +
+                    transaction.repetitionRule.every,
+                transaction.nextExecution.month,
+                transaction.nextExecution.day);
             break;
           case Period.month:
             next = DateTime(
-                now.year, now.month + transaction.repetitionRule.every, now.day);
+                transaction.nextExecution.year,
+                transaction.nextExecution.month +
+                    transaction.repetitionRule.every,
+                transaction.nextExecution.day);
             break;
           case Period.week:
-            next = DateTime(now.year + transaction.repetitionRule.every,
-                now.month, now.day + (transaction.repetitionRule.every * 7));
+            next = DateTime(
+                transaction.nextExecution.year +
+                    transaction.repetitionRule.every,
+                transaction.nextExecution.month,
+                transaction.nextExecution.day +
+                    (transaction.repetitionRule.every * 7));
             break;
           case Period.day:
-            next = DateTime(now.year + transaction.repetitionRule.every,
-                now.month, now.day + transaction.repetitionRule.every);
+            next = DateTime(
+                now.year + transaction.repetitionRule.every,
+                transaction.nextExecution.month,
+                transaction.nextExecution.day +
+                    transaction.repetitionRule.every);
             break;
         }
         transaction.nextExecution = next;
-        transaction.save();
       }
+      transaction.save();
     });
   }
 }
@@ -79,7 +94,7 @@ class _HomeViewState extends State<HomeView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed){
+    if (state == AppLifecycleState.resumed) {
       HomeView.applyRecurringTransactions();
     }
   }

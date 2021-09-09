@@ -3,7 +3,9 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/createRecurringTransactionView.dart';
+import 'package:money_tracker/pages/editRecurringTransactionView.dart';
 import 'package:money_tracker/pages/home.dart';
+import '../Consts.dart';
 import '../models/Transactions.dart';
 
 String recurringTransactionBox = "recurringTransaction";
@@ -51,20 +53,44 @@ class _RecurringTransactionListViewState
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    //this.getTransactions();
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Recurring Transactions"),
+  Widget getListElement(RecurringTransaction transaction) {
+    return Card(
+      color: primaryColor,
+      child: ListTile(
+        onLongPress: () {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditRecurringTransactionView(transaction)))
+              .then((value) => getTransactions());
+        },
+        leading: CircleAvatar(
+          backgroundColor: primaryColorLightTone,
+          child: transaction.tags.length > 0
+              ? Icon(allIconDataMap[transaction.tags.first.icon],
+                  color: primaryColor)
+              : Text(
+                  transaction.description.characters.first,
+                  style: TextStyle(
+                      color: primaryColor, fontWeight: FontWeight.bold),
+                ),
         ),
-        body: Column(children: [Expanded(child: getTransactionsList())]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _addTransaction(true),
-          tooltip: 'Increment',
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.add),
-        ));
+        title: Text(transaction.description,
+            style: TextStyle(color: Colors.white)),
+        subtitle: Text(
+          onlyDate.format(transaction.nextExecution),
+          style: TextStyle(color: primaryColorLightTone),
+        ),
+        trailing: getAmountText(
+            transaction.isIncome ? transaction.amount : -1 * transaction.amount,
+            false),
+        onTap: () {
+          debugPrint("ListTile Tapped");
+          // TODO: open editing popup
+        },
+      ),
+    );
   }
 
   ListView getTransactionsList() {
@@ -72,23 +98,25 @@ class _RecurringTransactionListViewState
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
-        return Card(
-          color: Colors.grey,
-          elevation: 1.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.amber,
-              child: transaction.isIncome
-                  ? Icon(Icons.add_circle_outline)
-                  : Icon(Icons.remove_circle_outline),
-            ),
-            title: Text(transaction.description,
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(onlyDate.format(transaction.nextExecution)),
-            trailing:  getAmountText(transaction.amount, false),
-          ),
-        );
+        return getListElement(transaction);
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //this.getTransactions();
+    return Scaffold(
+        backgroundColor: primaryColorLightTone,
+        appBar: AppBar(
+          title: Text("Recurring Transactions"),
+        ),
+        body: Column(children: [Expanded(child: getTransactionsList())]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _addTransaction(true),
+          tooltip: 'Increment',
+          backgroundColor: primaryColor,
+          child: Icon(Icons.add),
+        ));
   }
 }

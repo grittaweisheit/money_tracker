@@ -13,7 +13,7 @@ class CreateRecurringTransactionView extends StatefulWidget {
 
   @override
   _CreateRecurringTransactionViewState createState() =>
-      _CreateRecurringTransactionViewState(isIncome);
+      _CreateRecurringTransactionViewState();
 }
 
 class _CreateRecurringTransactionViewState
@@ -32,9 +32,10 @@ class _CreateRecurringTransactionViewState
     amount = 0.00;
     tags = [];
     nextExecution = DateTime.now();
+    isIncome = widget.isIncome;
   }
 
-  _CreateRecurringTransactionViewState(this.isIncome);
+  _CreateRecurringTransactionViewState();
 
   void submitTransaction() async {
     Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
@@ -56,7 +57,10 @@ class _CreateRecurringTransactionViewState
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
-      if (newAmount != null) amount = newAmount;
+      if (newAmount != null && newAmount != amount)
+        setState(() {
+          amount = newAmount;
+        });
     }
 
     void _saveDate(DateTime newDate) {
@@ -67,10 +71,10 @@ class _CreateRecurringTransactionViewState
     }
 
     void _saveEvery(int newEvery) {
+      _formKey.currentState.save();
       setState(() {
         every = newEvery;
       });
-      _formKey.currentState.save();
     }
 
     TextFormField getDescriptionFormField() {
@@ -83,6 +87,41 @@ class _CreateRecurringTransactionViewState
           onSaved: (value) {
             description = value;
           });
+    }
+
+    Widget getRepeatsEverySection() {
+      return Wrap(
+        children: [
+          Row(
+            children: [
+              Text("Repeats every"),
+              leftRightSpace20,
+              IntrinsicWidth(
+                  child: DropdownButtonFormField<int>(
+                items: List.generate(100, (index) => index)
+                    .map((number) => DropdownMenuItem(
+                        value: number, child: Text(number.toString())))
+                    .toList(),
+                value: every,
+                onChanged: _saveEvery,
+              )),
+              leftRightSpace20,
+              IntrinsicWidth(
+                  child: DropdownButtonFormField<Period>(
+                items: Period.values
+                    .map((periodEnum) => DropdownMenuItem(
+                        value: periodEnum,
+                        child: Text(every != null && every > 1
+                            ? periodPluralStrings[periodEnum.index]
+                            : periodSingularStrings[periodEnum.index])))
+                    .toList(),
+                value: period,
+                onChanged: (value) => period = value,
+              )),
+            ],
+          )
+        ],
+      );
     }
 
     FloatingActionButton getSwapOmenButton() {
@@ -101,20 +140,23 @@ class _CreateRecurringTransactionViewState
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
           heroTag: "submitTransaction",
+          backgroundColor: primaryColor,
           onPressed: () {
             _formKey.currentState.save();
             if (_formKey.currentState.validate()) {
               submitTransaction();
             } else {
-              //TODO: make snack bar
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Could not create Transaction.")));
             }
           },
           child: Icon(Icons.check));
     }
 
     return Scaffold(
+      backgroundColor: primaryColorLightTone,
       appBar: AppBar(
-        title: Text("Create Transaction"),
+        title: Text("Create Recurring Transaction"),
       ),
       body: Form(
           key: _formKey,
@@ -123,46 +165,9 @@ class _CreateRecurringTransactionViewState
               child: AmountInputFormField(_saveAmount, amount, isIncome, true),
             ),
             getDescriptionFormField(),
-            Wrap(children: [
-              Row(children: [
-                Text("First Execution"),
-                // don't allow past dates
-                DatePickerButtonFormField(false, nextExecution, _saveDate),
-              ]),
-            ]),
-            Wrap(
-              children: [
-                Row(
-                  children: [
-                    Text("Repeats every"),
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                    IntrinsicWidth(
-                        child: DropdownButtonFormField<int>(
-                      items: List.generate(100, (index) => index)
-                          .map((number) => DropdownMenuItem(
-                              value: number, child: Text(number.toString())))
-                          .toList(),
-                      value: every,
-                      onChanged: _saveEvery,
-                    )),
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                    IntrinsicWidth(
-                        child: DropdownButtonFormField<Period>(
-                      items: Period.values
-                          .map((periodEnum) => DropdownMenuItem(
-                              value: periodEnum,
-                              child: Text(every != null && every > 1
-                                  ? periodPluralStrings[periodEnum.index]
-                                  : periodSingularStrings[periodEnum.index])))
-                          .toList(),
-                      value: period,
-                      onChanged: (value) => period = value,
-                    )),
-                  ],
-                )
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 5)),
+            DatePickerButtonFormField(true, nextExecution, _saveDate),
+            getRepeatsEverySection(),
+            topBottomSpace5,
             Expanded(child: TagSelection(_saveTags, tags, isIncome))
           ])),
       floatingActionButton: Column(

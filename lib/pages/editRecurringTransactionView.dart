@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
 
-class CreateOneTimeTransactionView extends StatefulWidget {
-  final bool isIncome;
+class EditRecurringTransactionView extends StatefulWidget {
+  final RecurringTransaction transaction;
 
-  CreateOneTimeTransactionView(this.isIncome);
+  EditRecurringTransactionView(this.transaction);
 
   @override
-  _CreateOneTimeTransactionViewState createState() =>
-      _CreateOneTimeTransactionViewState();
+  _EditRecurringTransactionViewState createState() =>
+      _EditRecurringTransactionViewState();
 }
 
-class _CreateOneTimeTransactionViewState
-    extends State<CreateOneTimeTransactionView> {
+class _EditRecurringTransactionViewState
+    extends State<EditRecurringTransactionView> {
   String description;
-  bool isIncome;
   double amount;
   List<Tag> tags;
   DateTime date;
+  bool isIncome;
 
   @override
   void initState() {
     super.initState();
-    amount = 0.0;
-    tags = [];
-    date = DateTime.now();
-    isIncome = widget.isIncome;
+    amount = widget.transaction.amount;
+    description = widget.transaction.description;
+    date = widget.transaction.nextExecution;
+    tags = widget.transaction.tags;
+    isIncome = widget.transaction.isIncome;
   }
 
-  _CreateOneTimeTransactionViewState();
-
   void submitTransaction() async {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    box.add(OneTimeTransaction(description, isIncome, amount, date, tags));
-
+    widget.transaction.amount = amount;
+    widget.transaction.description = description;
+    widget.transaction.nextExecution = date;
+    widget.transaction.tags = tags;
+    widget.transaction.isIncome = isIncome;
+    widget.transaction.save();
     Navigator.pop(context);
   }
 
@@ -73,7 +73,7 @@ class _CreateOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-              value.length <= 0 ? "Please provide a description." : null,
+          value.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
@@ -84,8 +84,8 @@ class _CreateOneTimeTransactionViewState
 
     FloatingActionButton getSwapOmenButton() {
       return FloatingActionButton(
+          backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
-          backgroundColor: primaryColorMidTone,
           onPressed: () {
             _formKey.currentState.save();
             setState(() {
@@ -98,40 +98,33 @@ class _CreateOneTimeTransactionViewState
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
           heroTag: "submitTransaction",
-          backgroundColor: primaryColor,
           onPressed: () {
             _formKey.currentState.save();
             if (_formKey.currentState.validate()) {
               submitTransaction();
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Could not create Transaction.")));
+              debugPrint("The Transaction could not be submitted");
+              //TODO: make snack bar
             }
           },
           child: Icon(Icons.check));
     }
 
     return Scaffold(
-      backgroundColor: primaryColorLightTone,
       appBar: AppBar(
-        title: Text("Create Transaction"),
+        title: Text("Edit Transaction"),
       ),
-      body:
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Form(
-            key: _formKey,
-            child: Column(children: [
-              IntrinsicWidth(
-                child: AmountInputFormField(_saveAmount, amount, isIncome, true),
-              ),
-              getDescriptionFormField(),
-              DatePickerButtonFormField(true, date, _saveDate),
-              Padding(padding: EdgeInsets.only(bottom: 5)),
-              Expanded(child: TagSelection(_saveTags, tags, isIncome))
-            ])),
-      )
-      ,
+      body: Form(
+          key: _formKey,
+          child: Column(children: [
+            IntrinsicWidth(
+              child: AmountInputFormField(_saveAmount, amount, isIncome, true),
+            ),
+            getDescriptionFormField(),
+            DatePickerButtonFormField(true, date, _saveDate),
+            Padding(padding: EdgeInsets.only(bottom: 5)),
+            Expanded(child: TagSelection(_saveTags, tags, isIncome))
+          ])),
       floatingActionButton: Column(
         children: [
           Spacer(),
