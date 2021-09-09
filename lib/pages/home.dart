@@ -1,10 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:money_tracker/Consts.dart';
+import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/components/homeDrawer.dart';
 import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
 import 'package:money_tracker/components/overviewTab.dart';
 import 'package:money_tracker/components/statisticsTab.dart';
+import 'package:money_tracker/models/Transactions.dart';
+
+void applyRecurringTransactions() {
+  Box<RecurringTransaction> recurringBox = Hive.box(recurringTransactionBox);
+  Box<OneTimeTransaction> oneTimeBox = Hive.box(oneTimeTransactionBox);
+  recurringBox.values.forEach((transaction) {
+    DateTime now = DateTime.now();
+    // apply if next execution is today or should have been before today
+    if (areAtSameDay(transaction.nextExecution, now) || transaction.nextExecution.isBefore(now)) {
+      // add one time transaction
+      oneTimeBox.add(OneTimeTransaction(
+          transaction.description,
+          transaction.isIncome,
+          transaction.amount,
+          transaction.nextExecution,
+          transaction.tags));
+
+      // update next execution date
+      DateTime next;
+      switch (transaction.repetitionRule.period) {
+        case Period.year:
+          next = DateTime(
+              now.year + transaction.repetitionRule.every, now.month, now.day);
+          break;
+        case Period.month:
+          next = DateTime(
+              now.year, now.month + transaction.repetitionRule.every, now.day);
+          break;
+        case Period.week:
+          next = DateTime(now.year + transaction.repetitionRule.every,
+              now.month, now.day + (transaction.repetitionRule.every * 7));
+          break;
+        case Period.day:
+          next = DateTime(now.year + transaction.repetitionRule.every,
+              now.month, now.day + transaction.repetitionRule.every);
+          break;
+      }
+      transaction.nextExecution = next;
+      transaction.save();
+    }
+  });
+}
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -15,13 +59,29 @@ class HomeView extends StatefulWidget {
   }
 }
 
-class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
+class _HomeViewState extends State<HomeView>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   TabController _tabController;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    applyRecurringTransactions();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      applyRecurringTransactions();
+    }
   }
 
   TabBar getTabBar() {

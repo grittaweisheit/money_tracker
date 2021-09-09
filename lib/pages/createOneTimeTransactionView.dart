@@ -21,7 +21,6 @@ class _CreateOneTimeTransactionViewState
   String description;
   bool isIncome;
   double amount;
-  Category category;
   List<Tag> tags;
   DateTime date;
 
@@ -37,8 +36,7 @@ class _CreateOneTimeTransactionViewState
 
   void submitTransaction() async {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    box.add(OneTimeTransaction(
-        description, isIncome, amount, category, tags, date));
+    box.add(OneTimeTransaction(description, isIncome, amount, date, tags));
 
     Navigator.pop(context);
   }

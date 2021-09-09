@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/components/amountInputFormField.dart';
+import 'package:money_tracker/components/amountInputFormField.dart' as amountInputFormField;
 import 'package:money_tracker/pages/TagListView.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
@@ -20,16 +20,15 @@ class _CreateTagViewState extends State<CreateTagView> {
   bool isIncome;
   List<double> limits;
   List<bool> activeLimits;
-  Icon icon;
+  String icon;
 
   @override
   void initState() {
     super.initState();
-    name = "default tag name";
     isIncome = widget.isIncome;
     limits = List.filled(4, 0);
     activeLimits = List.filled(4, false);
-    icon = defaultIcon;
+    icon = defaultIconName;
   }
 
   void submitTag() async {
@@ -39,7 +38,7 @@ class _CreateTagViewState extends State<CreateTagView> {
         limits[i] = -1;
       }
     }
-    box.add(Tag(name, isIncome, limits, icon));
+    box.add(Tag(name, isIncome, icon, limits));
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return TagListView();
@@ -50,7 +49,7 @@ class _CreateTagViewState extends State<CreateTagView> {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
 
-    void _handleSelection(Icon tappedIcon) {
+    void _handleSelection(String tappedIcon) {
       _formKey.currentState.save();
       setState(() {
         icon = tappedIcon;
@@ -58,9 +57,7 @@ class _CreateTagViewState extends State<CreateTagView> {
     }
 
     Widget getDescriptionFormField() {
-      return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Container(
           alignment: Alignment.center,
           padding: EdgeInsets.all(5),
@@ -68,20 +65,19 @@ class _CreateTagViewState extends State<CreateTagView> {
             borderRadius: BorderRadius.circular(5),
             shape: BoxShape.rectangle,
             color: Colors.white,
-            border: Border.all(
-                color: primaryColor, width: 2),
+            border: Border.all(color: primaryColor, width: 2),
           ),
-          child: icon,
+          child: allIconsMap[icon],
         ),
         leftRightSpace5,
         Expanded(
             child: TextFormField(
-              style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20),
                 initialValue: name,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
                     value.length <= 0 ? "Please provide a name." : null,
-                decoration: InputDecoration(hintText: "Name...", border: InputBorder.none),
+                decoration: InputDecoration(
+                    hintText: "Name...", border: InputBorder.none),
                 onSaved: (value) {
                   setState(() {
                     name = value;
@@ -113,10 +109,9 @@ class _CreateTagViewState extends State<CreateTagView> {
     Widget getLimitInputField(int index) {
       return TextFormField(
           initialValue: limits[index].toStringAsFixed(2),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          inputFormatters: formatters,
-          keyboardType: inputType,
+          validator: amountInputFormField.validator,
+          inputFormatters: amountInputFormField.formatters,
+          keyboardType: amountInputFormField.inputType,
           decoration: InputDecoration(
               suffixText: '€',
               isDense: true,
@@ -170,17 +165,16 @@ class _CreateTagViewState extends State<CreateTagView> {
     }
 
     Widget getIconSelection() {
-      return CustomScrollView(shrinkWrap: true, slivers: [
+      return Expanded(
+          child: CustomScrollView(shrinkWrap: true, slivers: [
         SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 60,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5,
-              childAspectRatio: 1),
+              maxCrossAxisExtent: 60, mainAxisSpacing: 5, crossAxisSpacing: 5),
           delegate:
               SliverChildBuilderDelegate((BuildContext context, int index) {
+            var currentIconName = allIconNames[index];
             var currentIcon = allIcons[index];
-            bool isSelected = icon == currentIcon;
+            bool isSelected = icon == currentIconName;
             return Container(
                 decoration: BoxDecoration(
                   borderRadius: isSelected ? BorderRadius.circular(5) : null,
@@ -192,11 +186,11 @@ class _CreateTagViewState extends State<CreateTagView> {
                 child: IconButton(
                   iconSize: 30,
                   icon: currentIcon,
-                  onPressed: () => _handleSelection(currentIcon),
+                  onPressed: () => _handleSelection(currentIconName),
                 ));
           }, childCount: allIcons.length),
         )
-      ]);
+      ]));
     }
 
     FloatingActionButton getSwapOmenButton() {
@@ -224,7 +218,8 @@ class _CreateTagViewState extends State<CreateTagView> {
             if (_formKey.currentState.validate()) {
               submitTag();
             } else {
-              //TODO: make snack bar
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Could not create Tag.")));
             }
           },
           child: Icon(Icons.check));
@@ -244,7 +239,10 @@ class _CreateTagViewState extends State<CreateTagView> {
               getIncomeExpenseSwitch(),
               getIconSelection(),
               if (!isIncome) topBottomSpace20,
-              if (!isIncome) getLimitSection(),
+              if (!isIncome)
+                Padding(
+                    padding: EdgeInsets.only(bottom: 60),
+                    child: getLimitSection())
             ])),
       ),
       floatingActionButton: Row(

@@ -21,7 +21,6 @@ class _EditOneTimeTransactionViewState
   List<Tag> tags;
   DateTime date;
   bool isIncome;
-  Category category;
 
   @override
   void initState() {
@@ -74,7 +73,7 @@ class _EditOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-          value.length <= 0 ? "Please provide a description." : null,
+              value.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {

@@ -10,14 +10,13 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RecurringTransactionAdapter());
   Hive.registerAdapter(OneTimeTransactionAdapter());
-  Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(RuleAdapter());
   Hive.registerAdapter(PeriodAdapter());
   await Hive.openBox<Tag>(tagBox);
   await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
   await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-  
+
   runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();
 }

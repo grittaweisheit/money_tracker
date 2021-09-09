@@ -22,7 +22,6 @@ class _CreateRecurringTransactionViewState
   String description;
   bool isIncome;
   double amount;
-  Category category;
   List<Tag> tags;
   int every;
   Period period;
@@ -40,8 +39,8 @@ class _CreateRecurringTransactionViewState
 
   void submitTransaction() async {
     Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
-    box.add(RecurringTransaction(description, isIncome, amount, category, tags,
-        Rule(every, period), nextExecution));
+    box.add(RecurringTransaction(description, isIncome, amount,
+        Rule(every, period), nextExecution, tags));
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return HomeView();
