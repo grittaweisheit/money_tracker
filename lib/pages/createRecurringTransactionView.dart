@@ -18,13 +18,13 @@ class CreateRecurringTransactionView extends StatefulWidget {
 
 class _CreateRecurringTransactionViewState
     extends State<CreateRecurringTransactionView> {
-  String description;
-  bool isIncome;
-  double amount;
-  List<Tag> tags;
-  int every;
-  Period period;
-  DateTime nextExecution;
+  late String description;
+  late bool isIncome;
+  late double amount;
+  late List<Tag> tags;
+  late int every;
+  late Period period;
+  late DateTime nextExecution;
 
   @override
   void initState() {
@@ -35,12 +35,10 @@ class _CreateRecurringTransactionViewState
     isIncome = widget.isIncome;
   }
 
-  _CreateRecurringTransactionViewState();
-
   void submitTransaction() async {
     Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
-    box.add(RecurringTransaction(description, isIncome, amount,
-        Rule(every, period), nextExecution, tags));
+    box.add(RecurringTransaction(
+        description, isIncome, amount, tags, nextExecution, Rule(every, period)));
 
     Navigator.pop(context);
   }
@@ -63,17 +61,17 @@ class _CreateRecurringTransactionViewState
         });
     }
 
-    void _saveDate(DateTime newDate) {
-      _formKey.currentState.save();
+    void _saveNextExecution(DateTime newNextExecution) {
+      _formKey.currentState!.save();
       setState(() {
-        nextExecution = newDate;
+        nextExecution = newNextExecution;
       });
     }
 
-    void _saveEvery(int newEvery) {
-      _formKey.currentState.save();
+    void _saveEvery(int? newEvery) {
+      _formKey.currentState!.save();
       setState(() {
-        every = newEvery;
+        every = newEvery!;
       });
     }
 
@@ -82,10 +80,10 @@ class _CreateRecurringTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-              value.length <= 0 ? "Please provide a description." : null,
+              value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
-            description = value;
+            description = value!;
           });
     }
 
@@ -111,12 +109,12 @@ class _CreateRecurringTransactionViewState
                 items: Period.values
                     .map((periodEnum) => DropdownMenuItem(
                         value: periodEnum,
-                        child: Text(every != null && every > 1
+                        child: Text(every > 1
                             ? periodPluralStrings[periodEnum.index]
                             : periodSingularStrings[periodEnum.index])))
                     .toList(),
                 value: period,
-                onChanged: (value) => period = value,
+                onChanged: (value) => period = value!,
               )),
             ],
           )
@@ -129,7 +127,7 @@ class _CreateRecurringTransactionViewState
           backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -142,8 +140,8 @@ class _CreateRecurringTransactionViewState
           heroTag: "submitTransaction",
           backgroundColor: primaryColor,
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTransaction();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -165,7 +163,7 @@ class _CreateRecurringTransactionViewState
               child: AmountInputFormField(_saveAmount, amount, isIncome, true),
             ),
             getDescriptionFormField(),
-            DatePickerButtonFormField(true, nextExecution, _saveDate),
+            DatePickerButtonFormField(true, nextExecution, _saveNextExecution),
             getRepeatsEverySection(),
             topBottomSpace5,
             Expanded(child: TagSelection(_saveTags, tags, isIncome))

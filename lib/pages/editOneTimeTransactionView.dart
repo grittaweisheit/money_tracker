@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
@@ -16,20 +17,20 @@ class EditOneTimeTransactionView extends StatefulWidget {
 
 class _EditOneTimeTransactionViewState
     extends State<EditOneTimeTransactionView> {
-  String description;
-  double amount;
-  List<Tag> tags;
-  DateTime date;
-  bool isIncome;
+  late String description;
+   late double amount;
+   late List<Tag> tags;
+   late DateTime date;
+   late bool isIncome;
 
   @override
   void initState() {
-    super.initState();
-    amount = widget.transaction.amount;
     description = widget.transaction.description;
+    amount = widget.transaction.amount;
     date = widget.transaction.date;
     tags = widget.transaction.tags;
     isIncome = widget.transaction.isIncome;
+    super.initState();
   }
 
   void submitTransaction() async {
@@ -62,7 +63,7 @@ class _EditOneTimeTransactionViewState
     }
 
     void _saveDate(DateTime newDate) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       setState(() {
         date = newDate;
       });
@@ -73,11 +74,11 @@ class _EditOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-              value.length <= 0 ? "Please provide a description." : null,
+              value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
-              description = value;
+              description = value!;
             });
           });
     }
@@ -87,7 +88,7 @@ class _EditOneTimeTransactionViewState
           backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -98,9 +99,10 @@ class _EditOneTimeTransactionViewState
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
           heroTag: "submitTransaction",
+          backgroundColor: primaryColor,
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTransaction();
             } else {
               debugPrint("The Transaction could not be submitted");
@@ -111,6 +113,7 @@ class _EditOneTimeTransactionViewState
     }
 
     return Scaffold(
+      backgroundColor: primaryColorLightTone,
       appBar: AppBar(
         title: Text("Edit Transaction"),
       ),

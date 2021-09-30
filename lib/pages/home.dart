@@ -10,7 +10,7 @@ import 'package:money_tracker/components/statisticsTab.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({Key key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
 
   @override
   _HomeViewState createState() {
@@ -24,51 +24,51 @@ class HomeView extends StatefulWidget {
       DateTime now = DateTime.now();
       // apply if next execution is in this month or in the past
       // do this til the next execution is in the future an not the past or this month
-      while (areInSameMonth(transaction.nextExecution, now) ||
-          transaction.nextExecution.isBefore(now)) {
+      while (areInSameMonth(transaction.date, now) ||
+          transaction.date.isBefore(now)) {
         // add one time transaction
         oneTimeBox.add(OneTimeTransaction(
             transaction.description,
             transaction.isIncome,
             transaction.amount,
-            transaction.nextExecution,
-            transaction.tags));
+            transaction.tags,
+            transaction.date));
 
         // update next execution date
         DateTime next;
         switch (transaction.repetitionRule.period) {
           case Period.year:
             next = DateTime(
-                transaction.nextExecution.year +
+                transaction.date.year +
                     transaction.repetitionRule.every,
-                transaction.nextExecution.month,
-                transaction.nextExecution.day);
+                transaction.date.month,
+                transaction.date.day);
             break;
           case Period.month:
             next = DateTime(
-                transaction.nextExecution.year,
-                transaction.nextExecution.month +
+                transaction.date.year,
+                transaction.date.month +
                     transaction.repetitionRule.every,
-                transaction.nextExecution.day);
+                transaction.date.day);
             break;
           case Period.week:
             next = DateTime(
-                transaction.nextExecution.year,
-                transaction.nextExecution.month,
-                transaction.nextExecution.day +
+                transaction.date.year,
+                transaction.date.month,
+                transaction.date.day +
                     (transaction.repetitionRule.every * 7));
             break;
           case Period.day:
             debugPrint("added day");
             next = DateTime(
                 now.year,
-                transaction.nextExecution.month,
-                transaction.nextExecution.day +
+                transaction.date.month,
+                transaction.date.day +
                     transaction.repetitionRule.every);
             break;
         }
-        transaction.nextExecution = next;
-        debugPrint('${areInSameMonth(transaction.nextExecution, now)}');
+        transaction.date = next;
+        debugPrint('${areInSameMonth(transaction.date, now)}');
         transaction.save();
       }
     });
@@ -77,11 +77,11 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
     HomeView.applyRecurringTransactions();
     _tabController = TabController(length: 3, vsync: this);
@@ -89,7 +89,7 @@ class _HomeViewState extends State<HomeView>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 

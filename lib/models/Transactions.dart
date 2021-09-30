@@ -31,14 +31,15 @@ class Tag extends HiveObject {
   @HiveField(1)
   bool isIncomeTag;
   @HiveField(2)
-  String icon;
+  String? icon;
   @HiveField(3)
   List<double> limits = [-1, -1, -1, -1]; // 0-days, 1-weeks, 2-months, 3-years
 
   Tag(this.name, this.isIncomeTag, this.icon, this.limits);
 }
+
 @HiveType(typeId: 3)
-class RecurringTransaction extends HiveObject {
+class Transaction extends HiveObject {
   @HiveField(0)
   String description;
   @HiveField(1)
@@ -46,14 +47,29 @@ class RecurringTransaction extends HiveObject {
   @HiveField(2)
   double amount;
   @HiveField(3)
-  Rule repetitionRule;
-  @HiveField(4)
-  DateTime nextExecution;
-  @HiveField(5)
   List<Tag> tags;
+  @HiveField(4)
+  DateTime date; // nextExecution for RecurringTransactions
 
-  RecurringTransaction(this.description, this.isIncome, this.amount,
-      this.repetitionRule, this.nextExecution, this.tags);
+  Transaction(
+      this.description, this.isIncome, this.amount, this.tags, this.date);
+}
+
+@HiveType(typeId: 4)
+class RecurringTransaction extends Transaction {
+  @HiveField(5)
+  Rule repetitionRule;
+
+  RecurringTransaction(String description, bool isIncome, double amount,
+      List<Tag> tags, DateTime date, this.repetitionRule)
+      : super(description, isIncome, amount, tags, date);
+
+  DateTime get nextExecution{
+    return this.date;
+  }
+  set nextExecution(DateTime nextExecution){
+    this.date = nextExecution;
+  }
 
   getSignedAmountString() {
     String omen = isIncome ? '+' : '-';
@@ -61,21 +77,11 @@ class RecurringTransaction extends HiveObject {
   }
 }
 
-@HiveType(typeId: 4)
-class OneTimeTransaction extends HiveObject {
-  @HiveField(0)
-  String description;
-  @HiveField(1)
-  bool isIncome;
-  @HiveField(2)
-  double amount;
-  @HiveField(3)
-  DateTime date;
-  @HiveField(4)
-  List<Tag> tags;
-
-  OneTimeTransaction(
-      this.description, this.isIncome, this.amount, this.date, this.tags);
+@HiveType(typeId: 5)
+class OneTimeTransaction extends Transaction {
+  OneTimeTransaction(String description, bool isIncome, double amount,
+      List<Tag> tags, DateTime date)
+      : super(description, isIncome, amount, tags, date);
 
   getSignedAmountString() {
     String omen = isIncome ? '+' : '-';

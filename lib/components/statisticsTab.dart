@@ -15,7 +15,7 @@ class _StatisticsTabState extends State<StatisticsTab> {
   }
 
   void refresh(){
-    Box<Tag> box = Hive.box(tagBox);
+   // Box<Tag> box = Hive.box(tagBox);
   }
 
   @override

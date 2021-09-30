@@ -6,6 +6,8 @@ import 'package:money_tracker/models/Transactions.dart';
 import 'models/Transactions.dart';
 import 'pages/home.dart';
 
+const bool RESET = false;
+
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RecurringTransactionAdapter());
@@ -13,9 +15,17 @@ void main() async {
   Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(RuleAdapter());
   Hive.registerAdapter(PeriodAdapter());
-  await Hive.openBox<Tag>(tagBox);
-  await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-  await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+  Box tags = await Hive.openBox<Tag>(tagBox);
+  Box oneTimeTransactions =
+      await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
+  Box recurringTransactions =
+      await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+
+  if (RESET) {
+    tags.clear();
+    oneTimeTransactions.clear();
+    recurringTransactions.clear();
+  }
 
   runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();

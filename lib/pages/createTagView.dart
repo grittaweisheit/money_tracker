@@ -1,35 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/components/amountInputFormField.dart' as amountInputFormField;
+import 'package:money_tracker/components/amountInputFormField.dart'
+    as amountInputFormField;
 import 'package:money_tracker/pages/TagListView.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
 class CreateTagView extends StatefulWidget {
-  final bool isIncome;
-
-  CreateTagView(this.isIncome);
+  CreateTagView({Key? key}) : super(key: key);
 
   @override
   _CreateTagViewState createState() => _CreateTagViewState();
 }
 
 class _CreateTagViewState extends State<CreateTagView> {
-  String name;
-  bool isIncome;
-  List<double> limits;
-  List<bool> activeLimits;
-  String icon;
+  final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    isIncome = widget.isIncome;
-    limits = List.filled(4, 0);
-    activeLimits = List.filled(4, false);
-    icon = defaultIconName;
-  }
+  String name = "";
+  bool isIncome = true;
+  List<double> limits = List.filled(4, 0);
+  List<bool> activeLimits = List.filled(4, false);
+  String icon = defaultIconName;
+
+  _CreateTagViewState();
 
   void submitTag() async {
     Box<Tag> box = Hive.box(tagBox);
@@ -47,10 +41,8 @@ class _CreateTagViewState extends State<CreateTagView> {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-
     void _handleSelection(String tappedIcon) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       setState(() {
         icon = tappedIcon;
       });
@@ -75,12 +67,12 @@ class _CreateTagViewState extends State<CreateTagView> {
                 style: TextStyle(fontSize: 20),
                 initialValue: name,
                 validator: (value) =>
-                    value.length <= 0 ? "Please provide a name." : null,
+                    value!.length <= 0 ? "Please provide a name." : null,
                 decoration: InputDecoration(
                     hintText: "Name...", border: InputBorder.none),
                 onSaved: (value) {
                   setState(() {
-                    name = value;
+                    name = value!;
                   });
                 }))
       ]);
@@ -96,7 +88,7 @@ class _CreateTagViewState extends State<CreateTagView> {
               inactiveThumbColor: lightGreenColor,
               activeColor: lightRedColor,
               onChanged: (value) {
-                _formKey.currentState.save();
+                _formKey.currentState!.save();
                 setState(() {
                   isIncome = !value;
                 });
@@ -118,7 +110,7 @@ class _CreateTagViewState extends State<CreateTagView> {
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(bottom: -10, top: 10)),
           onSaved: (value) {
-            var newLimit = double.tryParse(value);
+            var newLimit = double.tryParse(value!);
             if (newLimit != null)
               setState(() {
                 limits[index] = newLimit;
@@ -144,7 +136,7 @@ class _CreateTagViewState extends State<CreateTagView> {
                           value: activeLimits[index],
                           onChanged: (value) {
                             setState(() {
-                              activeLimits[index] = value;
+                              activeLimits[index] = value!;
                             });
                           }),
                     ],
@@ -198,7 +190,7 @@ class _CreateTagViewState extends State<CreateTagView> {
           heroTag: "swapTag",
           backgroundColor: primaryColorMidTone,
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -214,8 +206,8 @@ class _CreateTagViewState extends State<CreateTagView> {
           heroTag: "submitTag",
           backgroundColor: primaryColor,
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTag();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

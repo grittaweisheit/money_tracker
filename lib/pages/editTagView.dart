@@ -16,19 +16,19 @@ class EditTagView extends StatefulWidget {
 }
 
 class _EditTagViewState extends State<EditTagView> {
-  String name;
-  bool isIncome;
-  List<double> limits;
-  List<bool> activeLimits;
-  String icon;
+  late String name;
+  late bool isIncome;
+  late List<double> limits;
+  late List<bool> activeLimits;
+  late String icon;
 
   @override
   void initState() {
     super.initState();
     isIncome = widget.tag.isIncomeTag;
     limits = widget.tag.limits;
-    activeLimits = widget.tag.limits.map((e) => e != -1);
-    icon = widget.tag.icon;
+    activeLimits = widget.tag.limits.map((e) => e != -1).toList();
+    icon = widget.tag.icon!;
   }
 
   void submitTag() async {
@@ -50,7 +50,7 @@ class _EditTagViewState extends State<EditTagView> {
     final _formKey = GlobalKey<FormState>();
 
     void _handleSelection(String tappedIcon) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       setState(() {
         icon = tappedIcon;
       });
@@ -75,12 +75,12 @@ class _EditTagViewState extends State<EditTagView> {
                 style: TextStyle(fontSize: 20),
                 initialValue: name,
                 validator: (value) =>
-                    value.length <= 0 ? "Please provide a name." : null,
+                    value!.length <= 0 ? "Please provide a name." : null,
                 decoration: InputDecoration(
                     hintText: "Name...", border: InputBorder.none),
                 onSaved: (value) {
                   setState(() {
-                    name = value;
+                    name = value!;
                   });
                 }))
       ]);
@@ -96,7 +96,7 @@ class _EditTagViewState extends State<EditTagView> {
               inactiveThumbColor: lightGreenColor,
               activeColor: lightRedColor,
               onChanged: (value) {
-                _formKey.currentState.save();
+                _formKey.currentState!.save();
                 setState(() {
                   isIncome = !value;
                 });
@@ -118,7 +118,7 @@ class _EditTagViewState extends State<EditTagView> {
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(bottom: -10, top: 10)),
           onSaved: (value) {
-            var newLimit = double.tryParse(value);
+            var newLimit = double.tryParse(value!);
             if (newLimit != null)
               setState(() {
                 limits[index] = newLimit;
@@ -144,7 +144,7 @@ class _EditTagViewState extends State<EditTagView> {
                           value: activeLimits[index],
                           onChanged: (value) {
                             setState(() {
-                              activeLimits[index] = value;
+                              activeLimits[index] = value!;
                             });
                           }),
                     ],
@@ -198,7 +198,7 @@ class _EditTagViewState extends State<EditTagView> {
           heroTag: "swapTag",
           backgroundColor: primaryColorMidTone,
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -214,8 +214,8 @@ class _EditTagViewState extends State<EditTagView> {
           heroTag: "submitTag",
           backgroundColor: primaryColor,
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTag();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

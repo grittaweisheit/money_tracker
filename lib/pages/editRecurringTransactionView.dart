@@ -16,26 +16,26 @@ class EditRecurringTransactionView extends StatefulWidget {
 
 class _EditRecurringTransactionViewState
     extends State<EditRecurringTransactionView> {
-  String description;
-  double amount;
-  List<Tag> tags;
-  DateTime date;
-  bool isIncome;
+  late String description;
+  late double amount;
+  late List<Tag> tags;
+  late DateTime nextExecution;
+  late bool isIncome;
 
   @override
   void initState() {
-    super.initState();
-    amount = widget.transaction.amount;
     description = widget.transaction.description;
-    date = widget.transaction.nextExecution;
+    amount = widget.transaction.amount;
+    nextExecution = widget.transaction.nextExecution;
     tags = widget.transaction.tags;
     isIncome = widget.transaction.isIncome;
+    super.initState();
   }
 
   void submitTransaction() async {
     widget.transaction.amount = amount;
     widget.transaction.description = description;
-    widget.transaction.nextExecution = date;
+    widget.transaction.nextExecution = nextExecution;
     widget.transaction.tags = tags;
     widget.transaction.isIncome = isIncome;
     widget.transaction.save();
@@ -61,10 +61,10 @@ class _EditRecurringTransactionViewState
         });
     }
 
-    void _saveDate(DateTime newDate) {
-      _formKey.currentState.save();
+    void _saveNextExecution(DateTime newNextExecution) {
+      _formKey.currentState!.save();
       setState(() {
-        date = newDate;
+        nextExecution = newNextExecution;
       });
     }
 
@@ -73,11 +73,11 @@ class _EditRecurringTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-          value.length <= 0 ? "Please provide a description." : null,
+          value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
-              description = value;
+              description = value!;
             });
           });
     }
@@ -87,7 +87,7 @@ class _EditRecurringTransactionViewState
           backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -99,8 +99,8 @@ class _EditRecurringTransactionViewState
       return FloatingActionButton(
           heroTag: "submitTransaction",
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTransaction();
             } else {
               debugPrint("The Transaction could not be submitted");
@@ -121,7 +121,7 @@ class _EditRecurringTransactionViewState
               child: AmountInputFormField(_saveAmount, amount, isIncome, true),
             ),
             getDescriptionFormField(),
-            DatePickerButtonFormField(true, date, _saveDate),
+            DatePickerButtonFormField(true, nextExecution, _saveNextExecution),
             Padding(padding: EdgeInsets.only(bottom: 5)),
             Expanded(child: TagSelection(_saveTags, tags, isIncome))
           ])),

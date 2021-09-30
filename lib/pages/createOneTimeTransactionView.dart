@@ -18,34 +18,29 @@ class CreateOneTimeTransactionView extends StatefulWidget {
 
 class _CreateOneTimeTransactionViewState
     extends State<CreateOneTimeTransactionView> {
-  String description;
-  bool isIncome;
-  double amount;
-  List<Tag> tags;
-  DateTime date;
+  final _formKey = GlobalKey<FormState>();
+
+  String description = "";
+  late bool isIncome;
+  double amount = 0.0;
+  List<Tag> tags = [];
+  DateTime date = DateTime.now();
 
   @override
   void initState() {
+    this.isIncome = widget.isIncome;
     super.initState();
-    amount = 0.0;
-    tags = [];
-    date = DateTime.now();
-    isIncome = widget.isIncome;
   }
-
-  _CreateOneTimeTransactionViewState();
 
   void submitTransaction() async {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    box.add(OneTimeTransaction(description, isIncome, amount, date, tags));
+    box.add(OneTimeTransaction(description, isIncome, amount, tags, date));
 
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-
     void _saveTags(List<Tag> newTags) {
       debugPrint("submitted tags $newTags");
       setState(() {
@@ -62,7 +57,7 @@ class _CreateOneTimeTransactionViewState
     }
 
     void _saveDate(DateTime newDate) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       setState(() {
         date = newDate;
       });
@@ -73,11 +68,11 @@ class _CreateOneTimeTransactionViewState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
           validator: (value) =>
-              value.length <= 0 ? "Please provide a description." : null,
+              value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
-              description = value;
+              description = value!;
             });
           });
     }
@@ -87,7 +82,7 @@ class _CreateOneTimeTransactionViewState
           heroTag: "changePrefix",
           backgroundColor: primaryColorMidTone,
           onPressed: () {
-            _formKey.currentState.save();
+            _formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
             });
@@ -100,8 +95,8 @@ class _CreateOneTimeTransactionViewState
           heroTag: "submitTransaction",
           backgroundColor: primaryColor,
           onPressed: () {
-            _formKey.currentState.save();
-            if (_formKey.currentState.validate()) {
+            _formKey.currentState!.save();
+            if (_formKey.currentState!.validate()) {
               submitTransaction();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -116,22 +111,21 @@ class _CreateOneTimeTransactionViewState
       appBar: AppBar(
         title: Text("Create Transaction"),
       ),
-      body:
-      Padding(
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Form(
             key: _formKey,
             child: Column(children: [
               IntrinsicWidth(
-                child: AmountInputFormField(_saveAmount, amount, isIncome, true),
+                child:
+                    AmountInputFormField(_saveAmount, amount, isIncome, true),
               ),
               getDescriptionFormField(),
               DatePickerButtonFormField(true, date, _saveDate),
               Padding(padding: EdgeInsets.only(bottom: 5)),
               Expanded(child: TagSelection(_saveTags, tags, isIncome))
             ])),
-      )
-      ,
+      ),
       floatingActionButton: Column(
         children: [
           Spacer(),

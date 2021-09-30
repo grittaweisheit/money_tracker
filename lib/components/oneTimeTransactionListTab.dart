@@ -108,7 +108,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   }
 
   ListView getTransactionsList() {
-    int currentMonth;
+    int? currentMonth;
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {

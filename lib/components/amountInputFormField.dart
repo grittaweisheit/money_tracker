@@ -8,7 +8,7 @@ final formatters = [
 ];
 final inputType = TextInputType.numberWithOptions(signed: false, decimal: true);
 
-String validator(inputString) {
+String? validator(inputString) {
   var amount = double.tryParse(inputString);
   if (amount != null) {
     return null;
@@ -30,9 +30,7 @@ class AmountInputFormField extends StatefulWidget {
 }
 
 class _AmountInputFormFieldState extends State<AmountInputFormField> {
-  _AmountInputFormFieldState();
-
-  String amountString;
+  late String amountString;
 
   @override
   void initState() {

@@ -34,9 +34,9 @@ class _TagListViewState extends State<TagListView> {
     });
   }
 
-  void _addTag(bool isIncome) {
+  void _addTag() {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => CreateTagView(isIncome)));
+        MaterialPageRoute(builder: (context) => CreateTagView()));
   }
 
   Widget getCircleAvatar(Tag tag) {
@@ -115,7 +115,7 @@ class _TagListViewState extends State<TagListView> {
         ),
         body: Column(children: [Expanded(child: getTagList())]),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _addTag(true),
+          onPressed: () => _addTag(),
           tooltip: 'Add Income Tag',
           backgroundColor: primaryColor,
           child: Icon(Icons.add),

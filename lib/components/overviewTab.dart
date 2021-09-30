@@ -26,7 +26,7 @@ class _OverviewTabState extends State<OverviewTab> {
 
   DateTime monthYear = DateTime.now();
 
-  Box<OneTimeTransaction> box;
+  late Box<OneTimeTransaction> box;
 
   @override
   void initState() {

@@ -105,8 +105,8 @@ class TagAdapter extends TypeAdapter<Tag> {
     return Tag(
       fields[0] as String,
       fields[1] as bool,
-      fields[2] as String,
-      (fields[3] as List)?.cast<double>(),
+      fields[2] as String?,
+      (fields[3] as List).cast<double>(),
     );
   }
 
@@ -135,9 +135,55 @@ class TagAdapter extends TypeAdapter<Tag> {
           typeId == other.typeId;
 }
 
-class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
+class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
   final int typeId = 3;
+
+  @override
+  Transaction read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Transaction(
+      fields[0] as String,
+      fields[1] as bool,
+      fields[2] as double,
+      (fields[3] as List).cast<Tag>(),
+      fields[4] as DateTime,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Transaction obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.description)
+      ..writeByte(1)
+      ..write(obj.isIncome)
+      ..writeByte(2)
+      ..write(obj.amount)
+      ..writeByte(3)
+      ..write(obj.tags)
+      ..writeByte(4)
+      ..write(obj.date);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransactionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
+  @override
+  final int typeId = 4;
 
   @override
   RecurringTransaction read(BinaryReader reader) {
@@ -149,9 +195,9 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
-      fields[3] as Rule,
+      (fields[3] as List).cast<Tag>(),
       fields[4] as DateTime,
-      (fields[5] as List)?.cast<Tag>(),
+      fields[5] as Rule,
     );
   }
 
@@ -159,6 +205,8 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
   void write(BinaryWriter writer, RecurringTransaction obj) {
     writer
       ..writeByte(6)
+      ..writeByte(5)
+      ..write(obj.repetitionRule)
       ..writeByte(0)
       ..write(obj.description)
       ..writeByte(1)
@@ -166,11 +214,9 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
-      ..write(obj.repetitionRule)
+      ..write(obj.tags)
       ..writeByte(4)
-      ..write(obj.nextExecution)
-      ..writeByte(5)
-      ..write(obj.tags);
+      ..write(obj.date);
   }
 
   @override
@@ -186,7 +232,7 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
 
 class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
   OneTimeTransaction read(BinaryReader reader) {
@@ -198,8 +244,8 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
-      fields[3] as DateTime,
-      (fields[4] as List)?.cast<Tag>(),
+      (fields[3] as List).cast<Tag>(),
+      fields[4] as DateTime,
     );
   }
 
@@ -214,9 +260,9 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
-      ..write(obj.date)
+      ..write(obj.tags)
       ..writeByte(4)
-      ..write(obj.tags);
+      ..write(obj.date);
   }
 
   @override
