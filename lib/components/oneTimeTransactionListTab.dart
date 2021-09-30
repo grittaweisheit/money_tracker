@@ -1,3 +1,4 @@
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -37,44 +38,73 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
     });
   }
 
-  Widget getListElement(OneTimeTransaction transaction) {
+  Widget getCircleAvatar(OneTimeTransaction transaction) {
+    return CircleAvatar(
+      backgroundColor: primaryColorLightTone,
+      child: transaction.tags.length > 0
+          ? Icon(allIconDataMap[transaction.tags.first.icon],
+          color: primaryColor)
+          : Text(
+        transaction.description.characters.first,
+        style:
+        TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget getEditButton(OneTimeTransaction transaction) {
+    return IconButton(
+        icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EditOneTimeTransactionView(transaction)));
+        });
+  }
+
+  Widget getDeleteButton(OneTimeTransaction transaction) {
+    return IconButton(
+        onPressed: () {
+          transaction.delete();
+          refresh();
+        },
+        icon: Icon(Icons.delete_outline, color: primaryColorLightTone));
+  }
+
+  Widget getListElementActions(OneTimeTransaction transaction) {
+    return Wrap(
+        children: [getEditButton(transaction), getDeleteButton(transaction)]);
+  }
+
+  Widget getListElementCard(OneTimeTransaction transaction, bool isFront) {
     return Card(
       color: primaryColor,
       child: ListTile(
-        onLongPress: () {
-          Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          EditOneTimeTransactionView(transaction)))
-              .then((value) => refresh());
-        },
-        leading: CircleAvatar(
-          backgroundColor: primaryColorLightTone,
-          child: transaction.tags.length > 0
-              ? Icon(allIconDataMap[transaction.tags.first.icon],
-                  color: primaryColor)
-              : Text(
-                  transaction.description.characters.first,
-                  style: TextStyle(
-                      color: primaryColor, fontWeight: FontWeight.bold),
-                ),
-        ),
+        leading: getCircleAvatar(transaction),
         title: Text(transaction.description,
             style: TextStyle(color: Colors.white)),
         subtitle: Text(
           onlyDate.format(transaction.date),
           style: TextStyle(color: primaryColorLightTone),
         ),
-        trailing: getAmountText(
-            transaction.isIncome ? transaction.amount : -1 * transaction.amount,
-            false),
-        onTap: () {
-          debugPrint("ListTile Tapped");
-          // TODO: open editing popup
-        },
+        trailing: isFront
+            ? getAmountText(
+            transaction.isIncome
+                ? transaction.amount
+                : -1 * transaction.amount,
+            false)
+            : getListElementActions(transaction),
       ),
     );
+  }
+
+  Widget getListElement(OneTimeTransaction transaction) {
+    return FlipCard(
+        direction: FlipDirection.VERTICAL,
+        front: getListElementCard(transaction, true),
+        back: getListElementCard(transaction, false));
   }
 
   ListView getTransactionsList() {
@@ -84,9 +114,6 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
         var children = [];
-        if (position == 0) {
-          children.add(topBottomSpace5);
-        }
         if (transaction.date.month != currentMonth) {
           currentMonth = transaction.date.month;
           children.add(Text(DateFormat("MMMM y").format(transaction.date)));

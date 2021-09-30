@@ -53,23 +53,24 @@ class HomeView extends StatefulWidget {
             break;
           case Period.week:
             next = DateTime(
-                transaction.nextExecution.year +
-                    transaction.repetitionRule.every,
+                transaction.nextExecution.year,
                 transaction.nextExecution.month,
                 transaction.nextExecution.day +
                     (transaction.repetitionRule.every * 7));
             break;
           case Period.day:
+            debugPrint("added day");
             next = DateTime(
-                now.year + transaction.repetitionRule.every,
+                now.year,
                 transaction.nextExecution.month,
                 transaction.nextExecution.day +
                     transaction.repetitionRule.every);
             break;
         }
         transaction.nextExecution = next;
+        debugPrint('${areInSameMonth(transaction.nextExecution, now)}');
+        transaction.save();
       }
-      transaction.save();
     });
   }
 }
@@ -95,6 +96,7 @@ class _HomeViewState extends State<HomeView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      debugPrint("resumed");
       HomeView.applyRecurringTransactions();
     }
   }
@@ -122,10 +124,16 @@ class _HomeViewState extends State<HomeView>
         ),
         drawer: HomeDrawer(),
         body: TabBarView(controller: _tabController, children: [
-          Container(color: primaryColorLightTone, child: OverviewTab()),
           Container(
-              color: primaryColorLightTone, child: OneTimeTransactionListTab()),
-          Container(color: primaryColorLightTone, child: StatisticsTab())
+              color: primaryColorLightTone,
+              child: OverviewTab()),
+          Container(
+              padding: EdgeInsets.only(top: 5),
+              color: primaryColorLightTone,
+              child: OneTimeTransactionListTab()),
+          Container(
+              color: primaryColorLightTone,
+              child: StatisticsTab())
         ]),
         bottomNavigationBar: BottomAppBar(
             child: Container(

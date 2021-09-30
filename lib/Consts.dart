@@ -24,7 +24,7 @@ String tagBox = "tag";
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-String targetDateFormatString = ("dd. MMM y");
+String targetDateFormatString = ("dd. MMMM y");
 DateFormat targetDateFormat = DateFormat(targetDateFormatString);
 
 List<String> periodSingularStrings = ["day", "week", "month", "year"];

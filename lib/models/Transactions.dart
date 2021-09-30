@@ -37,7 +37,6 @@ class Tag extends HiveObject {
 
   Tag(this.name, this.isIncomeTag, this.icon, this.limits);
 }
-
 @HiveType(typeId: 3)
 class RecurringTransaction extends HiveObject {
   @HiveField(0)

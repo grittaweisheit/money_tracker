@@ -1,8 +1,11 @@
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/pages/createTagView.dart';
+import 'package:money_tracker/pages/editRecurringTransactionView.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
+import 'editTagView.dart';
 
 class TagListView extends StatefulWidget {
   TagListView();
@@ -20,10 +23,10 @@ class _TagListViewState extends State<TagListView> {
   @override
   void initState() {
     super.initState();
-    getTags();
+    refresh();
   }
 
-  getTags() async {
+  refresh() async {
     final Box<Tag> box = Hive.box(tagBox);
     setState(() {
       tags = box.values.toList();
@@ -36,30 +39,69 @@ class _TagListViewState extends State<TagListView> {
         MaterialPageRoute(builder: (context) => CreateTagView(isIncome)));
   }
 
+  Widget getCircleAvatar(Tag tag) {
+    return CircleAvatar(
+      backgroundColor: primaryColorLightTone,
+      child: tag.icon != null
+          ? Icon(allIconDataMap[tag.icon], color: primaryColor)
+          : Text(
+              tag.name.characters.first,
+              style:
+                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+            ),
+    );
+  }
+
+  Widget getEditButton(Tag tag) {
+    return IconButton(
+        icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => EditTagView(tag)));
+        });
+  }
+
+  Widget getDeleteButton(Tag tag) {
+    return IconButton(
+        onPressed: () {
+          tag.delete();
+          refresh();
+        },
+        icon: Icon(Icons.delete_outline, color: primaryColorLightTone));
+  }
+
+  Widget getListElementActions(Tag tag) {
+    return Wrap(children: [getEditButton(tag), getDeleteButton(tag)]);
+  }
+
+  Widget getListElementCard(Tag tag, bool isFront) {
+    return Card(
+      color: primaryColor,
+      child: ListTile(
+        leading: getCircleAvatar(tag),
+        title: Text(tag.name, style: TextStyle(color: Colors.white)),
+        trailing: isFront
+            ? (tag.isIncomeTag
+                ? Text("Income", style: TextStyle(color: intensiveGreenColor))
+                : Text("Expense", style: TextStyle(color: intensiveRedColor)))
+            : getListElementActions(tag),
+      ),
+    );
+  }
+
+  Widget getListElement(Tag tag) {
+    return FlipCard(
+        direction: FlipDirection.VERTICAL,
+        front: getListElementCard(tag, true),
+        back: getListElementCard(tag, false));
+  }
+
   ListView getTagList() {
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         var tag = this.tags[position];
-        return Card(
-          color: Colors.grey,
-          elevation: 1.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.amber,
-              child: tag.isIncomeTag
-                  ? Icon(Icons.add_circle_outline)
-                  : Icon(Icons.remove_circle_outline),
-            ),
-            title:
-                Text(tag.name, style: TextStyle(fontWeight: FontWeight.bold)),
-            trailing: Text(tag.limits.toString()),
-            onTap: () {
-              debugPrint("ListTile Tapped");
-              // TODO: open editing popup
-            },
-          ),
-        );
+        return getListElement(tag);
       },
     );
   }
@@ -67,7 +109,7 @@ class _TagListViewState extends State<TagListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColorLightTone,
+        backgroundColor: primaryColorLightTone,
         appBar: AppBar(
           title: Text("Tags"),
         ),

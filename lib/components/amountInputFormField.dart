@@ -45,7 +45,6 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
     return TextFormField(
       initialValue: widget.amount.toStringAsFixed(2),
       style: TextStyle(fontSize: 20),
-      autofocus: true,
       validator: validator,
       inputFormatters: formatters,
       keyboardType: inputType,
