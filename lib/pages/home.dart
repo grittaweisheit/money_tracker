@@ -75,14 +75,14 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  late TabController _tabController;
+  late TabController tabController;
 
   @override
   void initState() {
+    tabController = TabController(length: NUM_TABS, vsync: this);
     WidgetsBinding.instance!.addObserver(this);
-    super.initState();
     HomeView.applyRecurringTransactions();
-    _tabController = TabController(length: NUM_TABS, vsync: this);
+    super.initState();
   }
 
   @override
@@ -100,7 +100,7 @@ class _HomeViewState extends State<HomeView>
   }
 
   TabBar getTabBar() {
-    return TabBar(controller: _tabController, tabs: [
+    return TabBar(controller: tabController, tabs: [
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [Icon(Icons.euro), Text("Overview")]),
@@ -121,7 +121,7 @@ class _HomeViewState extends State<HomeView>
     return Scaffold(
         appBar: AppBar(centerTitle: true, title: Text("Money Tracker")),
         drawer: HomeDrawer(),
-        body: TabBarView(controller: _tabController, children: [
+        body: TabBarView(controller: tabController, children: [
           Container(color: primaryColorLightTone, child: OverviewTab()),
           Container(
               color: primaryColorLightTone, child: OneTimeTransactionListTab()),

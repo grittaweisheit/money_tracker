@@ -16,6 +16,8 @@ String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String tagBox = "tag";
 
+int transfersTabIndex = 1;
+
 const String defaultIconName = 'label';
 Map<String, IconData> allIconDataMap = {
   'label': Icons.label_outline,

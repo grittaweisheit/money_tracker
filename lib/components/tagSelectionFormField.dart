@@ -24,17 +24,18 @@ class _TagSelectionState extends State<TagSelection> {
   int countIncome = 0;
 
   void initializeLists() async {
-    debugPrint('incoming tag selection ${widget.selectedTags}');
     Box<Tag> box = Hive.box(tagBox);
     var incomeTags =
         box.values.where((element) => element.isIncomeTag).toList();
     var spendingTags =
         box.values.where((element) => !element.isIncomeTag).toList();
+    List<Tag> allTags = List.from(incomeTags);
+    allTags.addAll(spendingTags);
+    debugPrint('${incomeTags.length}, ${spendingTags.length},  $allTags');
     setState(() {
       countIncome = incomeTags.length;
       countSpending = spendingTags.length;
-      incomeTags.addAll(spendingTags);
-      tags = incomeTags;
+      tags = allTags;
       selectedTags = widget.selectedTags;
     });
   }
@@ -56,6 +57,68 @@ class _TagSelectionState extends State<TagSelection> {
   void initState() {
     super.initState();
     initializeLists();
+  }
+
+  getChipSection() {
+    return SliverAppBar(
+        pinned: true,
+        collapsedHeight: 30,
+        toolbarHeight: 30,
+        excludeHeaderSemantics: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: primaryColorLightTone,
+        title: Wrap(
+            children: selectedTags
+                .map((tag) => Chip(
+                    label: Text(
+                      tag.name,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    avatar: allIconsMap[tag.icon],
+                    backgroundColor: primaryColorMidTone,
+                    visualDensity: VisualDensity.compact))
+                .toList()));
+  }
+
+  getTagHeader(String title) {
+    return SliverList(
+        delegate: SliverChildListDelegate(
+            <Widget>[topBottomSpace5, Text(title), topBottomSpace5]));
+  }
+
+  getTagGrid(bool income) {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 110,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 1.6),
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        var tagIndex = income ? index : index + countIncome;
+        if (!income && tagIndex > countSpending) return null;
+        Tag tag = tags[tagIndex];
+        bool isSelected = selectedTags.contains(tag);
+        return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                  color: primaryColor, width: 2, style: BorderStyle.solid),
+              color: isSelected ? Colors.white : Colors.transparent,
+            ),
+            child: IconButton(
+              padding: EdgeInsets.all(0),
+              icon: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(allIconDataMap[tag.icon], size: 30),
+                  Text(tag.name)
+                ],
+              ),
+              onPressed: () => _handleSelection(tag),
+            ));
+      }, childCount: countIncome),
+    );
   }
 
   @override
@@ -81,68 +144,5 @@ class _TagSelectionState extends State<TagSelection> {
                   getTagGrid(true),
                 ]);
     });
-  }
-
-  getChipSection() {
-    return SliverAppBar(
-        pinned: true,
-        collapsedHeight: 30,
-        toolbarHeight: 30,
-        excludeHeaderSemantics: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: primaryColorLightTone,
-        title: Wrap(
-            children: selectedTags
-                .map((tag) => Chip(
-                      label: Text(
-                        tag.name,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      avatar: allIconsMap[tag.icon],
-                      backgroundColor: primaryColorMidTone,
-                      visualDensity: VisualDensity.compact
-                    ))
-                .toList()));
-  }
-
-  getTagHeader(String title) {
-    return SliverList(
-        delegate: SliverChildListDelegate(
-            <Widget>[topBottomSpace5, Text(title), topBottomSpace5]));
-  }
-
-  getTagGrid(bool income) {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 110,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          childAspectRatio: 1.6),
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        var tagIndex = income ? index : index + countIncome;
-        if (!income && tagIndex >= countSpending) return null;
-        Tag tag = tags[tagIndex];
-        bool isSelected = selectedTags.contains(tag);
-        return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              shape: BoxShape.rectangle,
-              border: Border.all(
-                  color: primaryColor, width: 2, style: BorderStyle.solid),
-              color: isSelected ? Colors.white : Colors.transparent,
-            ),
-            child: IconButton(
-              padding: EdgeInsets.all(0),
-              icon: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(allIconDataMap[tag.icon], size: 30),
-                  Text(tag.name)
-                ],
-              ),
-              onPressed: () => _handleSelection(tag),
-            ));
-      }, childCount: countIncome),
-    );
   }
 }

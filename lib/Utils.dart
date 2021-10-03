@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,10 @@ import 'Consts.dart';
 
 TextStyle getLargerTextStyle() {
   return TextStyle(fontSize: 20);
+}
+
+TextStyle getBoldTextStyle() {
+  return TextStyle(fontWeight: FontWeight.bold);
 }
 
 TextStyle getRedGreenTextStyle(double amount) {

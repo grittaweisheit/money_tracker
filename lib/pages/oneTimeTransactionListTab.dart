@@ -24,8 +24,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   @override
   void initState() {
-    super.initState();
     refresh();
+    super.initState();
   }
 
   refresh() async {
@@ -43,12 +43,12 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
       backgroundColor: primaryColorLightTone,
       child: transaction.tags.length > 0
           ? Icon(allIconDataMap[transaction.tags.first.icon],
-          color: primaryColor)
+              color: primaryColor)
           : Text(
-        transaction.description.characters.first,
-        style:
-        TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-      ),
+              transaction.description.characters.first,
+              style:
+                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+            ),
     );
   }
 
@@ -91,10 +91,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         ),
         trailing: isFront
             ? getAmountText(
-            transaction.isIncome
-                ? transaction.amount
-                : -transaction.amount,
-            false)
+                transaction.isIncome ? transaction.amount : -transaction.amount,
+                false)
             : getListElementActions(transaction),
       ),
     );
