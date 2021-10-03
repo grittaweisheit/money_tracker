@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'Consts.dart';
 
 TextStyle getLargerTextStyle() {
@@ -47,3 +49,22 @@ bool areInSameMonth(DateTime date1, DateTime date2) {
 DateTime getOnlyDate(DateTime date) {
   return DateTime(date.year, date.month, date.day);
 }
+
+DateFormat onlyDate = DateFormat("dd.MM.y");
+DateFormat onlyTime = DateFormat("HH:mm");
+
+String targetDateFormatString = ("dd. MMMM y");
+DateFormat targetDateFormat = DateFormat(targetDateFormatString);
+
+List<String> periodSingularStrings = ["day", "week", "month", "year"];
+List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
+
+Padding topBottomSpace5 = Padding(padding: EdgeInsets.only(top: 5));
+Padding topBottomSpace20 = Padding(padding: EdgeInsets.only(top: 20));
+Padding leftRightSpace5 = Padding(padding: EdgeInsets.only(left: 5));
+Padding leftRightSpace20 = Padding(padding: EdgeInsets.only(left: 20));
+
+final List<TextInputFormatter> defaultFormatters = [
+  LengthLimitingTextInputFormatter(100),
+  FilteringTextInputFormatter.deny('\n')
+];

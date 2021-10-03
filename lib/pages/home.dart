@@ -4,9 +4,9 @@ import 'package:hive/hive.dart';
 import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/components/homeDrawer.dart';
-import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
-import 'package:money_tracker/components/overviewTab.dart';
-import 'package:money_tracker/components/statisticsTab.dart';
+import 'package:money_tracker/pages/oneTimeTransactionListTab.dart';
+import 'package:money_tracker/pages/overviewTab.dart';
+import 'package:money_tracker/pages/statisticsTab.dart';
 import 'package:money_tracker/models/Transactions.dart';
 import 'package:money_tracker/pages/recurringTransactionListTab.dart';
 

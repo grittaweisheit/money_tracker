@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
+import '../Utils.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
@@ -34,7 +35,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
   void initState() {
     formKey = widget.formKey;
     description = widget.startingTransaction.description;
-    isIncome =widget.startingTransaction.isIncome;
+    isIncome = widget.startingTransaction.isIncome;
     amount = widget.startingTransaction.amount;
     tags = widget.startingTransaction.tags;
     nextExecution = widget.startingTransaction.nextExecution;
@@ -149,31 +150,31 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           child: Icon(Icons.check));
     }
 
-    return Stack(
-      children: [
-        Form(
-            key: formKey,
-            child: Column(children: [
-              IntrinsicWidth(
-                child:
-                    AmountInputFormField(_saveAmount, amount, isIncome, true),
-              ),
-              getDescriptionFormField(),
-              DatePickerButtonFormField(
-                  true, nextExecution, _saveNextExecution),
-              getRepeatsEverySection(),
-              topBottomSpace5,
-              Expanded(child: TagSelection(_saveTags, tags, isIncome))
-            ])),
-        Column(
-          children: [
+    return Stack(children: [
+      Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Form(
+              key: formKey,
+              child: Column(children: [
+                IntrinsicWidth(
+                    child: AmountInputFormField(
+                        _saveAmount, amount, isIncome, true)),
+                getDescriptionFormField(),
+                DatePickerButtonFormField(
+                    true, nextExecution, _saveNextExecution),
+                getRepeatsEverySection(),
+                topBottomSpace5,
+                Expanded(child: TagSelection(_saveTags, tags, isIncome))
+              ]))),
+      Container(
+          alignment: Alignment.bottomRight,
+          padding: EdgeInsets.only(bottom: 5, right: 5),
+          child: Column(children: [
             Spacer(),
             getSwapOmenButton(),
-            Padding(padding: EdgeInsets.only(top: 5)),
+            topBottomSpace5,
             getSubmitButton()
-          ],
-        ),
-      ],
-    );
+          ]))
+    ]);
   }
 }

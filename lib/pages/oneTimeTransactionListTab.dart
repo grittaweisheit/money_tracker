@@ -6,7 +6,7 @@ import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
-import 'addOneTimeTransactionFloatingButtons.dart';
+import '../components/addOneTimeTransactionFloatingButtons.dart';
 
 class OneTimeTransactionListTab extends StatefulWidget {
   OneTimeTransactionListTab();

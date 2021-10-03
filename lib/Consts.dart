@@ -5,9 +5,6 @@ import 'package:flutter/services.dart';
 
 int maxTags = 10;
 
-/*Color primaryColor = Colors.black;
-Color primaryColorMidTone = Colors.blueGrey;
-Color primaryColorLightTone = Colors.blueGrey.shade900;*/
 Color primaryColor = Colors.blueGrey.shade900;
 Color primaryColorMidTone = Colors.blueGrey;
 Color primaryColorLightTone = Colors.blueGrey.shade100;
@@ -20,25 +17,6 @@ Color lightRedColor = Colors.red.shade300;
 String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String tagBox = "tag";
-
-DateFormat onlyDate = DateFormat("dd.MM.y");
-DateFormat onlyTime = DateFormat("HH:mm");
-
-String targetDateFormatString = ("dd. MMMM y");
-DateFormat targetDateFormat = DateFormat(targetDateFormatString);
-
-List<String> periodSingularStrings = ["day", "week", "month", "year"];
-List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
-
-Padding topBottomSpace5 = Padding(padding: EdgeInsets.only(top: 5));
-Padding topBottomSpace20 = Padding(padding: EdgeInsets.only(top: 20));
-Padding leftRightSpace5 = Padding(padding: EdgeInsets.only(left: 5));
-Padding leftRightSpace20 = Padding(padding: EdgeInsets.only(left: 20));
-
-final List<TextInputFormatter> defaultFormatters = [
-  LengthLimitingTextInputFormatter(100),
-  FilteringTextInputFormatter.deny('\n')
-];
 
 String defaultIconName = 'label';
 Map<String, IconData> allIconDataMap = {

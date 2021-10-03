@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
+import '../Utils.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
@@ -121,12 +122,15 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
                 topBottomSpace5,
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),
-      Column(children: [
-        Spacer(),
-        getSwapOmenButton(),
-        Padding(padding: EdgeInsets.only(top: 5)),
-        getSubmitButton()
-      ])
+      Container(
+          alignment: Alignment.bottomRight,
+          padding: EdgeInsets.only(bottom: 5, right: 5),
+          child: Column(children: [
+            Spacer(),
+            getSwapOmenButton(),
+            topBottomSpace5,
+            getSubmitButton()
+          ]))
     ]);
   }
 }
