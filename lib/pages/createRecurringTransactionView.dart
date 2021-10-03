@@ -24,7 +24,7 @@ class _CreateRecurringTransactionViewState
   }
 
   void submitTransaction(String description, bool isIncome, double amount,
-      List<Tag> tags, DateTime nextExecution, int every, Period period) async {
+      HiveList<Tag> tags, DateTime nextExecution, int every, Period period) async {
     Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
     box.add(RecurringTransaction(description, isIncome, amount, tags,
         nextExecution, Rule(every, period)));

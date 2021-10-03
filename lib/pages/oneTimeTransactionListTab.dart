@@ -93,7 +93,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
             ? getAmountText(
             transaction.isIncome
                 ? transaction.amount
-                : -1 * transaction.amount,
+                : -transaction.amount,
             false)
             : getListElementActions(transaction),
       ),

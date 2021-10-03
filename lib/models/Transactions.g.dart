@@ -105,7 +105,7 @@ class TagAdapter extends TypeAdapter<Tag> {
     return Tag(
       fields[0] as String,
       fields[1] as bool,
-      fields[2] as String?,
+      fields[2] == null ? 'label' : fields[2] as String,
       (fields[3] as List).cast<double>(),
     );
   }
@@ -149,7 +149,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
-      (fields[3] as List).cast<Tag>(),
+      (fields[3] as HiveList).castHiveList(),
       fields[4] as DateTime,
     );
   }
@@ -195,7 +195,7 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
-      (fields[3] as List).cast<Tag>(),
+      (fields[3] as HiveList).castHiveList(),
       fields[4] as DateTime,
       fields[5] as Rule,
     );
@@ -244,7 +244,7 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
-      (fields[3] as List).cast<Tag>(),
+      (fields[3] as HiveList).castHiveList(),
       fields[4] as DateTime,
     );
   }

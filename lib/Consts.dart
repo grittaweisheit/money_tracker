@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 
 int maxTags = 10;
 
@@ -18,7 +16,7 @@ String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String tagBox = "tag";
 
-String defaultIconName = 'label';
+const String defaultIconName = 'label';
 Map<String, IconData> allIconDataMap = {
   'label': Icons.label_outline,
   'offer': Icons.local_offer_outlined,

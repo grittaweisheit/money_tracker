@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/forms/oneTimeTransactionForm.dart';
 import '../models/Transactions.dart';
@@ -18,7 +19,7 @@ class _EditOneTimeTransactionViewState
   final formKey = GlobalKey<FormState>();
 
   void submitTransaction(String description, bool isIncome, double amount,
-      List<Tag> tags, DateTime date) async {
+      HiveList<Tag> tags, DateTime date) async {
     widget.transaction.description = description;
     widget.transaction.isIncome = isIncome;
     widget.transaction.amount = amount;

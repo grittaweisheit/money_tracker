@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:money_tracker/Consts.dart';
 
 part 'Transactions.g.dart';
 
@@ -27,15 +28,20 @@ class Rule extends HiveObject {
 @HiveType(typeId: 2)
 class Tag extends HiveObject {
   @HiveField(0)
-  String name; // 0-days, 1-weeks, 2-months, 3-years
+  String name;
   @HiveField(1)
   bool isIncomeTag;
-  @HiveField(2)
-  String? icon;
+  @HiveField(2, defaultValue: defaultIconName)
+  String icon;
   @HiveField(3)
   List<double> limits = [-1, -1, -1, -1]; // 0-days, 1-weeks, 2-months, 3-years
 
   Tag(this.name, this.isIncomeTag, this.icon, this.limits);
+
+  Tag.empty()
+      : this.name = "",
+        this.isIncomeTag = true,
+        this.icon = defaultIconName;
 }
 
 @HiveType(typeId: 3)
@@ -47,7 +53,7 @@ class Transaction extends HiveObject {
   @HiveField(2)
   double amount;
   @HiveField(3)
-  List<Tag> tags;
+  HiveList<Tag> tags;
   @HiveField(4)
   DateTime date; // nextExecution for RecurringTransactions
 
@@ -58,7 +64,7 @@ class Transaction extends HiveObject {
       : this.description = "",
         this.isIncome = true,
         this.amount = 0.00,
-        this.tags = [],
+        this.tags = HiveList<Tag>(Hive.box<Tag>(tagBox)),
         this.date = DateTime.now();
 }
 
@@ -68,7 +74,7 @@ class RecurringTransaction extends Transaction {
   Rule repetitionRule;
 
   RecurringTransaction(String description, bool isIncome, double amount,
-      List<Tag> tags, DateTime date, this.repetitionRule)
+      HiveList<Tag> tags, DateTime date, this.repetitionRule)
       : super(description, isIncome, amount, tags, date);
 
   RecurringTransaction.empty()
@@ -92,7 +98,7 @@ class RecurringTransaction extends Transaction {
 @HiveType(typeId: 5)
 class OneTimeTransaction extends Transaction {
   OneTimeTransaction(String description, bool isIncome, double amount,
-      List<Tag> tags, DateTime date)
+      HiveList<Tag> tags, DateTime date)
       : super(description, isIncome, amount, tags, date);
 
   OneTimeTransaction.empty() : super.empty();

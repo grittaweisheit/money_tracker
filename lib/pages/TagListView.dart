@@ -2,10 +2,10 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/pages/createTagView.dart';
-import 'package:money_tracker/pages/editRecurringTransactionView.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
 import 'editTagView.dart';
+import 'home.dart';
 
 class TagListView extends StatefulWidget {
   TagListView();
@@ -35,21 +35,14 @@ class _TagListViewState extends State<TagListView> {
   }
 
   void _addTag() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => CreateTagView()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CreateTagView()));
   }
 
   Widget getCircleAvatar(Tag tag) {
     return CircleAvatar(
-      backgroundColor: primaryColorLightTone,
-      child: tag.icon != null
-          ? Icon(allIconDataMap[tag.icon], color: primaryColor)
-          : Text(
-              tag.name.characters.first,
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-            ),
-    );
+        backgroundColor: primaryColorLightTone,
+        child: Icon(allIconDataMap[tag.icon], color: primaryColor));
   }
 
   Widget getEditButton(Tag tag) {
@@ -108,17 +101,22 @@ class _TagListViewState extends State<TagListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: primaryColorLightTone,
-        appBar: AppBar(
-          title: Text("Tags"),
-        ),
-        body: Column(children: [Expanded(child: getTagList())]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _addTag(),
-          tooltip: 'Add Income Tag',
-          backgroundColor: primaryColor,
-          child: Icon(Icons.add),
-        ));
+    return WillPopScope(
+        child: Scaffold(
+            backgroundColor: primaryColorLightTone,
+            appBar: AppBar(
+              title: Text("Tags"),
+            ),
+            body: Column(children: [Expanded(child: getTagList())]),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => _addTag(),
+              tooltip: 'Add Income Tag',
+              backgroundColor: primaryColor,
+              child: Icon(Icons.add),
+            )),
+        onWillPop: () async =>
+            await Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return HomeView();
+            })));
   }
 }

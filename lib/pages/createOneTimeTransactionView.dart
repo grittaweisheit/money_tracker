@@ -19,7 +19,7 @@ class _CreateOneTimeTransactionViewState
   final _formKey = GlobalKey<FormState>();
 
   void submitTransaction(String description, bool isIncome, double amount,
-      List<Tag> tags, DateTime date) async {
+      HiveList<Tag> tags, DateTime date) async {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     box.add(OneTimeTransaction(description, isIncome, amount, tags, date));
     Navigator.pop(context);

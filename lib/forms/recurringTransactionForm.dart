@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
@@ -86,38 +85,32 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
     }
 
     Widget getRepeatsEverySection() {
-      return Wrap(
-        children: [
-          Row(
-            children: [
-              Text("Repeats every"),
-              leftRightSpace20,
-              IntrinsicWidth(
-                  child: DropdownButtonFormField<int>(
-                items: List.generate(100, (index) => index)
-                    .map((number) => DropdownMenuItem(
-                        value: number, child: Text(number.toString())))
-                    .toList(),
-                value: every,
-                onChanged: _saveEvery,
-              )),
-              leftRightSpace20,
-              IntrinsicWidth(
-                  child: DropdownButtonFormField<Period>(
-                items: Period.values
-                    .map((periodEnum) => DropdownMenuItem(
-                        value: periodEnum,
-                        child: Text(every > 1
-                            ? periodPluralStrings[periodEnum.index]
-                            : periodSingularStrings[periodEnum.index])))
-                    .toList(),
-                value: period,
-                onChanged: (value) => period = value!,
-              )),
-            ],
-          )
-        ],
-      );
+      return Wrap(children: [
+        Row(children: [
+          Text("Repeats every"),
+          leftRightSpace20,
+          IntrinsicWidth(
+              child: DropdownButtonFormField<int>(
+                  items: List.generate(100, (index) => index)
+                      .map((number) => DropdownMenuItem(
+                          value: number, child: Text(number.toString())))
+                      .toList(),
+                  value: every,
+                  onChanged: _saveEvery)),
+          leftRightSpace20,
+          IntrinsicWidth(
+              child: DropdownButtonFormField<Period>(
+                  items: Period.values
+                      .map((periodEnum) => DropdownMenuItem(
+                          value: periodEnum,
+                          child: Text(every > 1
+                              ? periodPluralStrings[periodEnum.index]
+                              : periodSingularStrings[periodEnum.index])))
+                      .toList(),
+                  value: period,
+                  onChanged: (value) => period = value!))
+        ])
+      ]);
     }
 
     FloatingActionButton getSwapOmenButton() {
