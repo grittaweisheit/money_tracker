@@ -53,6 +53,13 @@ class Transaction extends HiveObject {
 
   Transaction(
       this.description, this.isIncome, this.amount, this.tags, this.date);
+
+  Transaction.empty()
+      : this.description = "",
+        this.isIncome = true,
+        this.amount = 0.00,
+        this.tags = [],
+        this.date = DateTime.now();
 }
 
 @HiveType(typeId: 4)
@@ -64,10 +71,15 @@ class RecurringTransaction extends Transaction {
       List<Tag> tags, DateTime date, this.repetitionRule)
       : super(description, isIncome, amount, tags, date);
 
-  DateTime get nextExecution{
+  RecurringTransaction.empty()
+      : repetitionRule = Rule(1, Period.month),
+        super.empty();
+
+  DateTime get nextExecution {
     return this.date;
   }
-  set nextExecution(DateTime nextExecution){
+
+  set nextExecution(DateTime nextExecution) {
     this.date = nextExecution;
   }
 
@@ -82,6 +94,8 @@ class OneTimeTransaction extends Transaction {
   OneTimeTransaction(String description, bool isIncome, double amount,
       List<Tag> tags, DateTime date)
       : super(description, isIncome, amount, tags, date);
+
+  OneTimeTransaction.empty() : super.empty();
 
   getSignedAmountString() {
     String omen = isIncome ? '+' : '-';
