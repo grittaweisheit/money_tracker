@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/components/recurringTransactionForm.dart';
+import 'package:money_tracker/forms/recurringTransactionForm.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
@@ -34,13 +34,12 @@ class _CreateRecurringTransactionViewState
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: primaryColorLightTone,
-      appBar: AppBar(
-        title: Text("Create Recurring Transaction"),
-      ),
-      body: RecurringTransactionForm(formKey, RecurringTransaction.empty(), submitTransaction)
-    );
+        backgroundColor: primaryColorLightTone,
+        appBar: AppBar(
+          title: Text("Create Recurring Transaction"),
+        ),
+        body: RecurringTransactionForm(
+            formKey, RecurringTransaction.empty(), submitTransaction));
   }
 }

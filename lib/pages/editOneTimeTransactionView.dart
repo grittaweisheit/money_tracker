@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/Consts.dart';
-import 'package:money_tracker/components/oneTimeTransactionForm.dart';
+import 'package:money_tracker/forms/oneTimeTransactionForm.dart';
 import '../models/Transactions.dart';
 
 class EditOneTimeTransactionView extends StatefulWidget {

@@ -8,20 +8,20 @@ import 'package:money_tracker/pages/home.dart';
 import '../Consts.dart';
 import '../models/Transactions.dart';
 
-class RecurringTransactionListView extends StatefulWidget {
-  RecurringTransactionListView();
+class RecurringTransactionListTab extends StatefulWidget {
+  RecurringTransactionListTab();
 
   @override
-  _RecurringTransactionListViewState createState() =>
-      _RecurringTransactionListViewState();
+  _RecurringTransactionListTabState createState() =>
+      _RecurringTransactionListTabState();
 }
 
-class _RecurringTransactionListViewState
-    extends State<RecurringTransactionListView> {
+class _RecurringTransactionListTabState
+    extends State<RecurringTransactionListTab> {
   List<RecurringTransaction> transactions = [];
   int count = 0;
 
-  _RecurringTransactionListViewState();
+  _RecurringTransactionListTabState();
 
   @override
   void initState() {
@@ -129,17 +129,19 @@ class _RecurringTransactionListViewState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: primaryColorLightTone,
-        appBar: AppBar(
-          title: Text("Recurring Transactions"),
-        ),
-        body: Column(children: [Expanded(child: getTransactionsList())]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _addTransaction(true),
-          tooltip: 'Increment',
-          backgroundColor: primaryColor,
-          child: Icon(Icons.add),
-        ));
+    return Stack(children: [
+      getTransactionsList(),
+      Container(
+          alignment: Alignment.bottomRight,
+          padding: EdgeInsets.only(right: 5, bottom: 5),
+          child: Column(children: <Widget>[
+            Spacer(),
+            FloatingActionButton(
+                onPressed: () => _addTransaction(true),
+                tooltip: 'Increment',
+                backgroundColor: primaryColor,
+                child: Icon(Icons.add))
+          ]))
+    ]);
   }
 }

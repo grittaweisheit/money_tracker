@@ -8,6 +8,9 @@ import 'package:money_tracker/components/oneTimeTransactionListTab.dart';
 import 'package:money_tracker/components/overviewTab.dart';
 import 'package:money_tracker/components/statisticsTab.dart';
 import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/pages/recurringTransactionListTab.dart';
+
+const int NUM_TABS = 4;
 
 class HomeView extends StatefulWidget {
   HomeView({Key? key}) : super(key: key);
@@ -39,16 +42,14 @@ class HomeView extends StatefulWidget {
         switch (transaction.repetitionRule.period) {
           case Period.year:
             next = DateTime(
-                transaction.date.year +
-                    transaction.repetitionRule.every,
+                transaction.date.year + transaction.repetitionRule.every,
                 transaction.date.month,
                 transaction.date.day);
             break;
           case Period.month:
             next = DateTime(
                 transaction.date.year,
-                transaction.date.month +
-                    transaction.repetitionRule.every,
+                transaction.date.month + transaction.repetitionRule.every,
                 transaction.date.day);
             break;
           case Period.week:
@@ -56,15 +57,12 @@ class HomeView extends StatefulWidget {
                 transaction.date.year,
                 transaction.date.month,
                 transaction.date.day +
-                    (transaction.repetitionRule.every * 7));
+                    (transaction.repetitionRule.every * DateTime.daysPerWeek));
             break;
           case Period.day:
             debugPrint("added day");
-            next = DateTime(
-                now.year,
-                transaction.date.month,
-                transaction.date.day +
-                    transaction.repetitionRule.every);
+            next = DateTime(now.year, transaction.date.month,
+                transaction.date.day + transaction.repetitionRule.every);
             break;
         }
         transaction.date = next;
@@ -84,7 +82,7 @@ class _HomeViewState extends State<HomeView>
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
     HomeView.applyRecurringTransactions();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: NUM_TABS, vsync: this);
   }
 
   @override
@@ -108,32 +106,27 @@ class _HomeViewState extends State<HomeView>
           children: [Icon(Icons.euro), Text("Overview")]),
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Icon(Icons.compare_arrows), Text("Transactions")]),
+          children: [Icon(Icons.compare_arrows), Text("Transfers")]),
       Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [Icon(Icons.bar_chart), Text("Statistics")]),
+      Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Icon(Icons.refresh), Text("Recurring")])
     ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Money Tracker"),
-        ),
+        appBar: AppBar(centerTitle: true, title: Text("Money Tracker")),
         drawer: HomeDrawer(),
         body: TabBarView(controller: _tabController, children: [
+          Container(color: primaryColorLightTone, child: OverviewTab()),
           Container(
-              color: primaryColorLightTone,
-              child: OverviewTab()),
-          Container(
-              padding: EdgeInsets.only(top: 5),
-              color: primaryColorLightTone,
-              child: OneTimeTransactionListTab()),
-          Container(
-              color: primaryColorLightTone,
-              child: StatisticsTab())
+              color: primaryColorLightTone, child: OneTimeTransactionListTab()),
+          Container(color: primaryColorLightTone, child: StatisticsTab()),
+          Container(color: primaryColorLightTone, child: RecurringTransactionListTab())
         ]),
         bottomNavigationBar: BottomAppBar(
             child: Container(

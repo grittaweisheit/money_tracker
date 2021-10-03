@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/components/oneTimeTransactionForm.dart';
+import 'package:money_tracker/forms/oneTimeTransactionForm.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 

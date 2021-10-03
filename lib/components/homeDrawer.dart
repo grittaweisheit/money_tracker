@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/pages/TagListView.dart';
-import 'package:money_tracker/pages/recurringTransactionListView.dart';
+import 'package:money_tracker/pages/recurringTransactionListTab.dart';
 
 import '../Consts.dart';
 
@@ -34,7 +34,7 @@ class HomeDrawer extends StatelessWidget {
                   leading: Icon(Icons.refresh),
                   title: Text('Recurring Transactions'),
                   onTap: () =>
-                      openPage(context, RecurringTransactionListView()),
+                      openPage(context, RecurringTransactionListTab()),
                 ),
                 ListTile(
                   leading: Icon(Icons.label_important),

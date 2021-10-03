@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:money_tracker/components/recurringTransactionForm.dart';
+import 'package:money_tracker/forms/recurringTransactionForm.dart';
+import '../Consts.dart';
 import '../models/Transactions.dart';
 
 class EditRecurringTransactionView extends StatefulWidget {
@@ -35,6 +36,7 @@ class _EditRecurringTransactionViewState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: primaryColorLightTone,
         appBar: AppBar(
           title: Text("Edit Transaction"),
         ),
