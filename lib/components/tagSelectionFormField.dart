@@ -95,7 +95,6 @@ class _TagSelectionState extends State<TagSelection> {
           childAspectRatio: 1.6),
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         var tagIndex = income ? index : index + countIncome;
-        if (!income && tagIndex > countSpending) return null;
         Tag tag = tags[tagIndex];
         bool isSelected = selectedTags.contains(tag);
         return Container(
@@ -117,7 +116,7 @@ class _TagSelectionState extends State<TagSelection> {
               ),
               onPressed: () => _handleSelection(tag),
             ));
-      }, childCount: countIncome),
+      }, childCount: income? countIncome: countSpending ),
     );
   }
 
