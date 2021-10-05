@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/Utils.dart';
@@ -18,7 +19,11 @@ class _StatisticsTabState extends State<StatisticsTab> {
   late PieChartData monthlyPieChartData;
   late Map<Tag, List<double>> tagsData;
   late DateTime currentMonthYear =
-      DateTime(DateTime.now().year, DateTime.now().month);
+  DateTime(DateTime
+      .now()
+      .year, DateTime
+      .now()
+      .month);
   int tagCount = 0;
 
   @override
@@ -27,6 +32,43 @@ class _StatisticsTabState extends State<StatisticsTab> {
     super.initState();
   }
 
+  PieChartData getOverallPieChartData(
+      List<OneTimeTransaction> newTransactions) {
+    double totalIncome = newTransactions
+        .where((t) => t.isIncome)
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    double totalExpense = newTransactions
+        .where((t) => !t.isIncome)
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    return getPieChartData(totalIncome, totalExpense);
+  }
+
+  PieChartData getMonthlyPieChartData(
+      List<OneTimeTransaction> newTransactions) {
+    double totalIncome = newTransactions
+        .where((t) => t.isIncome && !t.date.isBefore(currentMonthYear))
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    double totalExpense = newTransactions
+        .where((t) => !t.isIncome && !t.date.isBefore(currentMonthYear))
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    return getPieChartData(totalIncome, totalExpense);
+  }
+
+  PieChartData getPieChartData(double income, double expense) {
+    PieChartSectionData incomes = PieChartSectionData(
+        title: income.toStringAsFixed(2),
+        color: lightGreenColor,
+        value: income);
+    PieChartSectionData expenses = PieChartSectionData(
+        title: expense.toStringAsFixed(2),
+        color: lightRedColor,
+        value: expense);
+    return PieChartData(
+        sections: [incomes, expenses],
+        centerSpaceRadius: double.infinity);
+  }
+
+
   refresh() {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     List<OneTimeTransaction> newTransactions = box.values.toList();
@@ -34,45 +76,7 @@ class _StatisticsTabState extends State<StatisticsTab> {
     Box<Tag> tagsBox = Hive.box(tagBox);
     List<Tag> tags = tagsBox.values.toList();
     Map<Tag, List<double>> tagData =
-        Map.fromEntries(tags.map((tag) => MapEntry(tag, [0, 0])));
-
-    // generate overall pie chart data
-    double totalIncome = newTransactions
-        .where((t) => t.isIncome)
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    double totalExpense = newTransactions
-        .where((t) => !t.isIncome)
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    PieChartSectionData totalIncomes = PieChartSectionData(
-        title: totalIncome.toStringAsFixed(2),
-        color: lightGreenColor,
-        value: totalIncome);
-    PieChartSectionData totalExpenses = PieChartSectionData(
-        title: totalExpense.toStringAsFixed(2),
-        color: lightRedColor,
-        value: totalExpense);
-    PieChartData newOverallPieChartData = PieChartData(
-        sections: [totalIncomes, totalExpenses],
-        centerSpaceRadius: double.infinity);
-
-    // generate monthly pie chart data
-    double monthlyIncome = newTransactions
-        .where((t) => t.isIncome && !t.date.isBefore(currentMonthYear))
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    double monthlyExpense = newTransactions
-        .where((t) => !t.isIncome && !t.date.isBefore(currentMonthYear))
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    PieChartSectionData monthlyIncomes = PieChartSectionData(
-        title: monthlyIncome.toStringAsFixed(2),
-        color: lightGreenColor,
-        value: monthlyIncome);
-    PieChartSectionData monthlyExpenses = PieChartSectionData(
-        title: monthlyExpense.toStringAsFixed(2),
-        color: lightRedColor,
-        value: monthlyExpense);
-    PieChartData newMonthlyPieChartData = PieChartData(
-        sections: [monthlyIncomes, monthlyExpenses],
-        centerSpaceRadius: double.infinity);
+    Map.fromEntries(tags.map((tag) => MapEntry(tag, [0, 0])));
 
     // generate tag list data
     newTransactions.forEach((trans) {
@@ -89,20 +93,41 @@ class _StatisticsTabState extends State<StatisticsTab> {
     setState(() {
       transactions = newTransactions;
       tagCount = tags.length;
-      overallPieChartData = newOverallPieChartData;
-      monthlyPieChartData = newMonthlyPieChartData;
+      overallPieChartData = getOverallPieChartData(newTransactions);
+      monthlyPieChartData = getMonthlyPieChartData(newTransactions);
       tagsData = tagData;
     });
   }
 
   Widget getTagList() {
     return Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: {
+          0: IntrinsicColumnWidth(),
+          1: FlexColumnWidth(2),
+          2: FlexColumnWidth(1),
+          3: FlexColumnWidth(1),
+          4: FlexColumnWidth(1)
+        },
+        border: TableBorder(horizontalInside: BorderSide(
+            color: primaryColorLightTone, width: 1)),
         children: tagsData.entries
-            .map((e) => TableRow(children: [
-                  Text(e.key.name),
-                  getAmountText(e.value[0], false),
-                  getAmountText(e.value[1], false),
-                  getAmountText(e.value[1], false),
+            .map((tag) =>
+            TableRow(
+                decoration: BoxDecoration(
+                    color: primaryColor,
+                    border: Border.all(color: primaryColor),
+                    borderRadius: BorderRadius.circular(5)),
+                children: [
+                  Icon(allIconDataMap[tag.key.icon]!,
+                      color: primaryColorLightTone),
+                  Text(' ${tag.key.name}',
+                      style: TextStyle(color: Colors.white)),
+                  tag.value[0] != 0 ? getAmountText(tag.value[0], false) : Text(
+                      ''),
+                  tag.value[1] != 0 ? getAmountText(tag.value[1], false) : Text(
+                      ''),
+                  getAmountText(tag.value[0] + tag.value[1], false)
                 ]))
             .toList());
   }
