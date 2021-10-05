@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/components/addOneTimeTransactionFloatingButtons.dart';
+import 'package:money_tracker/components/tagStatisticsList.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
 import '../Utils.dart';
@@ -70,55 +71,74 @@ class _OverviewTabState extends State<OverviewTab> {
   }
 
   Widget getOverviewContent() {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: primaryColor, width: 4)),
-          child: Wrap(
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: primaryColor, width: 4)),
+      child: Wrap(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Overlap"), getAmountText(overlap, false)],
-              ),
-              Divider(color: primaryColor, thickness: 0.5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Income"), getAmountText(income, false)],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Expenses"), getAmountText(expenses, false)],
-              ),
-              Divider(color: primaryColor, thickness: 1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("This Month", style: getLargerTextStyle()),
-                  getAmountText(monthlyTotal, true)
-                ],
-              ),
-              Divider(color: primaryColor, thickness: 0.5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Total"), getAmountText(total, false)],
-              )
+              Text("Overlap", style: whiteTextStyle),
+              getAmountText(overlap, false)
             ],
           ),
-        ));
+          Divider(color: primaryColorLightTone, thickness: 0.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Income", style: whiteTextStyle),
+              getAmountText(income, false)
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Expenses", style: whiteTextStyle),
+              getAmountText(expenses, false)
+            ],
+          ),
+          Divider(color: primaryColorLightTone, thickness: 1),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("This Month",
+                  style: largerTextStyle
+                      .merge(whiteTextStyle)
+                      .merge(boldTextStyle)),
+              getAmountText(monthlyTotal, true)
+            ],
+          ),
+          Divider(color: primaryColorLightTone, thickness: 0.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Total", style: whiteTextStyle),
+              getAmountText(total, false)
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   Widget getContent() {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text(
-        targetDateFormat.format(DateTime.now()),
-        style: TextStyle(fontSize: 20),
-      ),
-      getOverviewContent()
-    ]);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
+      child: Column(children: [
+        Text(
+          targetDateFormat.format(DateTime.now()),
+          style: largerTextStyle,
+        ),
+        topBottomSpace5,
+        getOverviewContent(),
+        topBottomSpace20,
+        TagStatisticsList(true)
+      ]),
+    );
   }
 
   @override

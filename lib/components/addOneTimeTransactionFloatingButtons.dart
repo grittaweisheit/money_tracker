@@ -28,15 +28,17 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
             Spacer(),
             FloatingActionButton(
               heroTag: "addIncome",
+              backgroundColor: intensiveGreenColor.withOpacity(0.6),
+              elevation: 0.1,
               onPressed: () => addTransaction(true),
-              backgroundColor: lightGreenColor,
               child: Icon(Icons.add),
             ),
             topBottomSpace5,
             FloatingActionButton(
                 heroTag: "addLoss",
+                backgroundColor: intensiveRedColor.withOpacity(0.6),
+                elevation: 0.1,
                 onPressed: () => addTransaction(false),
-                backgroundColor: lightRedColor,
                 child: Icon(Icons.remove))
           ],
         ));

@@ -1,23 +1,20 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'Consts.dart';
 
-TextStyle getLargerTextStyle() {
-  return TextStyle(fontSize: 20);
-}
+TextStyle largerTextStyle = TextStyle(fontSize: 20);
 
-TextStyle getBoldTextStyle() {
-  return TextStyle(fontWeight: FontWeight.bold);
-}
+TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
 
-TextStyle getRedGreenTextStyle(double amount) {
+TextStyle redGreenTextStyle(double amount) {
   return TextStyle(
       color: amount < 0 ? intensiveRedColor : intensiveGreenColor,
       fontWeight: FontWeight.bold);
 }
+
+TextStyle whiteTextStyle = TextStyle(color: Colors.white);
 
 String getAmountString(double amount) {
   String omen = amount < 0 ? '-' : '+';
@@ -28,8 +25,8 @@ Text getAmountText(double amount, bool large) {
   return Text(
     getAmountString(amount),
     style: !large
-        ? getRedGreenTextStyle(amount)
-        : getRedGreenTextStyle(amount).merge(getLargerTextStyle()),
+        ? redGreenTextStyle(amount)
+        : redGreenTextStyle(amount).merge(largerTextStyle),
   );
 }
 

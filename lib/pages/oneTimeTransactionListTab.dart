@@ -38,22 +38,10 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
     });
   }
 
-  Widget getCircleAvatar(OneTimeTransaction transaction) {
-    return CircleAvatar(
-      backgroundColor: primaryColorLightTone,
-      child: transaction.tags.length > 0
-          ? Icon(allIconDataMap[transaction.tags.first.icon],
-              color: primaryColor)
-          : Text(
-              transaction.description.characters.first,
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-            ),
-    );
-  }
-
   Widget getEditButton(OneTimeTransaction transaction) {
     return IconButton(
+        padding: EdgeInsets.zero,
+        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
           Navigator.push(
@@ -66,6 +54,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
 
   Widget getDeleteButton(OneTimeTransaction transaction) {
     return IconButton(
+        padding: EdgeInsets.zero,
+        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         onPressed: () {
           transaction.delete();
           refresh();
@@ -79,19 +69,35 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   }
 
   Widget getListElementCard(OneTimeTransaction transaction, bool isFront) {
-    return Card(
-      color: primaryColor,
-      child: ListTile(
-        leading: getCircleAvatar(transaction),
-        title: Text(transaction.description,
-            style: TextStyle(color: Colors.white)),
-        subtitle: Text(
-          onlyDate.format(transaction.date),
-          style: TextStyle(color: primaryColorLightTone),
-        ),
-        trailing: isFront
-            ? getAmountText(transaction.amount, false)
-            : getListElementActions(transaction),
+    return Container(
+      decoration: BoxDecoration(
+          color: primaryColor,
+          border: Border.all(color: primaryColor),
+          borderRadius: BorderRadius.circular(5)),
+      margin: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Wrap(children: [
+                Icon(allIconDataMap[transaction.tags[0].icon],
+                    size: 30, color: primaryColorLightTone),
+                leftRightSpace5,
+                leftRightSpace5,
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(transaction.description,
+                      style: TextStyle(color: Colors.white)),
+                  Text(
+                    onlyDate.format(transaction.date),
+                    style: TextStyle(color: primaryColorLightTone),
+                  )
+                ])
+              ]),
+              isFront
+                  ? getAmountText(transaction.amount, false)
+                  : getListElementActions(transaction)
+            ]),
       ),
     );
   }
@@ -107,6 +113,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
     int? currentMonth;
     return ListView.builder(
       itemCount: count,
+      //itemExtent: 60,
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
         var children = [];
