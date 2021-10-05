@@ -77,13 +77,13 @@ class _OverviewTabState extends State<OverviewTab> {
           color: primaryColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: primaryColor, width: 4)),
-      child: Wrap(
+      child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Overlap", style: whiteTextStyle),
-              getAmountText(overlap)
+              getAmountText(overlap, white: true)
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 0.5),
@@ -91,17 +91,18 @@ class _OverviewTabState extends State<OverviewTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Income", style: whiteTextStyle),
-              getAmountText(income)
+              getAmountText(income, intensive: true)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Expenses", style: whiteTextStyle),
-              getAmountText(expenses)
+              getAmountText(expenses, zeroRed: true, intensive: true)
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 1),
+          topBottomSpace5,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -112,12 +113,13 @@ class _OverviewTabState extends State<OverviewTab> {
               getAmountText(monthlyTotal, intensive: true, large: true)
             ],
           ),
+          topBottomSpace5,
           Divider(color: primaryColorLightTone, thickness: 0.5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Total", style: whiteTextStyle),
-              getAmountText(total)
+              getAmountText(total, white: true)
             ],
           )
         ],
@@ -131,11 +133,13 @@ class _OverviewTabState extends State<OverviewTab> {
       child: Column(children: [
         Text(
           targetDateFormat.format(DateTime.now()),
-          style: largerTextStyle,
+          style: largerTextStyle.merge(boldTextStyle),
         ),
         topBottomSpace5,
         getOverviewContent(),
         topBottomSpace20,
+        Text('Tags this Month', style: largerTextStyle,),
+        topBottomSpace5,
         TagStatisticsList(true)
       ]),
     );

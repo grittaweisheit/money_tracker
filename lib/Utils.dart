@@ -8,16 +8,18 @@ TextStyle largerTextStyle = TextStyle(fontSize: 20);
 
 TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
 
-TextStyle intensiveRedGreenTextStyle(double amount) {
-  return TextStyle(
-      color: amount < 0 ? intensiveRedColor : intensiveGreenColor,
-      fontWeight: FontWeight.bold);
+TextStyle intensiveRedGreenTextStyle(double amount, {bool zeroRed = false}) {
+  Color color = amount < 0 || (amount == 0 && zeroRed)
+      ? intensiveRedColor
+      : intensiveGreenColor;
+  return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
-TextStyle lightRedGreenTextStyle(double amount) {
-  return TextStyle(
-      color: amount < 0 ? lightRedColor : lightGreenColor,
-      fontWeight: FontWeight.bold);
+TextStyle lightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
+  Color color = amount < 0 || (amount == 0 && zeroRed)
+      ? lightRedColor
+      : lightGreenColor;
+  return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
 TextStyle whiteTextStyle = TextStyle(color: Colors.white);
@@ -28,11 +30,16 @@ String getAmountString(double amount) {
 }
 
 Text getAmountText(double amount,
-    {bool large = false, bool intensive = false}) {
+    {bool large = false,
+    bool intensive = false,
+    white = false,
+    zeroRed = false}) {
   var style = TextStyle();
-  style = style.merge(intensive
-      ? intensiveRedGreenTextStyle(amount)
-      : lightRedGreenTextStyle(amount));
+  style = style.merge(white
+      ? whiteTextStyle
+      : intensive
+          ? intensiveRedGreenTextStyle(amount, zeroRed: zeroRed)
+          : lightRedGreenTextStyle(amount, zeroRed: zeroRed));
   if (large) style = style.merge(largerTextStyle);
   return Text(
     getAmountString(amount),

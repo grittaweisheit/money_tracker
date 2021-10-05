@@ -57,8 +57,10 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
     });
   }
 
-  Text getTagAmount(double amount) {
-    return amount != 0 ? getAmountText(amount) : Text('');
+  Text getTagAmount(double amount, bool isIncomeTag) {
+    return amount != 0
+        ? getAmountText(amount, zeroRed: !isIncomeTag)
+        : Text('');
   }
 
   Widget getTagList() {
@@ -87,9 +89,10 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
                               color: primaryColorLightTone)),
                       Text(' ${tag.key.name}',
                           style: TextStyle(color: Colors.white)),
-                      getTagAmount(tag.value[0]),
-                      getTagAmount(tag.value[1]),
-                      getAmountText(tag.value[0] + tag.value[1])
+                      getTagAmount(tag.value[0], tag.key.isIncomeTag),
+                      getTagAmount(tag.value[1], tag.key.isIncomeTag),
+                      getAmountText(tag.value[0] + tag.value[1],
+                          zeroRed: !tag.key.isIncomeTag)
                     ]))
             .toList());
   }

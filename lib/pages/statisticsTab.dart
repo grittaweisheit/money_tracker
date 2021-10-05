@@ -15,7 +15,6 @@ class StatisticsTab extends StatefulWidget {
 }
 
 class _StatisticsTabState extends State<StatisticsTab> {
-  List<OneTimeTransaction> transactions = [];
   late PieChartData overallPieChartData;
   late PieChartData monthlyPieChartData;
   late DateTime currentMonthYear =
@@ -70,7 +69,6 @@ class _StatisticsTabState extends State<StatisticsTab> {
     List<OneTimeTransaction> newTransactions = box.values.toList();
 
     setState(() {
-      transactions = newTransactions;
       overallPieChartData = getOverallPieChartData(newTransactions);
       monthlyPieChartData = getMonthlyPieChartData(newTransactions);
     });
@@ -80,33 +78,34 @@ class _StatisticsTabState extends State<StatisticsTab> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Expanded(
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Container(
+          height: 230,
           child: Card(
-            child: Row(children: [
-              leftRightSpace5,
-              Expanded(
-                child: Column(children: [
-                  Text('Overall', style: largerTextStyle.merge(boldTextStyle)),
-                  Expanded(child: PieChart(overallPieChartData)),
-                ]),
-              ),
-              leftRightSpace5,
-              Expanded(
-                child: Column(children: [
-                  Text(
-                    'This Month',
-                    style: largerTextStyle.merge(boldTextStyle),
-                  ),
-                  Expanded(child: PieChart(monthlyPieChartData)),
-                ]),
-              ),
-              leftRightSpace5
-            ]),
+            color: primaryColor,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Row(children: [
+                Expanded(
+                  child: Column(children: [
+                    Text('Overall',
+                        style: largerTextStyle.merge(whiteTextStyle)),
+                    Expanded(child: PieChart(overallPieChartData)),
+                  ]),
+                ),
+                leftRightSpace5,
+                Expanded(
+                  child: Column(children: [
+                    Text('This Month',
+                        style: largerTextStyle.merge(whiteTextStyle)),
+                    Expanded(child: PieChart(monthlyPieChartData)),
+                  ]),
+                )
+              ]),
+            ),
           ),
         ),
-        TagStatisticsList(false),
-        Spacer()
+        TagStatisticsList(false)
       ]),
     );
   }
