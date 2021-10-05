@@ -95,7 +95,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
                 ])
               ]),
               isFront
-                  ? getAmountText(transaction.amount, false)
+                  ? getAmountText(transaction.amount, intensive: true)
                   : getListElementActions(transaction)
             ]),
       ),

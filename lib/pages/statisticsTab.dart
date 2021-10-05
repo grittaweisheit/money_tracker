@@ -50,16 +50,19 @@ class _StatisticsTabState extends State<StatisticsTab> {
   }
 
   PieChartData getPieChartData(double income, double expense) {
-    PieChartSectionData incomes = PieChartSectionData(
-        title: income.toStringAsFixed(2),
-        color: lightGreenColor,
-        value: income);
-    PieChartSectionData expenses = PieChartSectionData(
-        title: expense.toStringAsFixed(2),
-        color: lightRedColor,
-        value: expense.abs());
-    return PieChartData(
-        sections: [incomes, expenses], centerSpaceRadius: double.infinity);
+    List<PieChartSectionData> sections = [];
+    // don't add sections if their value is 0 to avoid bad displaying
+    if (income != 0)
+      sections.add(PieChartSectionData(
+          title: income.toStringAsFixed(2),
+          color: lightGreenColor,
+          value: income));
+    if (expense != 0)
+      sections.add(PieChartSectionData(
+          title: expense.toStringAsFixed(2),
+          color: lightRedColor,
+          value: expense.abs()));
+    return PieChartData(sections: sections, centerSpaceRadius: double.infinity);
   }
 
   refresh() {
@@ -81,10 +84,10 @@ class _StatisticsTabState extends State<StatisticsTab> {
         Expanded(
           child: Card(
             child: Row(children: [
+              leftRightSpace5,
               Expanded(
                 child: Column(children: [
-                  Text('Overall',
-                      style: largerTextStyle.merge(boldTextStyle)),
+                  Text('Overall', style: largerTextStyle.merge(boldTextStyle)),
                   Expanded(child: PieChart(overallPieChartData)),
                 ]),
               ),
@@ -98,6 +101,7 @@ class _StatisticsTabState extends State<StatisticsTab> {
                   Expanded(child: PieChart(monthlyPieChartData)),
                 ]),
               ),
+              leftRightSpace5
             ]),
           ),
         ),

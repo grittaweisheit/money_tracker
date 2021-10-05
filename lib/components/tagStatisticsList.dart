@@ -58,7 +58,7 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
   }
 
   Text getTagAmount(double amount) {
-    return amount != 0 ? getAmountText(amount, false) : Text('');
+    return amount != 0 ? getAmountText(amount) : Text('');
   }
 
   Widget getTagList() {
@@ -89,7 +89,7 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
                           style: TextStyle(color: Colors.white)),
                       getTagAmount(tag.value[0]),
                       getTagAmount(tag.value[1]),
-                      getAmountText(tag.value[0] + tag.value[1], false)
+                      getAmountText(tag.value[0] + tag.value[1])
                     ]))
             .toList());
   }

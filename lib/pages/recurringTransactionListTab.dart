@@ -100,7 +100,7 @@ class _RecurringTransactionListTabState
           style: TextStyle(color: primaryColorLightTone),
         ),
         trailing: isFront
-            ? getAmountText(transaction.amount, false)
+            ? getAmountText(transaction.amount, intensive: true)
             : getListElementActions(transaction),
       ),
     );

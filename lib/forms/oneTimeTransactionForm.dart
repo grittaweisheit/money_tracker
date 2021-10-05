@@ -98,7 +98,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           backgroundColor: primaryColor,
           onPressed: () {
             formKey.currentState!.save();
-            if (formKey.currentState!.validate()) {
+            if (formKey.currentState!.validate() && tags.isNotEmpty) {
               widget.submitTransaction(
                   description, isIncome, amount, tags, date);
             } else {

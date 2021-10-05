@@ -119,14 +119,14 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: primaryColorLightTone,
         appBar: AppBar(centerTitle: true, title: Text("Money Tracker")),
         drawer: HomeDrawer(),
         body: TabBarView(controller: tabController, children: [
-          Container(color: primaryColorLightTone, child: OverviewTab()),
-          Container(
-              color: primaryColorLightTone, child: OneTimeTransactionListTab()),
-          Container(color: primaryColorLightTone, child: StatisticsTab()),
-          Container(color: primaryColorLightTone, child: RecurringTransactionListTab())
+          Container(child: OverviewTab()),
+          Container(child: OneTimeTransactionListTab()),
+          Container(child: StatisticsTab()),
+          Container(child: RecurringTransactionListTab())
         ]),
         bottomNavigationBar: BottomAppBar(
             child: Container(

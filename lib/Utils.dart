@@ -8,9 +8,15 @@ TextStyle largerTextStyle = TextStyle(fontSize: 20);
 
 TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
 
-TextStyle redGreenTextStyle(double amount) {
+TextStyle intensiveRedGreenTextStyle(double amount) {
   return TextStyle(
       color: amount < 0 ? intensiveRedColor : intensiveGreenColor,
+      fontWeight: FontWeight.bold);
+}
+
+TextStyle lightRedGreenTextStyle(double amount) {
+  return TextStyle(
+      color: amount < 0 ? lightRedColor : lightGreenColor,
       fontWeight: FontWeight.bold);
 }
 
@@ -21,12 +27,16 @@ String getAmountString(double amount) {
   return "$omen ${amount.abs().toStringAsFixed(2)} €";
 }
 
-Text getAmountText(double amount, bool large) {
+Text getAmountText(double amount,
+    {bool large = false, bool intensive = false}) {
+  var style = TextStyle();
+  style = style.merge(intensive
+      ? intensiveRedGreenTextStyle(amount)
+      : lightRedGreenTextStyle(amount));
+  if (large) style = style.merge(largerTextStyle);
   return Text(
     getAmountString(amount),
-    style: !large
-        ? redGreenTextStyle(amount)
-        : redGreenTextStyle(amount).merge(largerTextStyle),
+    style: style,
   );
 }
 

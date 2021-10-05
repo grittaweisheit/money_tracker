@@ -83,7 +83,7 @@ class _OverviewTabState extends State<OverviewTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Overlap", style: whiteTextStyle),
-              getAmountText(overlap, false)
+              getAmountText(overlap)
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 0.5),
@@ -91,14 +91,14 @@ class _OverviewTabState extends State<OverviewTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Income", style: whiteTextStyle),
-              getAmountText(income, false)
+              getAmountText(income)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Expenses", style: whiteTextStyle),
-              getAmountText(expenses, false)
+              getAmountText(expenses)
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 1),
@@ -109,7 +109,7 @@ class _OverviewTabState extends State<OverviewTab> {
                   style: largerTextStyle
                       .merge(whiteTextStyle)
                       .merge(boldTextStyle)),
-              getAmountText(monthlyTotal, true)
+              getAmountText(monthlyTotal, intensive: true, large: true)
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 0.5),
@@ -117,7 +117,7 @@ class _OverviewTabState extends State<OverviewTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Total", style: whiteTextStyle),
-              getAmountText(total, false)
+              getAmountText(total)
             ],
           )
         ],
