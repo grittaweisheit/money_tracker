@@ -50,9 +50,10 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
+      int omen = isIncome? 1 : -1;
       if (newAmount != null && newAmount != amount)
         setState(() {
-          amount = newAmount;
+          amount = omen * newAmount;
         });
     }
 
@@ -85,6 +86,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
             formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
+              amount *= -1;
             });
           },
           child: Icon(Icons.repeat));
@@ -115,7 +117,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
               child: Column(children: [
                 IntrinsicWidth(
                   child:
-                      AmountInputFormField(_saveAmount, amount, isIncome, true),
+                      AmountInputFormField(_saveAmount, amount.abs(), isIncome, true),
                 ),
                 getDescriptionFormField(),
                 DatePickerButtonFormField(true, date, _saveDate),

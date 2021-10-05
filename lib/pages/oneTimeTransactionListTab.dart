@@ -90,9 +90,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
           style: TextStyle(color: primaryColorLightTone),
         ),
         trailing: isFront
-            ? getAmountText(
-                transaction.isIncome ? transaction.amount : -transaction.amount,
-                false)
+            ? getAmountText(transaction.amount, false)
             : getListElementActions(transaction),
       ),
     );

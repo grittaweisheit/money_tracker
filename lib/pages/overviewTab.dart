@@ -45,31 +45,21 @@ class _OverviewTabState extends State<OverviewTab> {
   double getOverlap() {
     return box.values
         .where((transaction) => transaction.date.isBefore(monthYear))
-        .fold(
-            0,
-            (sum, transaction) => transaction.isIncome
-                ? sum + transaction.amount
-                : sum - transaction.amount);
-  }
-
-  double getIncome() {
-    return box.values
-        .where((transaction) =>
-            transaction.isIncome && !transaction.date.isBefore(monthYear))
         .fold(0, (sum, transaction) => sum + transaction.amount);
   }
 
-  double getExpenses() {
+  double getIncomeOrExpense(bool getIncome) {
     return box.values
         .where((transaction) =>
-            !transaction.isIncome && !transaction.date.isBefore(monthYear))
-        .fold(0, (sum, transaction) => sum - transaction.amount);
+            transaction.isIncome == getIncome &&
+            !transaction.date.isBefore(monthYear))
+        .fold(0, (sum, transaction) => sum + transaction.amount);
   }
 
   void refresh() {
     double newOverlap = getOverlap();
-    double newIncome = getIncome();
-    double newExpenses = getExpenses();
+    double newIncome = getIncomeOrExpense(true);
+    double newExpenses = getIncomeOrExpense(false);
     setState(() {
       overlap = newOverlap;
       income = newIncome;

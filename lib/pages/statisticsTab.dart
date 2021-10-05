@@ -19,11 +19,7 @@ class _StatisticsTabState extends State<StatisticsTab> {
   late PieChartData monthlyPieChartData;
   late Map<Tag, List<double>> tagsData;
   late DateTime currentMonthYear =
-  DateTime(DateTime
-      .now()
-      .year, DateTime
-      .now()
-      .month);
+      DateTime(DateTime.now().year, DateTime.now().month);
   int tagCount = 0;
 
   @override
@@ -62,12 +58,10 @@ class _StatisticsTabState extends State<StatisticsTab> {
     PieChartSectionData expenses = PieChartSectionData(
         title: expense.toStringAsFixed(2),
         color: lightRedColor,
-        value: expense);
+        value: expense.abs());
     return PieChartData(
-        sections: [incomes, expenses],
-        centerSpaceRadius: double.infinity);
+        sections: [incomes, expenses], centerSpaceRadius: double.infinity);
   }
-
 
   refresh() {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
@@ -76,15 +70,13 @@ class _StatisticsTabState extends State<StatisticsTab> {
     Box<Tag> tagsBox = Hive.box(tagBox);
     List<Tag> tags = tagsBox.values.toList();
     Map<Tag, List<double>> tagData =
-    Map.fromEntries(tags.map((tag) => MapEntry(tag, [0, 0])));
+        Map.fromEntries(tags.map((tag) => MapEntry(tag, [0, 0])));
 
     // generate tag list data
     newTransactions.forEach((trans) {
       trans.tags.forEach((tag) {
         tagData.update(tag, (values) {
-          trans.isIncome
-              ? values[0] += trans.amount
-              : values[1] -= trans.amount;
+          values[trans.isIncome ? 0 : 1] += trans.amount;
           return values;
         });
       });
@@ -99,6 +91,12 @@ class _StatisticsTabState extends State<StatisticsTab> {
     });
   }
 
+  Text getTagAmount(double amount){
+    return amount != 0
+        ? getAmountText(amount, false)
+        : Text('');
+  }
+
   Widget getTagList() {
     return Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -109,26 +107,26 @@ class _StatisticsTabState extends State<StatisticsTab> {
           3: FlexColumnWidth(1),
           4: FlexColumnWidth(1)
         },
-        border: TableBorder(horizontalInside: BorderSide(
-            color: primaryColorLightTone, width: 1)),
+        border: TableBorder(
+            horizontalInside:
+                BorderSide(color: primaryColorLightTone, width: 1)),
         children: tagsData.entries
-            .map((tag) =>
-            TableRow(
-                decoration: BoxDecoration(
-                    color: primaryColor,
-                    border: Border.all(color: primaryColor),
-                    borderRadius: BorderRadius.circular(5)),
-                children: [
-                  Icon(allIconDataMap[tag.key.icon]!,
-                      color: primaryColorLightTone),
-                  Text(' ${tag.key.name}',
-                      style: TextStyle(color: Colors.white)),
-                  tag.value[0] != 0 ? getAmountText(tag.value[0], false) : Text(
-                      ''),
-                  tag.value[1] != 0 ? getAmountText(tag.value[1], false) : Text(
-                      ''),
-                  getAmountText(tag.value[0] + tag.value[1], false)
-                ]))
+            .map((tag) => TableRow(
+                    decoration: BoxDecoration(
+                        color: primaryColor,
+                        border: Border.all(color: primaryColor),
+                        borderRadius: BorderRadius.circular(5)),
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.all(3),
+                          child: Icon(allIconDataMap[tag.key.icon]!,
+                          color: primaryColorLightTone)),
+                      Text(' ${tag.key.name}',
+                          style: TextStyle(color: Colors.white)),
+                      getTagAmount(tag.value[0]),
+                      getTagAmount(tag.value[1]),
+                      getAmountText(tag.value[0] + tag.value[1], false)
+                    ]))
             .toList());
   }
 
