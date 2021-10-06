@@ -100,6 +100,7 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Scrollbar(child: SingleChildScrollView(child: getTagList())));
+        child: Scrollbar(
+            child: SingleChildScrollView(child: getTagList())));
   }
 }

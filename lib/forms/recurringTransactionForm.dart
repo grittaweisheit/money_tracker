@@ -53,9 +53,10 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
+      int omen = isIncome? 1 : -1;
       if (newAmount != null && newAmount != amount)
         setState(() {
-          amount = newAmount;
+          amount = omen * newAmount;
         });
     }
 
@@ -121,6 +122,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
             formKey.currentState!.save();
             setState(() {
               isIncome = !isIncome;
+              amount *= -1;
             });
           },
           child: Icon(Icons.repeat));
