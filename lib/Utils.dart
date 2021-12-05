@@ -1,8 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'Consts.dart';
+import 'models/Transactions.dart';
+
+
+double getIncomeOrExpense(bool getIncome, DateTime monthYear, Box<Transaction> box) {
+  return box.values
+      .where((transaction) =>
+  transaction.isIncome == getIncome &&
+      !transaction.date.isBefore(monthYear))
+      .fold(0, (sum, transaction) => sum + transaction.amount);
+}
 
 TextStyle largerTextStyle = TextStyle(fontSize: 20);
 

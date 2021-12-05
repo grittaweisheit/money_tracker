@@ -45,7 +45,7 @@ class Tag extends HiveObject {
 }
 
 @HiveType(typeId: 3)
-class Transaction extends HiveObject {
+class TransactionBase extends HiveObject {
   @HiveField(0)
   String description;
   @HiveField(1)
@@ -54,21 +54,36 @@ class Transaction extends HiveObject {
   double amount;
   @HiveField(3)
   HiveList<Tag> tags;
-  @HiveField(4)
-  DateTime date; // nextExecution for RecurringTransactions
 
-  Transaction(
-      this.description, this.isIncome, this.amount, this.tags, this.date);
+  TransactionBase(this.description, this.isIncome, this.amount, this.tags);
 
-  Transaction.empty()
+  TransactionBase.empty()
       : this.description = "",
         this.isIncome = true,
         this.amount = 0.00,
-        this.tags = HiveList<Tag>(Hive.box<Tag>(tagBox)),
-        this.date = DateTime.now();
+        this.tags = HiveList<Tag>(Hive.box<Tag>(tagBox));
 }
 
 @HiveType(typeId: 4)
+class Transaction extends TransactionBase {
+  @HiveField(4)
+  DateTime date;
+
+  Transaction(String description, bool isIncome, double amount,
+      HiveList<Tag> tags, this.date)
+      : super(description, isIncome, amount, tags);
+
+  Transaction.empty()
+      : date = DateTime.now(),
+        super.empty();
+
+  getSignedAmountString() {
+    String omen = isIncome ? '+' : '-';
+    return '$omen ${amount.toString()} €';
+  }
+}
+
+@HiveType(typeId: 5)
 class RecurringTransaction extends Transaction {
   @HiveField(5)
   Rule repetitionRule;
@@ -76,10 +91,6 @@ class RecurringTransaction extends Transaction {
   RecurringTransaction(String description, bool isIncome, double amount,
       HiveList<Tag> tags, DateTime date, this.repetitionRule)
       : super(description, isIncome, amount, tags, date);
-
-  RecurringTransaction.empty()
-      : repetitionRule = Rule(1, Period.month),
-        super.empty();
 
   DateTime get nextExecution {
     return this.date;
@@ -89,22 +100,25 @@ class RecurringTransaction extends Transaction {
     this.date = nextExecution;
   }
 
-  getSignedAmountString() {
-    String omen = isIncome ? '+' : '-';
-    return '$omen ${amount.toString()} €';
-  }
+  RecurringTransaction.empty()
+      : repetitionRule = Rule(1, Period.month),
+        super.empty();
 }
 
-@HiveType(typeId: 5)
+@HiveType(typeId: 6)
 class OneTimeTransaction extends Transaction {
   OneTimeTransaction(String description, bool isIncome, double amount,
-      HiveList<Tag> tags, DateTime date)
+      HiveList<Tag> tags, date)
       : super(description, isIncome, amount, tags, date);
 
   OneTimeTransaction.empty() : super.empty();
+}
 
-  getSignedAmountString() {
-    String omen = isIncome ? '+' : '-';
-    return '$omen ${amount.toString()} €';
-  }
+@HiveType(typeId: 7)
+class BluePrintTransaction extends TransactionBase {
+  BluePrintTransaction(
+      String description, bool isIncome, double amount, HiveList<Tag> tags)
+      : super(description, isIncome, amount, tags);
+
+  BluePrintTransaction.empty() : super.empty();
 }

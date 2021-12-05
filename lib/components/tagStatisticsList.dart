@@ -70,8 +70,8 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
           0: IntrinsicColumnWidth(),
           1: FlexColumnWidth(2),
           2: FlexColumnWidth(1),
-          3: FlexColumnWidth(1),
-          4: FlexColumnWidth(1)
+          //3: FlexColumnWidth(1),
+          //4: FlexColumnWidth(1)
         },
         border: TableBorder(
             horizontalInside:
@@ -89,10 +89,14 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
                               color: primaryColorLightTone)),
                       Text(' ${tag.key.name}',
                           style: TextStyle(color: Colors.white)),
-                      getTagAmount(tag.value[0], tag.key.isIncomeTag),
-                      getTagAmount(tag.value[1], tag.key.isIncomeTag),
-                      getAmountText(tag.value[0] + tag.value[1],
-                          zeroRed: !tag.key.isIncomeTag)
+                      //getTagAmount(tag.value[0], tag.key.isIncomeTag),
+                      //getTagAmount(tag.value[1], tag.key.isIncomeTag),
+                      Container(
+                        padding: EdgeInsets.only(right: 10),
+                        alignment: Alignment.centerRight,
+                        child: getAmountText(tag.value[0] + tag.value[1],
+                            zeroRed: !tag.key.isIncomeTag),
+                      )
                     ]))
             .toList());
   }
@@ -100,7 +104,6 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Scrollbar(
-            child: SingleChildScrollView(child: getTagList())));
+        child: Scrollbar(child: SingleChildScrollView(child: getTagList())));
   }
 }

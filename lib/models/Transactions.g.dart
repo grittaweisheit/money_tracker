@@ -135,9 +135,52 @@ class TagAdapter extends TypeAdapter<Tag> {
           typeId == other.typeId;
 }
 
-class TransactionAdapter extends TypeAdapter<Transaction> {
+class TransactionBaseAdapter extends TypeAdapter<TransactionBase> {
   @override
   final int typeId = 3;
+
+  @override
+  TransactionBase read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TransactionBase(
+      fields[0] as String,
+      fields[1] as bool,
+      fields[2] as double,
+      (fields[3] as HiveList).castHiveList(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TransactionBase obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.description)
+      ..writeByte(1)
+      ..write(obj.isIncome)
+      ..writeByte(2)
+      ..write(obj.amount)
+      ..writeByte(3)
+      ..write(obj.tags);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransactionBaseAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TransactionAdapter extends TypeAdapter<Transaction> {
+  @override
+  final int typeId = 4;
 
   @override
   Transaction read(BinaryReader reader) {
@@ -158,6 +201,8 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
   void write(BinaryWriter writer, Transaction obj) {
     writer
       ..writeByte(5)
+      ..writeByte(4)
+      ..write(obj.date)
       ..writeByte(0)
       ..write(obj.description)
       ..writeByte(1)
@@ -165,9 +210,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
-      ..write(obj.tags)
-      ..writeByte(4)
-      ..write(obj.date);
+      ..write(obj.tags);
   }
 
   @override
@@ -183,7 +226,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
 
 class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
   RecurringTransaction read(BinaryReader reader) {
@@ -207,6 +250,8 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
       ..writeByte(6)
       ..writeByte(5)
       ..write(obj.repetitionRule)
+      ..writeByte(4)
+      ..write(obj.date)
       ..writeByte(0)
       ..write(obj.description)
       ..writeByte(1)
@@ -214,9 +259,7 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
-      ..write(obj.tags)
-      ..writeByte(4)
-      ..write(obj.date);
+      ..write(obj.tags);
   }
 
   @override
@@ -232,7 +275,7 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
 
 class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   @override
-  final int typeId = 5;
+  final int typeId = 6;
 
   @override
   OneTimeTransaction read(BinaryReader reader) {
@@ -245,7 +288,7 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
       fields[1] as bool,
       fields[2] as double,
       (fields[3] as HiveList).castHiveList(),
-      fields[4] as DateTime,
+      fields[4] as dynamic,
     );
   }
 
@@ -253,6 +296,8 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   void write(BinaryWriter writer, OneTimeTransaction obj) {
     writer
       ..writeByte(5)
+      ..writeByte(4)
+      ..write(obj.date)
       ..writeByte(0)
       ..write(obj.description)
       ..writeByte(1)
@@ -260,9 +305,7 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)
-      ..write(obj.tags)
-      ..writeByte(4)
-      ..write(obj.date);
+      ..write(obj.tags);
   }
 
   @override
@@ -272,6 +315,49 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is OneTimeTransactionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class BluePrintTransactionAdapter extends TypeAdapter<BluePrintTransaction> {
+  @override
+  final int typeId = 7;
+
+  @override
+  BluePrintTransaction read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return BluePrintTransaction(
+      fields[0] as String,
+      fields[1] as bool,
+      fields[2] as double,
+      (fields[3] as HiveList).castHiveList(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, BluePrintTransaction obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.description)
+      ..writeByte(1)
+      ..write(obj.isIncome)
+      ..writeByte(2)
+      ..write(obj.amount)
+      ..writeByte(3)
+      ..write(obj.tags);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BluePrintTransactionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
