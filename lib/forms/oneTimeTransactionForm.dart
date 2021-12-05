@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
@@ -50,7 +51,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
-      int omen = isIncome? 1 : -1;
+      int omen = isIncome ? 1 : -1;
       if (newAmount != null && newAmount != amount)
         setState(() {
           amount = omen * newAmount;
@@ -109,6 +110,30 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           child: Icon(Icons.check));
     }
 
+    _showDatePicker() {
+      showCupertinoModalPopup(
+          context: context,
+          builder: (_) => Container(
+                height: 500,
+                color: Color.fromARGB(255, 255, 255, 255),
+                child: Column(
+                  children: [
+                    Container(
+                        height: 400,
+                        child: CupertinoDatePicker(
+                          initialDateTime: date,
+                          mode: CupertinoDatePickerMode.date,
+                          onDateTimeChanged: _saveDate,
+                        )),
+                    CupertinoButton(
+                      child: Text('OK'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ),
+              ));
+    }
+
     return Stack(children: [
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -116,11 +141,11 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
               key: formKey,
               child: Column(children: [
                 IntrinsicWidth(
-                  child:
-                      AmountInputFormField(_saveAmount, amount.abs(), isIncome, true),
+                  child: AmountInputFormField(
+                      _saveAmount, amount.abs(), isIncome, true),
                 ),
                 getDescriptionFormField(),
-                DatePickerButtonFormField(true, date, _saveDate),
+                TextButton(onPressed: _showDatePicker, child: Text(onlyDate.format(date))),
                 topBottomSpace5,
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),

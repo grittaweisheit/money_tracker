@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/datePickerButtonFormField.dart';
@@ -145,6 +146,29 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           child: Icon(Icons.check));
     }
 
+    _showDatePicker() {
+      showCupertinoModalPopup(
+          context: context,
+          builder: (_) => Container(
+            height: 500,
+            color: Color.fromARGB(255, 255, 255, 255),
+            child: Column(
+              children: [
+                Container(
+                    height: 400,
+                    child: CupertinoDatePicker(
+                      initialDateTime: nextExecution,
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: _saveNextExecution,
+                    )),
+                CupertinoButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+            ),
+          ));
+    }
     return Stack(children: [
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -155,8 +179,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                     child: AmountInputFormField(
                         _saveAmount, amount, isIncome, true)),
                 getDescriptionFormField(),
-                DatePickerButtonFormField(
-                    true, nextExecution, _saveNextExecution),
+                TextButton(onPressed: _showDatePicker, child: Text(onlyDate.format(nextExecution))),
                 getRepeatsEverySection(),
                 topBottomSpace5,
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
