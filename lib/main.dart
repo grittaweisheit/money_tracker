@@ -12,7 +12,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RecurringTransactionAdapter());
   Hive.registerAdapter(OneTimeTransactionAdapter());
-  Hive.registerAdapter(BluePrintTransactionAdapter());
+  Hive.registerAdapter(BlueprintTransactionAdapter());
   Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(RuleAdapter());
   Hive.registerAdapter(PeriodAdapter());
@@ -22,7 +22,7 @@ void main() async {
   Box recurringTransactions =
   await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
   Box bluePrintTransactions =
-  await Hive.openBox<BluePrintTransaction>(bluePrintTransactionBox);
+  await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
 
   if (RESET) {
     tags.clear();
@@ -33,6 +33,8 @@ void main() async {
 
   // insert default tags
   if(tags.isEmpty){
+    tags.add(new Tag("Essen", false, 'lunch', []));
+    tags.add(new Tag("Unterhalt", true, 'euro', []));
 
   }
 

@@ -14,7 +14,7 @@ Color lightRedColor = Colors.red.shade300;
 
 String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
-String bluePrintTransactionBox = "bluePrintTransaction";
+String blueprintTransactionBox = "bluePrintTransaction";
 String tagBox = "tag";
 
 int transfersTabIndex = 1;

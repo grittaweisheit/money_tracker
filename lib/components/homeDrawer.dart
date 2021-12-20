@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/pages/TagListView.dart';
+import 'package:money_tracker/pages/tagListView.dart';
+import 'package:money_tracker/pages/blueprintListView.dart';
 
 import '../Consts.dart';
 
@@ -33,6 +34,11 @@ class HomeDrawer extends StatelessWidget {
                   leading: Icon(Icons.label_important),
                   title: Text('Tags'),
                   onTap: () => openPage(context, TagListView()),
+                ),
+                ListTile(
+                  leading: Icon(Icons.label_important),
+                  title: Text('Blueprints'),
+                  onTap: () => openPage(context, BluePrintTransactionListView()),
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),

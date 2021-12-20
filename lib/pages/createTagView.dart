@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/forms/tagForm.dart';
-import 'package:money_tracker/pages/TagListView.dart';
+import 'package:money_tracker/pages/tagListView.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 

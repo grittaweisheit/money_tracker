@@ -6,43 +6,40 @@ import '../Utils.dart';
 import '../models/Transactions.dart';
 import '../Consts.dart';
 
-class OneTimeTransactionForm extends StatefulWidget {
+class BlueprintTransactionForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final bool isIncome;
-  final OneTimeTransaction startingTransaction;
-  final submitTransaction;
+  final BlueprintTransaction startingBlueprint;
+  final submitBlueprint;
 
-  OneTimeTransactionForm(this.formKey, this.isIncome, this.startingTransaction,
-      this.submitTransaction);
+  BlueprintTransactionForm(
+      this.formKey, this.startingBlueprint, this.submitBlueprint)
+      : super();
 
   @override
-  _CreateOneTimeTransactionViewState createState() =>
-      _CreateOneTimeTransactionViewState();
+  BlueprintTransactionFormState createState() =>
+      BlueprintTransactionFormState();
 }
 
-class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
-  late GlobalKey<FormState> formKey;
+class BlueprintTransactionFormState extends State<BlueprintTransactionForm> {
   late String description;
   late bool isIncome;
   late double amount;
   late List<Tag> tags;
-  late DateTime date;
+  late GlobalKey<FormState> formKey;
 
   @override
   void initState() {
-    isIncome = widget.isIncome;
     formKey = widget.formKey;
-    description = widget.startingTransaction.description;
-    amount = widget.startingTransaction.amount;
-    tags = widget.startingTransaction.tags;
-    date = widget.startingTransaction.date;
+    description = widget.startingBlueprint.description;
+    isIncome = widget.startingBlueprint.isIncome;
+    amount = widget.startingBlueprint.amount;
+    tags = widget.startingBlueprint.tags;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     void _saveTags(List<Tag> newTags) {
-      debugPrint("submitted tags $newTags");
       setState(() {
         tags = newTags;
       });
@@ -57,13 +54,6 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
         });
     }
 
-    void _saveDate(DateTime newDate) {
-      formKey.currentState!.save();
-      setState(() {
-        date = newDate;
-      });
-    }
-
     TextFormField getDescriptionFormField() {
       return TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -72,16 +62,14 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
               value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
-            setState(() {
-              description = value!;
-            });
+            description = value!;
           });
     }
 
     FloatingActionButton getSwapOmenButton() {
       return FloatingActionButton(
+          backgroundColor: Colors.blueGrey,
           heroTag: "changePrefix",
-          backgroundColor: primaryColorMidTone,
           onPressed: () {
             formKey.currentState!.save();
             setState(() {
@@ -98,39 +86,14 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           backgroundColor: primaryColor,
           onPressed: () {
             formKey.currentState!.save();
-            if (formKey.currentState!.validate() && tags.isNotEmpty) {
-              widget.submitTransaction(
-                  description, isIncome, amount, tags, date);
+            if (formKey.currentState!.validate()) {
+              widget.submitBlueprint(description, isIncome, amount, tags);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Could not submit Transaction.")));
+                  SnackBar(content: Text("Could not create Blueprint.")));
             }
           },
           child: Icon(Icons.check));
-    }
-
-    _showDatePicker() {
-      showCupertinoModalPopup(
-          context: context,
-          builder: (_) => Container(
-                height: 500,
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: Column(
-                  children: [
-                    Container(
-                        height: 400,
-                        child: CupertinoDatePicker(
-                          initialDateTime: date,
-                          mode: CupertinoDatePickerMode.date,
-                          onDateTimeChanged: _saveDate,
-                        )),
-                    CupertinoButton(
-                      child: Text('OK'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ),
-              ));
     }
 
     return Stack(children: [
@@ -140,11 +103,9 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
               key: formKey,
               child: Column(children: [
                 IntrinsicWidth(
-                  child: AmountInputFormField(
-                      _saveAmount, amount.abs(), isIncome, true),
-                ),
+                    child: AmountInputFormField(
+                        _saveAmount, amount, isIncome, true)),
                 getDescriptionFormField(),
-                TextButton(onPressed: _showDatePicker, child: Text(onlyDate.format(date))),
                 topBottomSpace5,
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),

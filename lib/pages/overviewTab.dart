@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/Consts.dart';
 import 'package:money_tracker/components/addOneTimeTransactionFloatingButtons.dart';
 import 'package:money_tracker/components/overviewCard.dart';
-import 'package:money_tracker/components/statisticsPieChartCard.dart';
-import 'package:money_tracker/components/tagStatisticsList.dart';
 
 import '../Utils.dart';
 

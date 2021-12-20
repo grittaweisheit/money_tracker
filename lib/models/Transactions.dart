@@ -81,6 +81,10 @@ class Transaction extends TransactionBase {
     String omen = isIncome ? '+' : '-';
     return '$omen ${amount.toString()} €';
   }
+
+  bool get isRecurring {
+    return false;
+  }
 }
 
 @HiveType(typeId: 5)
@@ -103,6 +107,11 @@ class RecurringTransaction extends Transaction {
   RecurringTransaction.empty()
       : repetitionRule = Rule(1, Period.month),
         super.empty();
+
+  @override
+  bool get isRecurring {
+    return true;
+  }
 }
 
 @HiveType(typeId: 6)
@@ -112,13 +121,18 @@ class OneTimeTransaction extends Transaction {
       : super(description, isIncome, amount, tags, date);
 
   OneTimeTransaction.empty() : super.empty();
+
+  @override
+  bool get isRecurring {
+    return false;
+  }
 }
 
 @HiveType(typeId: 7)
-class BluePrintTransaction extends TransactionBase {
-  BluePrintTransaction(
+class BlueprintTransaction extends TransactionBase {
+  BlueprintTransaction(
       String description, bool isIncome, double amount, HiveList<Tag> tags)
       : super(description, isIncome, amount, tags);
 
-  BluePrintTransaction.empty() : super.empty();
+  BlueprintTransaction.empty() : super.empty();
 }

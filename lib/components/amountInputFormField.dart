@@ -41,7 +41,7 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: widget.amount.toStringAsFixed(2),
+      initialValue: widget.amount.abs().toStringAsFixed(2),
       style: TextStyle(fontSize: 20),
       validator: validator,
       inputFormatters: formatters,
