@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/Consts.dart';
+import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/forms/oneTimeTransactionForm.dart';
 import '../models/Transactions.dart';
 
@@ -25,12 +25,7 @@ class _EditOneTimeTransactionViewState
     widget.transaction.amount = amount;
     widget.transaction.date = date;
     widget.transaction.tags = tags;
-    if(widget.transaction.isInBox) {
-      widget.transaction.save();
-    }else{
-      Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-      box.add(widget.transaction);
-    }
+    widget.transaction.save();
     Navigator.pop(context);
   }
 
@@ -41,7 +36,10 @@ class _EditOneTimeTransactionViewState
         appBar: AppBar(
           title: Text("Edit Transaction"),
         ),
-        body: OneTimeTransactionForm(formKey, widget.transaction.isIncome,
-            widget.transaction, submitTransaction));
+        body: OneTimeTransactionForm(
+          formKey,
+          startingTransaction: widget.transaction,
+          submitTransaction: submitTransaction,
+        ));
   }
 }

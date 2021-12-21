@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:money_tracker/forms/tagForm.dart';
 import 'package:money_tracker/pages/tagListView.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 
 class CreateTagView extends StatefulWidget {
   CreateTagView();

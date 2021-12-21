@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/forms/tagForm.dart';
 import 'package:money_tracker/pages/tagListView.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 
 class EditTagView extends StatefulWidget {
   final Tag tag;

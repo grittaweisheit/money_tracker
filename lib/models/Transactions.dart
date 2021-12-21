@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/Consts.dart';
+import 'package:money_tracker/Constants.dart';
 
 part 'Transactions.g.dart';
 
@@ -58,10 +60,40 @@ class TransactionBase extends HiveObject {
   TransactionBase(this.description, this.isIncome, this.amount, this.tags);
 
   TransactionBase.empty()
-      : this.description = "",
+      : this.description = '',
         this.isIncome = true,
         this.amount = 0.00,
         this.tags = HiveList<Tag>(Hive.box<Tag>(tagBox));
+
+  getSignedAmountString() {
+    String omen = isIncome ? '+' : '-';
+    return '$omen ${amount.toString()} €';
+  }
+
+  getOmenIcon() {
+    return Icon(
+      this.isIncome ? Icons.add : Icons.remove,
+      color: primaryColorLightTone,
+      size: oneTimeListIconSize,
+    );
+  }
+
+  getIcon({Color? color}) {
+    Color usedColor = color != null ? color : primaryColorLightTone;
+    return this.tags.isNotEmpty
+        ? Icon(
+            allIconDataMap[this.tags.first.icon],
+            color: usedColor,
+            size: oneTimeListIconSize,
+          )
+        : this.description.characters.isNotEmpty
+            ? Text(this.description.characters.first,
+                style: TextStyle(
+                    color: usedColor,
+                    fontWeight: FontWeight.normal,
+                    fontSize: oneTimeListIconSize))
+            : this.getOmenIcon();
+  }
 }
 
 @HiveType(typeId: 4)
@@ -76,11 +108,6 @@ class Transaction extends TransactionBase {
   Transaction.empty()
       : date = DateTime.now(),
         super.empty();
-
-  getSignedAmountString() {
-    String omen = isIncome ? '+' : '-';
-    return '$omen ${amount.toString()} €';
-  }
 
   bool get isRecurring {
     return false;
@@ -121,7 +148,10 @@ class OneTimeTransaction extends Transaction {
       : super(description, isIncome, amount, tags, date);
 
   OneTimeTransaction.empty() : super.empty();
-  OneTimeTransaction.fromBlueprint(BlueprintTransaction blueprint): super(blueprint.description, blueprint.isIncome, blueprint.amount, blueprint.tags, DateTime.now());
+
+  OneTimeTransaction.fromBlueprint(BlueprintTransaction blueprint)
+      : super(blueprint.description, blueprint.isIncome, blueprint.amount,
+            blueprint.tags, DateTime.now());
 
   @override
   bool get isRecurring {

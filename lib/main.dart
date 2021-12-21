@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money_tracker/Consts.dart';
+import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/models/Transactions.dart';
 import 'models/Transactions.dart';
 import 'pages/home.dart';

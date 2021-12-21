@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/forms/recurringTransactionForm.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 import '../models/Transactions.dart';
 
 class EditRecurringTransactionView extends StatefulWidget {

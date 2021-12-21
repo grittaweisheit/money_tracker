@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
-import '../Consts.dart';
+import '../Constants.dart';
 import '../Utils.dart';
 
 class StatisticsPieChartCard extends StatelessWidget{

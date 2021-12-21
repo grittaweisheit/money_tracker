@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 import '../models/Transactions.dart';
 import '../components/addOneTimeTransactionFloatingButtons.dart';
 
@@ -77,27 +77,25 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
       margin: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Wrap(children: [
-                Icon(allIconDataMap[transaction.tags[0].icon],
-                    size: 30, color: primaryColorLightTone),
-                leftRightSpace5,
-                leftRightSpace5,
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(transaction.description,
-                      style: TextStyle(color: Colors.white)),
-                  Text(
-                    onlyDate.format(transaction.date),
-                    style: TextStyle(color: primaryColorLightTone),
-                  )
-                ])
-              ]),
-              isFront
-                  ? getAmountText(transaction.amount, intensive: true)
-                  : getListElementActions(transaction)
-            ]),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Wrap(children: [
+            Container(child: transaction.getIcon(), width: oneTimeListIconSize, alignment: Alignment.center,),
+            leftRightSpace5,
+            leftRightSpace5,
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(transaction.description,
+                  style: TextStyle(color: Colors.white)),
+              Text(
+                onlyDate.format(transaction.date),
+                style: TextStyle(color: primaryColorLightTone),
+              )
+            ])
+          ]),
+          isFront
+              ? getAmountText(transaction.amount, intensive: true)
+              : getListElementActions(transaction)
+        ]),
       ),
     );
   }

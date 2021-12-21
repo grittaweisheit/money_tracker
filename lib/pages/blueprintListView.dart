@@ -5,7 +5,7 @@ import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/createBlueprintTransactionView.dart';
 import 'package:money_tracker/pages/editBlueprintTransactionView.dart';
 import 'package:money_tracker/pages/home.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 import '../models/Transactions.dart';
 
 class BluePrintTransactionListView extends StatefulWidget {

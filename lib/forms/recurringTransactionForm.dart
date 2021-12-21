@@ -4,7 +4,7 @@ import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../Utils.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 
 class RecurringTransactionForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;

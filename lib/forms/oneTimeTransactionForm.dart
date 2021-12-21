@@ -4,16 +4,17 @@ import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../Utils.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 
 class OneTimeTransactionForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final bool isIncome;
   final OneTimeTransaction startingTransaction;
   final submitTransaction;
 
-  OneTimeTransactionForm(this.formKey, this.isIncome, this.startingTransaction,
-      this.submitTransaction);
+  OneTimeTransactionForm(
+      this.formKey,{
+      required this.startingTransaction,
+      required this.submitTransaction});
 
   @override
   _CreateOneTimeTransactionViewState createState() =>
@@ -30,9 +31,9 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
 
   @override
   void initState() {
-    isIncome = widget.isIncome;
     formKey = widget.formKey;
     description = widget.startingTransaction.description;
+    isIncome = widget.startingTransaction.isIncome;
     amount = widget.startingTransaction.amount;
     tags = widget.startingTransaction.tags;
     date = widget.startingTransaction.date;
@@ -66,10 +67,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
 
     TextFormField getDescriptionFormField() {
       return TextFormField(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           initialValue: description,
-          validator: (value) =>
-              value!.length <= 0 ? "Please provide a description." : null,
           decoration: InputDecoration(hintText: "Description..."),
           onSaved: (value) {
             setState(() {
@@ -98,7 +96,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           backgroundColor: primaryColor,
           onPressed: () {
             formKey.currentState!.save();
-            if (formKey.currentState!.validate() && tags.isNotEmpty) {
+            if (formKey.currentState!.validate()) {
               widget.submitTransaction(
                   description, isIncome, amount, tags, date);
             } else {

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/models/Transactions.dart';
 import 'package:money_tracker/pages/createOneTimeTransactionView.dart';
-import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 
-import '../Consts.dart';
+import '../Constants.dart';
 import '../Utils.dart';
 
 class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
@@ -16,7 +15,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void addTransaction(bool isIncome) {
-      openPage(context, CreateOneTimeTransactionView(isIncome))
+      openPage(context, CreateOneTimeTransactionView())
           .then((value) => onNavigatedTo());
     }
 
@@ -34,12 +33,15 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
                       ))
                   .toList(),
             );
-          }).then((selectedBlueprint) => openPage(
-              context,
-              EditOneTimeTransactionView(selectedBlueprint != null
-                  ? OneTimeTransaction.fromBlueprint(selectedBlueprint)
-                  : OneTimeTransaction.empty()))
-          .then((val) => onNavigatedTo));
+          }).then((selectedBlueprint) {
+        if (selectedBlueprint != null) {
+          openPage(
+                  context,
+                  CreateOneTimeTransactionView(
+                      blueprintTransaction: selectedBlueprint))
+              .then((val) => onNavigatedTo);
+        }
+      });
     }
 
     return Container(
@@ -53,7 +55,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
               backgroundColor: primaryColorMidTone,
               elevation: 0.1,
               onPressed: _selectBlueprint,
-              child: Icon(Icons.add),
+              child: Icon(Icons.note_add_outlined),
             ),
             topBottomSpace5,
             FloatingActionButton(
@@ -61,7 +63,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
                 backgroundColor: primaryColor,
                 elevation: 0.1,
                 onPressed: () => addTransaction(true),
-                child: Icon(Icons.remove))
+                child: Icon(Icons.add))
           ],
         ));
   }

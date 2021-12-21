@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/forms/recurringTransactionForm.dart';
 import '../models/Transactions.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 
 class CreateRecurringTransactionView extends StatefulWidget {
   final bool isIncome;

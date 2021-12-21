@@ -2,7 +2,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/pages/createTagView.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 import '../models/Transactions.dart';
 import 'editTagView.dart';
 import 'home.dart';

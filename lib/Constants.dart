@@ -19,6 +19,8 @@ String tagBox = "tag";
 
 int transfersTabIndex = 1;
 
+double oneTimeListIconSize = 30;
+
 const String defaultIconName = 'label';
 Map<String, IconData> allIconDataMap = {
   'label': Icons.label_outline,

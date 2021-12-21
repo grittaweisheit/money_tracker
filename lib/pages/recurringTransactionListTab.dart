@@ -5,7 +5,7 @@ import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/createRecurringTransactionView.dart';
 import 'package:money_tracker/pages/editRecurringTransactionView.dart';
 import 'package:money_tracker/pages/home.dart';
-import '../Consts.dart';
+import '../Constants.dart';
 import '../models/Transactions.dart';
 
 class RecurringTransactionListTab extends StatefulWidget {
@@ -51,14 +51,7 @@ class _RecurringTransactionListTabState
   Widget getCircleAvatar(RecurringTransaction transaction) {
     return CircleAvatar(
       backgroundColor: primaryColorLightTone,
-      child: transaction.tags.length > 0
-          ? Icon(allIconDataMap[transaction.tags.first.icon],
-              color: primaryColor)
-          : Text(
-              transaction.description.characters.first,
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-            ),
+      child: transaction.getIcon(color: primaryColor),
     );
   }
 
