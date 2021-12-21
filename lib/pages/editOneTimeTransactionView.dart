@@ -25,7 +25,12 @@ class _EditOneTimeTransactionViewState
     widget.transaction.amount = amount;
     widget.transaction.date = date;
     widget.transaction.tags = tags;
-    widget.transaction.save();
+    if(widget.transaction.isInBox) {
+      widget.transaction.save();
+    }else{
+      Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
+      box.add(widget.transaction);
+    }
     Navigator.pop(context);
   }
 

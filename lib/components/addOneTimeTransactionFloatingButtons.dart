@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:money_tracker/models/Transactions.dart';
 import 'package:money_tracker/pages/createOneTimeTransactionView.dart';
+import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 
 import '../Consts.dart';
 import '../Utils.dart';
@@ -13,11 +16,30 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void addTransaction(bool isIncome) {
-      Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateOneTimeTransactionView(isIncome)))
+      openPage(context, CreateOneTimeTransactionView(isIncome))
           .then((value) => onNavigatedTo());
+    }
+
+    void _selectBlueprint() {
+      Box<BlueprintTransaction> box = Hive.box(blueprintTransactionBox);
+      List<BlueprintTransaction> blueprints = box.values.toList();
+      showDialog<BlueprintTransaction>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: blueprints
+                  .map((blueprint) => SimpleDialogOption(
+                        onPressed: () => {Navigator.pop(context, blueprint)},
+                        child: Text(blueprint.description),
+                      ))
+                  .toList(),
+            );
+          }).then((selectedBlueprint) => openPage(
+              context,
+              EditOneTimeTransactionView(selectedBlueprint != null
+                  ? OneTimeTransaction.fromBlueprint(selectedBlueprint)
+                  : OneTimeTransaction.empty()))
+          .then((val) => onNavigatedTo));
     }
 
     return Container(
@@ -27,18 +49,18 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
           children: <Widget>[
             Spacer(),
             FloatingActionButton(
-              heroTag: "addIncome",
-              backgroundColor: intensiveGreenColor.withOpacity(0.6),
+              heroTag: "addFromBlueprint",
+              backgroundColor: primaryColorMidTone,
               elevation: 0.1,
-              onPressed: () => addTransaction(true),
+              onPressed: _selectBlueprint,
               child: Icon(Icons.add),
             ),
             topBottomSpace5,
             FloatingActionButton(
-                heroTag: "addLoss",
-                backgroundColor: intensiveRedColor.withOpacity(0.6),
+                heroTag: "addIncome",
+                backgroundColor: primaryColor,
                 elevation: 0.1,
-                onPressed: () => addTransaction(false),
+                onPressed: () => addTransaction(true),
                 child: Icon(Icons.remove))
           ],
         ));

@@ -98,3 +98,7 @@ final List<TextInputFormatter> defaultFormatters = [
   LengthLimitingTextInputFormatter(100),
   FilteringTextInputFormatter.deny('\n')
 ];
+
+Future<Object?> openPage(context, func) async {
+  return Navigator.push(context, MaterialPageRoute(builder: (context) => func));
+}

@@ -121,6 +121,7 @@ class OneTimeTransaction extends Transaction {
       : super(description, isIncome, amount, tags, date);
 
   OneTimeTransaction.empty() : super.empty();
+  OneTimeTransaction.fromBlueprint(BlueprintTransaction blueprint): super(blueprint.description, blueprint.isIncome, blueprint.amount, blueprint.tags, DateTime.now());
 
   @override
   bool get isRecurring {
