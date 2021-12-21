@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.schutzteufel.money_tracker">
    <application
-        android:label="money_tracker"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Money"
+        android:icon="@mipmap/money_greem">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

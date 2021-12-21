@@ -51,12 +51,11 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
           children: <Widget>[
             Spacer(),
             FloatingActionButton(
-              heroTag: "addFromBlueprint",
-              backgroundColor: primaryColorMidTone,
-              elevation: 0.1,
-              onPressed: _selectBlueprint,
-              child: Icon(Icons.note_add_outlined),
-            ),
+                heroTag: "addFromBlueprint",
+                backgroundColor: primaryColorMidTone,
+                elevation: 0.1,
+                onPressed: _selectBlueprint,
+                child: Icon(Icons.assignment_outlined, size: 30)),
             topBottomSpace5,
             FloatingActionButton(
                 heroTag: "addIncome",
