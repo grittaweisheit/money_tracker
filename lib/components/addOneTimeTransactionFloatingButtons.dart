@@ -39,7 +39,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
                   context,
                   CreateOneTimeTransactionView(
                       blueprintTransaction: selectedBlueprint))
-              .then((val) => onNavigatedTo);
+              .then((value) => onNavigatedTo());
         }
       });
     }
