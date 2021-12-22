@@ -1,4 +1,5 @@
 import 'package:flip_card/flip_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -80,12 +81,20 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Wrap(children: [
-            Container(child: transaction.getIcon(), width: oneTimeListIconSize, alignment: Alignment.center,),
+            Container(
+              child: transaction.getIcon(),
+              width: oneTimeListIconSize,
+              alignment: Alignment.center,
+            ),
             leftRightSpace5,
             leftRightSpace5,
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(transaction.description,
-                  style: TextStyle(color: Colors.white)),
+              Container(
+                  width: 220,
+                  child: Text(transaction.description,
+                      style: TextStyle(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1)),
               Text(
                 onlyDate.format(transaction.date),
                 style: TextStyle(color: primaryColorLightTone),
