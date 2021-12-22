@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/Utils.dart';
+import 'package:money_tracker/pages/importExportView.dart';
 import 'package:money_tracker/pages/tagListView.dart';
 import 'package:money_tracker/pages/blueprintListView.dart';
 
@@ -37,6 +38,11 @@ class HomeDrawer extends StatelessWidget {
                   leading: Icon(Icons.assignment_outlined),
                   title: Text('Blueprints'),
                   onTap: () => openPage(context, BluePrintTransactionListView()),
+                ),
+                ListTile(
+                  leading: Icon(Icons.download_outlined),
+                  title: Text('Import/Export'),
+                  onTap: () => openPage(context, ImportExportView()),
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),

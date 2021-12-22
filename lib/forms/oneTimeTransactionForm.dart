@@ -11,10 +11,8 @@ class OneTimeTransactionForm extends StatefulWidget {
   final OneTimeTransaction startingTransaction;
   final submitTransaction;
 
-  OneTimeTransactionForm(
-      this.formKey,{
-      required this.startingTransaction,
-      required this.submitTransaction});
+  OneTimeTransactionForm(this.formKey,
+      {required this.startingTransaction, required this.submitTransaction});
 
   @override
   _CreateOneTimeTransactionViewState createState() =>
@@ -142,7 +140,9 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
                       _saveAmount, amount.abs(), isIncome, true),
                 ),
                 getDescriptionFormField(),
-                TextButton(onPressed: _showDatePicker, child: Text(onlyDate.format(date))),
+                TextButton(
+                    onPressed: _showDatePicker,
+                    child: Text(onlyDate.format(date))),
                 topBottomSpace5,
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),

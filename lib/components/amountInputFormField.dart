@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+String zeroString = '0.00';
+
 final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9][0-9])))$');
 final formatters = [
   FilteringTextInputFormatter.deny(',', replacementString: '.'),
@@ -35,14 +37,14 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
   @override
   void initState() {
     super.initState();
-    amountString = "0.00";
+    amountString = zeroString;
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autofocus: true,
-      initialValue: widget.amount.abs().toStringAsFixed(2) == "0.00"
+      initialValue: widget.amount.abs().toStringAsFixed(2) == zeroString
           ? ''
           : widget.amount.abs().toStringAsFixed(2),
       style: TextStyle(fontSize: 20),
@@ -50,7 +52,7 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
       inputFormatters: formatters,
       keyboardType: inputType,
       decoration: InputDecoration(
-          hintText: "0.00",
+          hintText: zeroString,
           border: InputBorder.none,
           prefixIcon: widget.withDecoration
               ? Icon(widget.isIncome ? Icons.add : Icons.remove)
