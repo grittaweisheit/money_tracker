@@ -44,6 +44,10 @@ class Tag extends HiveObject {
       : this.name = "",
         this.isIncomeTag = true,
         this.icon = defaultIconName;
+
+  bool get isExpenseTag {
+    return !isIncomeTag;
+  }
 }
 
 @HiveType(typeId: 3)
@@ -64,6 +68,10 @@ class TransactionBase extends HiveObject {
         this.isIncome = true,
         this.amount = 0.00,
         this.tags = HiveList<Tag>(Hive.box<Tag>(tagBox));
+
+  bool get isExpense {
+    return !isIncome;
+  }
 
   getSignedAmountString() {
     String omen = isIncome ? '+' : '-';
@@ -123,14 +131,6 @@ class RecurringTransaction extends Transaction {
       HiveList<Tag> tags, DateTime date, this.repetitionRule)
       : super(description, isIncome, amount, tags, date);
 
-  DateTime get nextExecution {
-    return this.date;
-  }
-
-  set nextExecution(DateTime nextExecution) {
-    this.date = nextExecution;
-  }
-
   RecurringTransaction.empty()
       : repetitionRule = Rule(1, Period.month),
         super.empty();
@@ -138,6 +138,14 @@ class RecurringTransaction extends Transaction {
   @override
   bool get isRecurring {
     return true;
+  }
+
+  DateTime get nextExecution {
+    return this.date;
+  }
+
+  set nextExecution(DateTime nextExecution) {
+    this.date = nextExecution;
   }
 }
 

@@ -7,7 +7,7 @@ import 'package:money_tracker/pages/createOneTimeTransactionView.dart';
 import '../Constants.dart';
 import '../Utils.dart';
 
-class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
+class AddOneTimeTransactionFloatingButtons extends StatelessWidget{
   final onNavigatedTo;
 
   AddOneTimeTransactionFloatingButtons(this.onNavigatedTo);
@@ -53,14 +53,12 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
             FloatingActionButton(
                 heroTag: "addFromBlueprint",
                 backgroundColor: primaryColorMidTone,
-                elevation: 0.1,
                 onPressed: _selectBlueprint,
                 child: Icon(Icons.assignment_outlined, size: 30)),
             topBottomSpace5,
             FloatingActionButton(
                 heroTag: "addIncome",
                 backgroundColor: primaryColor,
-                elevation: 0.1,
                 onPressed: () => addTransaction(true),
                 child: Icon(Icons.add))
           ],

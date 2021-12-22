@@ -20,8 +20,8 @@ class OverviewCard extends StatelessWidget {
     DateTime monthYear = DateTime(currentYear, currentMonth);
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     double overlap = getOverlap(box, monthYear);
-    double income = getIncomeOrExpense(true, monthYear, box);
-    double expenses = getIncomeOrExpense(false, monthYear, box);
+    double income = getIncomeOrExpenseForMonth(true, monthYear, box);
+    double expenses = getIncomeOrExpenseForMonth(false, monthYear, box);
     double monthlyTotal = income + expenses;
     double total = overlap + income + expenses;
 

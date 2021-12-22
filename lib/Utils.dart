@@ -6,12 +6,14 @@ import 'package:intl/intl.dart';
 import 'Constants.dart';
 import 'models/Transactions.dart';
 
-
-double getIncomeOrExpense(bool getIncome, DateTime monthYear, Box<Transaction> box) {
+double getIncomeOrExpenseForMonth(
+    bool getIncome, DateTime monthYear, Box<Transaction> box) {
   return box.values
       .where((transaction) =>
-  transaction.isIncome == getIncome &&
-      !transaction.date.isBefore(monthYear))
+          transaction.isIncome == getIncome &&
+          !transaction.date.isBefore(monthYear) &&
+          !transaction.date
+              .isAfter(DateTime(monthYear.year, monthYear.month + 1)))
       .fold(0, (sum, transaction) => sum + transaction.amount);
 }
 
@@ -27,9 +29,8 @@ TextStyle intensiveRedGreenTextStyle(double amount, {bool zeroRed = false}) {
 }
 
 TextStyle lightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
-  Color color = amount < 0 || (amount == 0 && zeroRed)
-      ? lightRedColor
-      : lightGreenColor;
+  Color color =
+      amount < 0 || (amount == 0 && zeroRed) ? lightRedColor : lightGreenColor;
   return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
@@ -85,6 +86,9 @@ DateFormat onlyTime = DateFormat("HH:mm");
 
 String targetDateFormatString = ("dd. MMMM y");
 DateFormat targetDateFormat = DateFormat(targetDateFormatString);
+
+String monthYearOnlyFormatString = ("MMM yy");
+DateFormat monthYearOnlyFormat = DateFormat(monthYearOnlyFormatString);
 
 List<String> periodSingularStrings = ["day", "week", "month", "year"];
 List<String> periodPluralStrings = ["days", "weeks", "months", "years"];

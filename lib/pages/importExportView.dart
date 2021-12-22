@@ -16,7 +16,7 @@ class ImportExportView extends StatelessWidget {
     Box<OneTimeTransaction> oneTimeTransactions =
         Hive.box(oneTimeTransactionBox);
 
-    for (String rowString in rowStrings) {
+    for (String rowString in rowStrings.skip(1)) {
       List<String> rowArray = rowString.split(';');
       DateTime date = DateTime.parse(rowArray[0]);
       String description = rowArray[1];

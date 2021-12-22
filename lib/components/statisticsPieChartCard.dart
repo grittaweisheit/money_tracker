@@ -9,26 +9,6 @@ import '../Utils.dart';
 
 class StatisticsPieChartCard extends StatelessWidget{
 
-
-  PieChartData getOverallPieChartData(
-      List<OneTimeTransaction> newTransactions) {
-    double totalIncome = newTransactions
-        .where((t) => t.isIncome)
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    double totalExpense = newTransactions
-        .where((t) => !t.isIncome)
-        .fold(0, (previousValue, element) => previousValue + element.amount);
-    return getPieChartData(totalIncome, totalExpense);
-  }
-
-  PieChartData getMonthlyPieChartData(Box<OneTimeTransaction> box) {
-    DateTime currentMonthYear =
-    DateTime(DateTime.now().year, DateTime.now().month);
-    double monthlyIncome = getIncomeOrExpense(true, currentMonthYear, box);
-    double monthlyExpense = getIncomeOrExpense(false, currentMonthYear, box);
-    return getPieChartData(monthlyIncome, monthlyExpense);
-  }
-
   PieChartData getPieChartData(double income, double expense) {
     List<PieChartSectionData> sections = [];
     // don't add sections if their value is 0 to avoid bad displaying
@@ -44,6 +24,26 @@ class StatisticsPieChartCard extends StatelessWidget{
           value: expense.abs()));
     return PieChartData(sections: sections, centerSpaceRadius: double.infinity);
   }
+
+  PieChartData getOverallPieChartData(
+      List<OneTimeTransaction> newTransactions) {
+    double totalIncome = newTransactions
+        .where((t) => t.isIncome)
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    double totalExpense = newTransactions
+        .where((t) => !t.isIncome)
+        .fold(0, (previousValue, element) => previousValue + element.amount);
+    return getPieChartData(totalIncome, totalExpense);
+  }
+
+  PieChartData getMonthlyPieChartData(Box<OneTimeTransaction> box) {
+    DateTime currentMonthYear =
+    DateTime(DateTime.now().year, DateTime.now().month);
+    double monthlyIncome = getIncomeOrExpenseForMonth(true, currentMonthYear, box);
+    double monthlyExpense = getIncomeOrExpenseForMonth(false, currentMonthYear, box);
+    return getPieChartData(monthlyIncome, monthlyExpense);
+  }
+
 
   @override
   Widget build(BuildContext context) {
