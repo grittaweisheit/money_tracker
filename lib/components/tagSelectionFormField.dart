@@ -83,7 +83,7 @@ class _TagSelectionState extends State<TagSelection> {
   getTagHeader(String title) {
     return SliverList(
         delegate: SliverChildListDelegate(
-            <Widget>[topBottomSpace5, Text(title), topBottomSpace5]));
+            <Widget>[topBottomSpace(5), Text(title), topBottomSpace(5)]));
   }
 
   getTagGrid(bool income) {

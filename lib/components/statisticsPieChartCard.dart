@@ -64,7 +64,7 @@ class StatisticsPieChartCard extends StatelessWidget{
                 Expanded(child: PieChart(overallPieChartData)),
               ]),
             ),
-            leftRightSpace5,
+            leftRightSpace(5),
             Expanded(
               child: Column(children: [
                 Text('This Month',

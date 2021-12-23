@@ -56,7 +56,7 @@ class OverviewCard extends StatelessWidget {
             ],
           ),
           Divider(color: primaryColorLightTone, thickness: 1),
-          topBottomSpace5,
+          topBottomSpace(5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -67,7 +67,7 @@ class OverviewCard extends StatelessWidget {
               getAmountText(monthlyTotal, intensive: true, large: true)
             ],
           ),
-          topBottomSpace5,
+          topBottomSpace(5),
           Divider(color: primaryColorLightTone, thickness: 0.5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

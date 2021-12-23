@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/components/addOneTimeTransactionFloatingButtons.dart';
 import 'package:money_tracker/components/overviewCard.dart';
 
@@ -21,7 +22,7 @@ class OverviewTab extends StatelessWidget {
                 targetDateFormat.format(DateTime.now()),
                 style: largerTextStyle.merge(boldTextStyle),
               ),
-              topBottomSpace20,
+              topBottomSpace(20),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: OverviewCard(),

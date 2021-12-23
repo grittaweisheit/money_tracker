@@ -3,7 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:mdi/mdi.dart';
 
 int maxTags = 10;
+int transfersTabIndex = 1;
+
+List<String> periodSingularStrings = ["day", "week", "month", "year"];
+List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
+
+/// Transaction stuff
+
 List<double> inactiveLimits = [-1, -1, -1, -1];
+
+/// Colors
 
 Color primaryColor = Colors.blueGrey.shade900;
 Color primaryColorMidTone = Colors.blueGrey;
@@ -14,14 +23,26 @@ Color lightGreenColor = Colors.green.shade300;
 Color intensiveRedColor = Colors.red;
 Color lightRedColor = Colors.red.shade300;
 
+/// TextStyles
+
+TextStyle largerTextStyle = TextStyle(fontSize: 20);
+
+TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
+
+TextStyle whiteTextStyle = TextStyle(color: Colors.white);
+
+/// Boxes
+
 String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String blueprintTransactionBox = "bluePrintTransaction";
 String tagBox = "tag";
 
-int transfersTabIndex = 1;
+/// Sizes
 
 double oneTimeListIconSize = 30;
+
+/// Icons
 
 const String defaultIconName = 'label';
 Map<String, IconData> allIconDataMap = {

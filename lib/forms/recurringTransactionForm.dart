@@ -53,7 +53,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
 
     void _saveAmount(String inputString) {
       var newAmount = double.tryParse(inputString);
-      int omen = isIncome? 1 : -1;
+      int omen = isIncome ? 1 : -1;
       if (newAmount != null && newAmount != amount)
         setState(() {
           amount = omen * newAmount;
@@ -89,7 +89,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
       return Wrap(children: [
         Row(children: [
           Text("Repeats every"),
-          leftRightSpace20,
+          topBottomSpace(20),
           IntrinsicWidth(
               child: DropdownButtonFormField<int>(
                   items: List.generate(100, (index) => index)
@@ -98,7 +98,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                       .toList(),
                   value: every,
                   onChanged: _saveEvery)),
-          leftRightSpace20,
+          topBottomSpace(20),
           IntrinsicWidth(
               child: DropdownButtonFormField<Period>(
                   items: Period.values
@@ -149,25 +149,26 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
       showCupertinoModalPopup(
           context: context,
           builder: (_) => Container(
-            height: 500,
-            color: Color.fromARGB(255, 255, 255, 255),
-            child: Column(
-              children: [
-                Container(
-                    height: 400,
-                    child: CupertinoDatePicker(
-                      initialDateTime: nextExecution,
-                      mode: CupertinoDatePickerMode.date,
-                      onDateTimeChanged: _saveNextExecution,
-                    )),
-                CupertinoButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              ],
-            ),
-          ));
+                height: 500,
+                color: Color.fromARGB(255, 255, 255, 255),
+                child: Column(
+                  children: [
+                    Container(
+                        height: 400,
+                        child: CupertinoDatePicker(
+                          initialDateTime: nextExecution,
+                          mode: CupertinoDatePickerMode.date,
+                          onDateTimeChanged: _saveNextExecution,
+                        )),
+                    CupertinoButton(
+                      child: Text('OK'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ),
+              ));
     }
+
     return Stack(children: [
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -178,9 +179,11 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                     child: AmountInputFormField(
                         _saveAmount, amount, isIncome, true)),
                 getDescriptionFormField(),
-                TextButton(onPressed: _showDatePicker, child: Text(onlyDate.format(nextExecution))),
+                TextButton(
+                    onPressed: _showDatePicker,
+                    child: Text(onlyDate.format(nextExecution))),
                 getRepeatsEverySection(),
-                topBottomSpace5,
+                topBottomSpace(5),
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),
       Container(
@@ -189,7 +192,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           child: Column(children: [
             Spacer(),
             getSwapOmenButton(),
-            topBottomSpace5,
+            topBottomSpace(5),
             getSubmitButton()
           ]))
     ]);

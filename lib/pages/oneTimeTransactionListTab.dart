@@ -86,8 +86,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
               width: oneTimeListIconSize,
               alignment: Alignment.center,
             ),
-            leftRightSpace5,
-            leftRightSpace5,
+            leftRightSpace(10),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                   width: 220,

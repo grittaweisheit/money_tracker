@@ -106,7 +106,7 @@ class BlueprintTransactionFormState extends State<BlueprintTransactionForm> {
                     child: AmountInputFormField(
                         _saveAmount, amount, isIncome, true)),
                 getDescriptionFormField(),
-                topBottomSpace5,
+                topBottomSpace(5),
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),
       Container(
@@ -115,7 +115,7 @@ class BlueprintTransactionFormState extends State<BlueprintTransactionForm> {
           child: Column(children: [
             Spacer(),
             getSwapOmenButton(),
-            topBottomSpace5,
+            topBottomSpace(5),
             getSubmitButton()
           ]))
     ]);

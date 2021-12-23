@@ -67,7 +67,7 @@ class _TagFormState extends State<TagForm> {
           ),
           child: allIconsMap[icon],
         ),
-        leftRightSpace5,
+        leftRightSpace(5),
         Expanded(
             child: TextFormField(
                 style: TextStyle(fontSize: 20),
@@ -234,7 +234,7 @@ class _TagFormState extends State<TagForm> {
                 getDescriptionFormField(),
                 getIncomeExpenseSwitch(),
                 getIconSelection(),
-                if (!isIncome) topBottomSpace20,
+                if (!isIncome) topBottomSpace(20),
                 if (!isIncome)
                   Padding(
                       padding: EdgeInsets.only(bottom: 60),
@@ -245,7 +245,7 @@ class _TagFormState extends State<TagForm> {
           padding: EdgeInsets.only(bottom: 5, right: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [getSwapOmenButton(), leftRightSpace5, getSubmitButton()],
+            children: [getSwapOmenButton(), leftRightSpace(5), getSubmitButton()],
           ))
     ]);
   }

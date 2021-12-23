@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'Constants.dart';
 import 'models/Transactions.dart';
 
+/// Data Collection
+
 double getIncomeOrExpenseForMonth(
     bool getIncome, DateTime monthYear, Box<Transaction> box) {
   return box.values
@@ -17,24 +19,22 @@ double getIncomeOrExpenseForMonth(
       .fold(0, (sum, transaction) => sum + transaction.amount);
 }
 
-TextStyle largerTextStyle = TextStyle(fontSize: 20);
+/// TextStyle Utils
 
-TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
-
-TextStyle intensiveRedGreenTextStyle(double amount, {bool zeroRed = false}) {
+TextStyle getIntensiveRedGreenTextStyle(double amount, {bool zeroRed = false}) {
   Color color = amount < 0 || (amount == 0 && zeroRed)
       ? intensiveRedColor
       : intensiveGreenColor;
   return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
-TextStyle lightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
+TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
   Color color =
       amount < 0 || (amount == 0 && zeroRed) ? lightRedColor : lightGreenColor;
   return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
-TextStyle whiteTextStyle = TextStyle(color: Colors.white);
+/// Transaction Utils
 
 String getAmountString(double amount) {
   String omen = amount < 0 ? '-' : '+';
@@ -50,14 +50,16 @@ Text getAmountText(double amount,
   style = style.merge(white
       ? whiteTextStyle
       : intensive
-          ? intensiveRedGreenTextStyle(amount, zeroRed: zeroRed)
-          : lightRedGreenTextStyle(amount, zeroRed: zeroRed));
+          ? getIntensiveRedGreenTextStyle(amount, zeroRed: zeroRed)
+          : getLightRedGreenTextStyle(amount, zeroRed: zeroRed));
   if (large) style = style.merge(largerTextStyle);
   return Text(
     getAmountString(amount),
     style: style,
   );
 }
+
+/// DateTime
 
 bool areAtSameDay(DateTime date1, DateTime date2) {
   if (date1.year == date2.year &&
@@ -90,19 +92,20 @@ DateFormat targetDateFormat = DateFormat(targetDateFormatString);
 String monthYearOnlyFormatString = ("MMM yy");
 DateFormat monthYearOnlyFormat = DateFormat(monthYearOnlyFormatString);
 
-List<String> periodSingularStrings = ["day", "week", "month", "year"];
-List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
+/// Components
 
-Padding topBottomSpace5 = Padding(padding: EdgeInsets.only(top: 5));
-Padding topBottomSpace20 = Padding(padding: EdgeInsets.only(top: 20));
-Padding leftRightSpace5 = Padding(padding: EdgeInsets.only(left: 5));
-Padding leftRightSpace20 = Padding(padding: EdgeInsets.only(left: 20));
+Padding topBottomSpace(double size) =>
+    Padding(padding: EdgeInsets.only(top: size));
+
+Padding leftRightSpace(double size) =>
+    Padding(padding: EdgeInsets.only(left: size));
 
 final List<TextInputFormatter> defaultFormatters = [
   LengthLimitingTextInputFormatter(100),
   FilteringTextInputFormatter.deny('\n')
 ];
 
+/// Navigation 
 Future<Object?> openPage(context, func) async {
   return Navigator.push(context, MaterialPageRoute(builder: (context) => func));
 }

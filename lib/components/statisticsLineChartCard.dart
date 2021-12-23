@@ -8,8 +8,11 @@ import '../Constants.dart';
 import '../Utils.dart';
 
 class StatisticsLineChartCard extends StatelessWidget {
+  final int coveredMonths;
+
+  StatisticsLineChartCard(this.coveredMonths);
+
   LineChartBarData getIncomeExpenseLineData(bool isIncome) {
-    int coveredMonths = 24;
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     List<OneTimeTransaction> transactions = box.values.toList();
     transactions

@@ -143,7 +143,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
                 TextButton(
                     onPressed: _showDatePicker,
                     child: Text(onlyDate.format(date))),
-                topBottomSpace5,
+                topBottomSpace(5),
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
               ]))),
       Container(
@@ -152,7 +152,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           child: Column(children: [
             Spacer(),
             getSwapOmenButton(),
-            topBottomSpace5,
+            topBottomSpace(5),
             getSubmitButton()
           ]))
     ]);
