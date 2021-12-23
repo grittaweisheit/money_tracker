@@ -19,7 +19,7 @@ class OverviewTab extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
               Text(
-                targetDateFormat.format(DateTime.now()),
+                fullDateDateFormat.format(DateTime.now()),
                 style: largerTextStyle.merge(boldTextStyle),
               ),
               topBottomSpace(20),

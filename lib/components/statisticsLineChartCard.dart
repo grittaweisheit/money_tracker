@@ -16,7 +16,7 @@ class StatisticsLineChartCard extends StatelessWidget {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     List<OneTimeTransaction> transactions = box.values.toList();
     transactions
-        .sort((t1, t2) => t2.date.compareTo(t1.date)); // earliest is first
+        .sort(sortTransactionsEarliestFirst); // earliest is first
 
     DateTime now = getOnlyDate(DateTime.now());
     DateTime earliestMonthYear = DateTime(

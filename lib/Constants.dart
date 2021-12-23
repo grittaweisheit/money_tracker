@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mdi/mdi.dart';
 
 int maxTags = 10;
@@ -7,6 +8,17 @@ int transfersTabIndex = 1;
 
 List<String> periodSingularStrings = ["day", "week", "month", "year"];
 List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
+
+/// DateFormats
+
+DateFormat onlyDate = DateFormat("dd.MM.y");
+DateFormat onlyTime = DateFormat("HH:mm");
+
+String fullDateDateFormatString = ("dd. MMMM y");
+DateFormat fullDateDateFormat = DateFormat(fullDateDateFormatString);
+
+String monthYearOnlyFormatString = ("MMM yy");
+DateFormat monthYearOnlyFormat = DateFormat(monthYearOnlyFormatString);
 
 /// Transaction stuff
 

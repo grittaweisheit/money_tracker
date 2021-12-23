@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'Constants.dart';
 import 'models/Transactions.dart';
 
@@ -35,6 +34,10 @@ TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
 }
 
 /// Transaction Utils
+
+int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) => t2.date.compareTo(t1.date);
+
+/// Amount Utils
 
 String getAmountString(double amount) {
   String omen = amount < 0 ? '-' : '+';
@@ -83,15 +86,6 @@ DateTime getOnlyDate(DateTime date) {
   return DateTime(date.year, date.month, date.day);
 }
 
-DateFormat onlyDate = DateFormat("dd.MM.y");
-DateFormat onlyTime = DateFormat("HH:mm");
-
-String targetDateFormatString = ("dd. MMMM y");
-DateFormat targetDateFormat = DateFormat(targetDateFormatString);
-
-String monthYearOnlyFormatString = ("MMM yy");
-DateFormat monthYearOnlyFormat = DateFormat(monthYearOnlyFormatString);
-
 /// Components
 
 Padding topBottomSpace(double size) =>
@@ -105,7 +99,7 @@ final List<TextInputFormatter> defaultFormatters = [
   FilteringTextInputFormatter.deny('\n')
 ];
 
-/// Navigation 
+/// Navigation
 Future<Object?> openPage(context, func) async {
   return Navigator.push(context, MaterialPageRoute(builder: (context) => func));
 }
