@@ -15,17 +15,15 @@ class StatisticsLineChartCard extends StatelessWidget {
   LineChartBarData getIncomeExpenseLineData(bool isIncome) {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     List<OneTimeTransaction> transactions = box.values.toList();
-    transactions
-        .sort(sortTransactionsEarliestFirst); // earliest is first
+    transactions.sort(sortTransactionsEarliestFirst); // earliest is first
 
     DateTime now = getOnlyDate(DateTime.now());
     DateTime earliestMonthYear = DateTime(
         now.year - coveredMonths ~/ DateTime.monthsPerYear,
-        now.month - coveredMonths % DateTime.monthsPerYear,
-        now.day);
+        now.month - coveredMonths % DateTime.monthsPerYear);
     List<FlSpot> spots = [];
     while (now.isAfter(earliestMonthYear)) {
-      FlSpot spot = FlSpot(now.month + now.year * 13,
+      FlSpot spot = FlSpot(now.month + now.year * 12,
           getIncomeOrExpenseForMonth(isIncome, now, box).abs());
       spots.add(spot);
       now = DateTime(now.year, now.month - 1, now.day);
@@ -59,9 +57,10 @@ class StatisticsLineChartCard extends StatelessWidget {
               }),
           bottomTitles: SideTitles(
             showTitles: true,
+            interval: 1,
             getTextStyles: getTextStyles,
             getTitles: (value) {
-              DateTime date = DateTime(value ~/ 13, value.toInt() % 13);
+              DateTime date = DateTime(value ~/ 12, value.toInt() % 12);
               return monthYearOnlyFormat.format(date);
             },
           ),

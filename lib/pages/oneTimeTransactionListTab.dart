@@ -32,7 +32,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   refresh() async {
     Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
     List<OneTimeTransaction> newTransactions = box.values.toList();
-    newTransactions.sort((t1, t2) => t2.date.compareTo(t1.date));
+    newTransactions.sort(sortTransactionsEarliestFirst);
     setState(() {
       transactions = newTransactions;
       count = transactions.length;

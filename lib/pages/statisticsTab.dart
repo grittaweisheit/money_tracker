@@ -9,12 +9,11 @@ class StatisticsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("build statistics tab");
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         topBottomSpace(5),
-        StatisticsLineChartCard(24),
+        StatisticsLineChartCard(2),
         topBottomSpace(5),
         TagStatisticsList(false)
       ]),

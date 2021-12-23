@@ -9,12 +9,17 @@ import 'models/Transactions.dart';
 
 double getIncomeOrExpenseForMonth(
     bool getIncome, DateTime monthYear, Box<Transaction> box) {
+  monthYear = getMonthYear(monthYear);
+
+  DateTime nextMonthYear = monthYear.month == 12
+      ? DateTime(monthYear.year + 1, 1)
+      : DateTime(monthYear.year, monthYear.month + 1);
+  debugPrint('$monthYear $nextMonthYear');
   return box.values
       .where((transaction) =>
           transaction.isIncome == getIncome &&
           !transaction.date.isBefore(monthYear) &&
-          !transaction.date
-              .isAfter(DateTime(monthYear.year, monthYear.month + 1)))
+          transaction.date.isBefore(nextMonthYear))
       .fold(0, (sum, transaction) => sum + transaction.amount);
 }
 
@@ -35,7 +40,8 @@ TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
 
 /// Transaction Utils
 
-int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) => t2.date.compareTo(t1.date);
+int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) =>
+    t2.date.compareTo(t1.date);
 
 /// Amount Utils
 
@@ -84,6 +90,10 @@ bool areInSameMonth(DateTime date1, DateTime date2) {
 
 DateTime getOnlyDate(DateTime date) {
   return DateTime(date.year, date.month, date.day);
+}
+
+DateTime getMonthYear(DateTime date) {
+  return DateTime(date.year, date.month);
 }
 
 /// Components
