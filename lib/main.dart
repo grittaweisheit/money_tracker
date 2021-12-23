@@ -7,7 +7,6 @@ import 'models/Transactions.dart';
 import 'pages/home.dart';
 
 const bool RESET = false;
-const bool reset_oneTimeTransactions = true;
 
 void main() async {
   await Hive.initFlutter();
@@ -21,12 +20,10 @@ void main() async {
   Box oneTimeTransactions =
       await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
   Box recurringTransactions =
-  await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
+      await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
   Box bluePrintTransactions =
-  await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
+      await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
 
-  if(reset_oneTimeTransactions){
-    oneTimeTransactions.clear();}
   if (RESET) {
     tags.clear();
     oneTimeTransactions.clear();
@@ -35,10 +32,9 @@ void main() async {
   }
 
   // insert default tags
-  if(tags.isEmpty){
+  if (tags.isEmpty) {
     tags.add(new Tag("Essen", false, 'lunch', []));
     tags.add(new Tag("Unterhalt", true, 'euro', []));
-
   }
 
   runApp(MyApp());

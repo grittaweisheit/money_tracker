@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/importExportView.dart';
+import 'package:money_tracker/pages/settingsView.dart';
 import 'package:money_tracker/pages/tagListView.dart';
 import 'package:money_tracker/pages/blueprintListView.dart';
 
@@ -47,6 +48,7 @@ class HomeDrawer extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
+                  onTap: () => openPage(context, SettingsView()),
                 ),
               ],
             )));
