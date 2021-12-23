@@ -123,10 +123,30 @@ class StatisticsLineChartCardState extends State<StatisticsLineChartCard> {
       child: Card(
         color: primaryColor,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
           child: Column(children: [
-            Text('The Last $coveredMonths Months',
-                style: largerTextStyle.merge(lightTextStyle)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('The Last  ', style: largerTextStyle.merge(lightTextStyle)),
+                DropdownButton<int>(
+                  elevation: 0,
+                  isDense: true,
+                  dropdownColor: primaryColor,
+                  value: coveredMonths,
+                  items: List<DropdownMenuItem<int>>.generate(
+                      36,
+                      (index) => DropdownMenuItem(
+                          child: Text('$index', style: lightTextStyle.merge(largerTextStyle)), value: index)),
+                  onChanged: (newValue) {
+                    setState(() {
+                      coveredMonths = newValue!;
+                    });
+                  },
+                ),
+                Text(' Months', style: largerTextStyle.merge(lightTextStyle))
+              ],
+            ),
             Expanded(
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 15, 25, 0),
