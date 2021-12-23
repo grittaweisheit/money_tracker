@@ -167,7 +167,7 @@ class _TagFormState extends State<TagForm> {
           child: CustomScrollView(shrinkWrap: true, slivers: [
         SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 60, mainAxisSpacing: 5, crossAxisSpacing: 5),
+              maxCrossAxisExtent: 50, mainAxisSpacing: 3, crossAxisSpacing: 3),
           delegate:
               SliverChildBuilderDelegate((BuildContext context, int index) {
             var currentIconName = allIconNames[index];
@@ -182,7 +182,9 @@ class _TagFormState extends State<TagForm> {
                   color: isSelected ? Colors.white : Colors.transparent,
                 ),
                 child: IconButton(
-                  iconSize: 30,
+                  alignment: Alignment.center,
+                  iconSize: 25,
+                  padding: EdgeInsets.all(0),
                   icon: currentIcon,
                   onPressed: () => _handleSelection(currentIconName),
                 ));

@@ -23,7 +23,7 @@ class ImportExportView extends StatelessWidget {
       String category = rowArray[2];
       double amount = double.parse(rowArray[3].replaceAll(',', '.'));
       if (!tags.values.any((tag) => tag.name == category)) {
-        tags.add(Tag(category, amount >= 0, defaultIconName, []));
+        tags.add(Tag(category, amount >= 0, defaultIconName, inactiveLimits));
       }
       HiveList<Tag> list = (new HiveList<Tag>(tags));
       list.addAll(
