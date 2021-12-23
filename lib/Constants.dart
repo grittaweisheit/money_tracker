@@ -38,10 +38,12 @@ Color lightRedColor = Colors.red.shade300;
 /// TextStyles
 
 TextStyle largerTextStyle = TextStyle(fontSize: 20);
-
 TextStyle boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
 
 TextStyle whiteTextStyle = TextStyle(color: Colors.white);
+TextStyle lightTextStyle = TextStyle(color: primaryColorLightTone);
+TextStyle intensiveGreenTextStyle = TextStyle(color: intensiveGreenColor);
+TextStyle intensiveRedTextStyle = TextStyle(color: intensiveRedColor);
 
 /// Boxes
 

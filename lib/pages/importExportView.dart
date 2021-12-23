@@ -29,7 +29,7 @@ class ImportExportView extends StatelessWidget {
       list.addAll(
           tags.values.where((t) => t.name == category)); // should only be one
       oneTimeTransactions.add(
-          OneTimeTransaction(description, amount >= 0, amount, list, date));
+          OneTimeTransaction(description, amount >= 0,amount, list, date));
     }
   }
 

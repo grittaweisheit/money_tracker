@@ -20,7 +20,7 @@ double getIncomeOrExpenseForMonth(
           transaction.isIncome == getIncome &&
           !transaction.date.isBefore(monthYear) &&
           transaction.date.isBefore(nextMonthYear))
-      .fold(0, (sum, transaction) => sum + transaction.amount);
+      .fold(0.0, (sum, transaction) => sum + transaction.amount);
 }
 
 /// TextStyle Utils

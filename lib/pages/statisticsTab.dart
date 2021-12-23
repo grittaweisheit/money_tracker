@@ -4,9 +4,12 @@ import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/components/statisticsLineChartCard.dart';
 import 'package:money_tracker/components/tagStatisticsList.dart';
 
-class StatisticsTab extends StatelessWidget {
-  StatisticsTab();
+class StatisticsTab extends StatefulWidget {
+  @override
+  StatisticsTabState createState() => StatisticsTabState();
+}
 
+class StatisticsTabState extends State<StatisticsTab> {
   @override
   Widget build(BuildContext context) {
     return Padding(

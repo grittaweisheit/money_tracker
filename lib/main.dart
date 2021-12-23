@@ -7,6 +7,7 @@ import 'models/Transactions.dart';
 import 'pages/home.dart';
 
 const bool RESET = false;
+const bool reset_oneTimeTransactions = true;
 
 void main() async {
   await Hive.initFlutter();
@@ -24,6 +25,8 @@ void main() async {
   Box bluePrintTransactions =
   await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
 
+  if(reset_oneTimeTransactions){
+    oneTimeTransactions.clear();}
   if (RESET) {
     tags.clear();
     oneTimeTransactions.clear();
