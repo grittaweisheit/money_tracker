@@ -111,7 +111,7 @@ class _TagSelectionState extends State<TagSelection> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(allIconDataMap[tag.icon], size: 30),
-                  Text(tag.name)
+                  Text(tag.name, overflow: TextOverflow.ellipsis,)
                 ],
               ),
               onPressed: () => _handleSelection(tag),

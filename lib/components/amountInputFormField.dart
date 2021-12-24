@@ -64,9 +64,6 @@ class _AmountInputFormFieldState extends State<AmountInputFormField> {
       onSaved: (value) {
         widget.onSaved(value);
       },
-      onEditingComplete: () {
-        widget.onSaved(amountString);
-      },
     );
   }
 }

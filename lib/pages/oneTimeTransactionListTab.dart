@@ -119,7 +119,6 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
     int? currentMonth;
     return ListView.builder(
       itemCount: count,
-      //itemExtent: 60,
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
         var children = [];
