@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mdi/mdi.dart';
 
-int maxTags = 10;
+int maxTags = 20;
 int transfersTabIndex = 1;
 
 List<String> periodSingularStrings = ["day", "week", "month", "year"];

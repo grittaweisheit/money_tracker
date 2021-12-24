@@ -31,7 +31,6 @@ class _TagSelectionState extends State<TagSelection> {
         box.values.where((element) => !element.isIncomeTag).toList();
     List<Tag> allTags = List.from(incomeTags);
     allTags.addAll(spendingTags);
-    debugPrint('${incomeTags.length}, ${spendingTags.length},  $allTags');
     setState(() {
       countIncome = incomeTags.length;
       countSpending = spendingTags.length;
@@ -60,24 +59,28 @@ class _TagSelectionState extends State<TagSelection> {
   }
 
   getChipSection() {
-    return SliverAppBar(
-        pinned: true,
-        collapsedHeight: 30,
-        toolbarHeight: 30,
-        excludeHeaderSemantics: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: primaryColorLightTone,
-        title: Wrap(
-            children: selectedTags
-                .map((tag) => Chip(
-                    label: Text(
-                      tag.name,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    avatar: allIconsMap[tag.icon],
-                    backgroundColor: primaryColorMidTone,
-                    visualDensity: VisualDensity.compact))
-                .toList()));
+    return Container(
+      alignment: Alignment.topLeft,
+      child: Wrap(
+          spacing: 2,
+          runSpacing: -10,
+          children: selectedTags
+              .map((tag) => Chip(
+                  avatar: Icon(allIconDataMap[tag.icon],
+                      color: primaryColorLightTone),
+                  label: Text(
+                    tag.name,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  deleteIcon: Icon(
+                    Icons.close,
+                    color: primaryColor,
+                  ),
+                  onDeleted: () => _handleSelection(tag),
+                  backgroundColor: primaryColorMidTone,
+                  visualDensity: VisualDensity.compact))
+              .toList()),
+    );
   }
 
   getTagHeader(String title) {
@@ -111,12 +114,15 @@ class _TagSelectionState extends State<TagSelection> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(allIconDataMap[tag.icon], size: 30),
-                  Text(tag.name, overflow: TextOverflow.ellipsis,)
+                  Text(
+                    tag.name,
+                    overflow: TextOverflow.ellipsis,
+                  )
                 ],
               ),
               onPressed: () => _handleSelection(tag),
             ));
-      }, childCount: income? countIncome: countSpending ),
+      }, childCount: income ? countIncome : countSpending),
     );
   }
 
@@ -125,23 +131,28 @@ class _TagSelectionState extends State<TagSelection> {
     return FormField(onSaved: (value) {
       widget.onSaved(selectedTags);
     }, builder: (FormFieldState state) {
-      return CustomScrollView(
-          shrinkWrap: true,
-          slivers: widget.isIncome
-              ? [
-                  getChipSection(),
-                  getTagHeader("Income"),
-                  getTagGrid(true),
-                  getTagHeader("Spending"),
-                  getTagGrid(false),
-                ]
-              : [
-                  getChipSection(),
-                  getTagHeader("Spending"),
-                  getTagGrid(false),
-                  getTagHeader("Income"),
-                  getTagGrid(true),
-                ]);
+      return Column(children: [
+        getChipSection(),
+        Expanded(
+            child: Scrollbar(
+                child: CustomScrollView(
+                    shrinkWrap: true,
+                    slivers: widget.isIncome
+                        ? [
+                            //getChipSection(),
+                            getTagHeader("Income"),
+                            getTagGrid(true),
+                            getTagHeader("Spending"),
+                            getTagGrid(false),
+                          ]
+                        : [
+                            //getChipSection(),
+                            getTagHeader("Spending"),
+                            getTagGrid(false),
+                            getTagHeader("Income"),
+                            getTagGrid(true),
+                          ])))
+      ]);
     });
   }
 }
