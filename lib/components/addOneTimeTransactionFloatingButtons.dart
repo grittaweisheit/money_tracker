@@ -7,7 +7,7 @@ import 'package:money_tracker/pages/createOneTimeTransactionView.dart';
 import '../Constants.dart';
 import '../Utils.dart';
 
-class AddOneTimeTransactionFloatingButtons extends StatelessWidget{
+class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
   final onNavigatedTo;
 
   AddOneTimeTransactionFloatingButtons(this.onNavigatedTo);
@@ -26,11 +26,25 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget{
           context: context,
           builder: (BuildContext context) {
             return SimpleDialog(
+              backgroundColor: primaryColorLightTone,
               children: blueprints
                   .map((blueprint) => SimpleDialogOption(
-                        onPressed: () => {Navigator.pop(context, blueprint)},
-                        child: Text(blueprint.description),
-                      ))
+                      padding: EdgeInsets.fromLTRB(5, 4, 5, 0),
+                      onPressed: () => {Navigator.pop(context, blueprint)},
+                      child: ListTile(
+                        horizontalTitleGap: 0,
+                        dense: true,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        tileColor: primaryColor,
+                        leading: blueprint.getIcon(),
+                        title: Text(
+                          blueprint.description,
+                          style: lightTextStyle,
+                        ),
+                        trailing:
+                            getAmountText(blueprint.amount, intensive: true),
+                      )))
                   .toList(),
             );
           }).then((selectedBlueprint) {
