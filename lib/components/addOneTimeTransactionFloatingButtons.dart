@@ -27,6 +27,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
           builder: (BuildContext context) {
             return SimpleDialog(
               backgroundColor: primaryColorLightTone,
+              title: Text("Select a blueprint", textAlign: TextAlign.center),
               children: blueprints
                   .map((blueprint) => SimpleDialogOption(
                       padding: EdgeInsets.fromLTRB(5, 4, 5, 0),
