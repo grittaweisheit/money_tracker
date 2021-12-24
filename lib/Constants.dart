@@ -45,6 +45,8 @@ TextStyle lightTextStyle = TextStyle(color: primaryColorLightTone);
 TextStyle intensiveGreenTextStyle = TextStyle(color: intensiveGreenColor);
 TextStyle intensiveRedTextStyle = TextStyle(color: intensiveRedColor);
 
+TextStyle appBarTitleTextStyle = lightTextStyle.merge(TextStyle(fontSize: 22));
+
 /// Boxes
 
 String recurringTransactionBox = "recurringTransaction";

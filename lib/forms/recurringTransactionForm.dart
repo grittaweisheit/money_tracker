@@ -73,6 +73,13 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
       });
     }
 
+    void _savePeriod(Period? newPeriod) {
+      formKey.currentState!.save();
+      setState(() {
+        period = newPeriod!;
+      });
+    }
+
     TextFormField getDescriptionFormField() {
       return TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -89,18 +96,21 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
       return Wrap(children: [
         Row(children: [
           Text("Repeats every"),
-          topBottomSpace(20),
+          leftRightSpace(10),
           IntrinsicWidth(
-              child: DropdownButtonFormField<int>(
-                  items: List.generate(100, (index) => index)
+              child: DropdownButton<int>(
+                  isDense: true,
+                  dropdownColor: primaryColorLightTone,
+                  items: List.generate(50, (index) => index)
                       .map((number) => DropdownMenuItem(
                           value: number, child: Text(number.toString())))
                       .toList(),
                   value: every,
                   onChanged: _saveEvery)),
-          topBottomSpace(20),
           IntrinsicWidth(
-              child: DropdownButtonFormField<Period>(
+              child: DropdownButton<Period>(
+                  isDense: true,
+                  dropdownColor: primaryColorLightTone,
                   items: Period.values
                       .map((periodEnum) => DropdownMenuItem(
                           value: periodEnum,
@@ -109,7 +119,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                               : periodSingularStrings[periodEnum.index])))
                       .toList(),
                   value: period,
-                  onChanged: (value) => period = value!))
+                  onChanged: _savePeriod))
         ])
       ]);
     }

@@ -117,7 +117,6 @@ class StatisticsLineChartCardState extends State<StatisticsLineChartCard> {
 
   @override
   Widget build(BuildContext context) {
-    LineChartData lineChartData = getLineChartData();
     return Container(
       height: 230,
       child: Card(
@@ -150,7 +149,7 @@ class StatisticsLineChartCardState extends State<StatisticsLineChartCard> {
             Expanded(
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 15, 25, 0),
-                    child: LineChart(lineChartData))),
+                    child: LineChart(getLineChartData()))),
           ]),
         ),
       ),

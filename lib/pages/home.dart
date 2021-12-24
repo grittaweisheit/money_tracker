@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/Utils.dart';
@@ -119,8 +118,11 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: primaryColorLightTone,
-        appBar: AppBar(centerTitle: true, title: Text("Money Tracker")),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Money Tracker"),
+          backgroundColor: primaryColor,
+        ),
         drawer: HomeDrawer(),
         body: TabBarView(controller: tabController, children: [
           Container(child: OverviewTab()),

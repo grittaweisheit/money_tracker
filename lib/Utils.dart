@@ -14,7 +14,6 @@ double getIncomeOrExpenseForMonth(
   DateTime nextMonthYear = monthYear.month == 12
       ? DateTime(monthYear.year + 1, 1)
       : DateTime(monthYear.year, monthYear.month + 1);
-  debugPrint('$monthYear $nextMonthYear');
   return box.values
       .where((transaction) =>
           transaction.isIncome == getIncome &&

@@ -49,6 +49,8 @@ class MyApp extends StatelessWidget {
       title: 'Money Tracker',
       theme: ThemeData(
         primaryColor: primaryColor,
+        scaffoldBackgroundColor: primaryColorLightTone,
+        appBarTheme: AppBarTheme(backgroundColor: primaryColor, titleTextStyle:appBarTitleTextStyle, centerTitle: true)
       ),
       home: HomeView(),
     );
