@@ -9,6 +9,10 @@ int transfersTabIndex = 1;
 List<String> periodSingularStrings = ["day", "week", "month", "year"];
 List<String> periodPluralStrings = ["days", "weeks", "months", "years"];
 
+/// Preferences
+
+Map<String, bool> defaultBoolPreferences = {'cutoff_year': true};
+
 /// DateFormats
 
 DateFormat onlyDate = DateFormat("dd.MM.y");
@@ -53,6 +57,7 @@ String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String blueprintTransactionBox = "bluePrintTransaction";
 String tagBox = "tag";
+String preferencesBox = "preferences";
 
 /// Sizes
 

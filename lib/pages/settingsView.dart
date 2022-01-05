@@ -1,13 +1,43 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
+import 'package:money_tracker/models/Models.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends StatefulWidget {
   SettingsView();
 
+  @override
+  SettingsViewState createState() {
+    return SettingsViewState();
+  }
+}
+
+class SettingsViewState extends State<SettingsView> {
+
+  bool cutoffYear = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getPreferences();
+  }
+
+  void getPreferences() async {
+    final preferences = await Preferences.getInstance();
+    setState(() {
+      cutoffYear = preferences.getCutoffYear();
+    });
+  }
+
+  void setCutoffYear(bool newCutoffYear) async{
+    final preferences = await Preferences.getInstance();
+    setState(() {
+      cutoffYear = newCutoffYear;
+    });
+    preferences.setCutoffYear(newCutoffYear);
+  }
+  
   void confirmDeletion(BuildContext context) {
     showDialog(
         context: context,
@@ -15,7 +45,7 @@ class SettingsView extends StatelessWidget {
           return AlertDialog(
             title: Text('Please Confirm'),
             content: Text(
-                'Are you really sure you want to delete all your Transfer entries? They can not be recovered afterwards.'),
+                'Are you sure you want to delete all your Transfer entries? They can not be recovered afterwards.'),
             actions: [
               TextButton(
                   onPressed: () {
@@ -44,10 +74,14 @@ class SettingsView extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       itemExtent: 30,
       children: <Widget>[
+        SwitchListTile(
+            title: Text('Only consider the current year'),
+            value: cutoffYear,
+            onChanged: (value) => setCutoffYear(value)),
         ListTile(
           title: Text('Delete all Transfers'),
           onTap: () => confirmDeletion(context),
-        )
+        ),
       ],
     );
   }

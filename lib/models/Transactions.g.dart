@@ -6,55 +6,6 @@ part of 'Transactions.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PeriodAdapter extends TypeAdapter<Period> {
-  @override
-  final int typeId = 0;
-
-  @override
-  Period read(BinaryReader reader) {
-    switch (reader.readByte()) {
-      case 0:
-        return Period.day;
-      case 1:
-        return Period.week;
-      case 2:
-        return Period.month;
-      case 3:
-        return Period.year;
-      default:
-        return Period.day;
-    }
-  }
-
-  @override
-  void write(BinaryWriter writer, Period obj) {
-    switch (obj) {
-      case Period.day:
-        writer.writeByte(0);
-        break;
-      case Period.week:
-        writer.writeByte(1);
-        break;
-      case Period.month:
-        writer.writeByte(2);
-        break;
-      case Period.year:
-        writer.writeByte(3);
-        break;
-    }
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PeriodAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class RuleAdapter extends TypeAdapter<Rule> {
   @override
   final int typeId = 1;
@@ -358,6 +309,55 @@ class BlueprintTransactionAdapter extends TypeAdapter<BlueprintTransaction> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BlueprintTransactionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class PeriodAdapter extends TypeAdapter<Period> {
+  @override
+  final int typeId = 0;
+
+  @override
+  Period read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return Period.day;
+      case 1:
+        return Period.week;
+      case 2:
+        return Period.month;
+      case 3:
+        return Period.year;
+      default:
+        return Period.day;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Period obj) {
+    switch (obj) {
+      case Period.day:
+        writer.writeByte(0);
+        break;
+      case Period.week:
+        writer.writeByte(1);
+        break;
+      case Period.month:
+        writer.writeByte(2);
+        break;
+      case Period.year:
+        writer.writeByte(3);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PeriodAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
