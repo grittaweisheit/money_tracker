@@ -10,8 +10,8 @@ class Preferences {
 
   // This doesn't have to be a singleton.
   // We just want to make sure that the box is open, before we start getting/setting objects on it
-  static Future<Preferences> getInstance() async {
-    final box = await Hive.openBox<dynamic>(preferencesBox);
+  static Preferences getInstance() {
+    final box = Hive.box(preferencesBox);
     return Preferences._(box);
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:money_tracker/models/Models.dart';
 import 'package:money_tracker/models/Transactions.dart';
 
 import '../Constants.dart';
@@ -7,8 +8,10 @@ import '../Utils.dart';
 
 class OverviewCard extends StatelessWidget {
   double getOverlap(Box<OneTimeTransaction> box, DateTime monthYear) {
+    Preferences preferences = Preferences.getInstance();
     return box.values
-        .where((transaction) => transaction.date.isBefore(monthYear))
+        .where((transaction) => transaction.date.isBefore(monthYear) &&
+        (transaction.date.year >= DateTime.now().year || !preferences.getCutoffYear()))
         .fold(0, (sum, transaction) => sum + transaction.amount);
   }
 

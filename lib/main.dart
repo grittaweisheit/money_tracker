@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_tracker/Constants.dart';
+import 'package:money_tracker/models/Models.dart';
 import 'package:money_tracker/models/Transactions.dart';
 import 'models/Transactions.dart';
 import 'pages/home.dart';
@@ -22,12 +23,15 @@ void main() async {
       await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
   Box bluePrintTransactions =
       await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
+  Box preferences =
+      await Hive.openBox<dynamic>(preferencesBox);
 
   if (RESET) {
     tags.clear();
     oneTimeTransactions.clear();
     recurringTransactions.clear();
     bluePrintTransactions.clear();
+    preferences.clear();
   }
 
   // insert default tags
@@ -47,10 +51,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Money Tracker',
       theme: ThemeData(
-        primaryColor: primaryColor,
-        scaffoldBackgroundColor: primaryColorLightTone,
-        appBarTheme: AppBarTheme(backgroundColor: primaryColor, titleTextStyle:appBarTitleTextStyle, centerTitle: true)
-      ),
+          primaryColor: primaryColor,
+          scaffoldBackgroundColor: primaryColorLightTone,
+          appBarTheme: AppBarTheme(
+              backgroundColor: primaryColor,
+              titleTextStyle: appBarTitleTextStyle,
+              centerTitle: true)),
       home: HomeView(),
     );
   }
