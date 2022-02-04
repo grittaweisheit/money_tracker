@@ -52,12 +52,12 @@ TextStyle intensiveRedTextStyle = TextStyle(color: intensiveRedColor);
 TextStyle appBarTitleTextStyle = lightTextStyle.merge(TextStyle(fontSize: 22));
 
 /// Boxes
-
 String recurringTransactionBox = "recurringTransaction";
 String oneTimeTransactionBox = "oneTimeTransaction";
 String blueprintTransactionBox = "bluePrintTransaction";
 String tagBox = "tag";
 String preferencesBox = "preferences";
+
 
 /// Sizes
 

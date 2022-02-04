@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
@@ -17,17 +19,24 @@ enum Period {
 }
 
 @HiveType(typeId: 1)
-class Rule extends HiveObject {
+class Rule extends HiveObject  {
   @HiveField(0)
   int every;
   @HiveField(1)
   Period period; // 0-days, 1-weeks, 2-months, 3-years
 
   Rule(this.every, this.period);
+
+  Map toJson() {
+    return {'every': every, 'period': period.index};
+  }
+  static Rule fromJson(Map<String, dynamic> json) {
+    return Rule(json['every'], json['period']);
+  }
 }
 
 @HiveType(typeId: 2)
-class Tag extends HiveObject {
+class Tag extends HiveObject  {
   @HiveField(0)
   String name;
   @HiveField(1)
@@ -46,6 +55,21 @@ class Tag extends HiveObject {
 
   bool get isExpenseTag {
     return !isIncomeTag;
+  }
+
+  Map toJson() {
+    return {
+      'name': name,
+      'isIncomeTag': isIncomeTag,
+      'icon': icon,
+      'limits': limits
+    };
+  }
+
+  static Tag fromJson(Map<String, dynamic> json) {
+    List<dynamic> limitsDynamics = json['limits'];
+    List<double> limits = limitsDynamics.map((e) => (e as double)).toList();
+    return Tag(json['name'], json['isIncomeTag'], json['icon'], limits);
   }
 }
 
@@ -101,6 +125,24 @@ class TransactionBase extends HiveObject {
                     fontSize: oneTimeListIconSize))
             : this.getOmenIcon();
   }
+
+  Map toJson() {
+    return {
+      'description': description,
+      'isIncome': isIncome,
+      'amount': amount,
+      'tags': jsonEncode(tags.map((e) => e.name).toList())
+    };
+  }
+
+  static TransactionBase fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = json['tags'];
+    HiveList<Tag> tags = tagsDynamics
+        .map((tagDynamic) => Tag.fromJson(tagDynamic))
+        .toList() as HiveList<Tag>;
+    return TransactionBase(
+        json['description'], json['isIncome'], json['amount'], tags);
+  }
 }
 
 @HiveType(typeId: 4)
@@ -119,10 +161,26 @@ class Transaction extends TransactionBase {
   bool get isRecurring {
     return false;
   }
+
+  @override
+  Map toJson() {
+    Map baseJson = super.toJson();
+    baseJson['date'] = date.toString();
+    return baseJson;
+  }
+
+   static Transaction fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = json['tags'];
+    HiveList<Tag> tags = tagsDynamics
+        .map((tagDynamic) => Tag.fromJson(tagDynamic))
+        .toList() as HiveList<Tag>;
+    return Transaction(json['description'], json['isIncome'], json['amount'],
+        tags, json['date']);
+  }
 }
 
 @HiveType(typeId: 5)
-class RecurringTransaction extends Transaction {
+class RecurringTransaction extends Transaction  {
   @HiveField(5)
   Rule repetitionRule;
 
@@ -146,10 +204,31 @@ class RecurringTransaction extends Transaction {
   set nextExecution(DateTime nextExecution) {
     this.date = nextExecution;
   }
+
+  @override
+  Map toJson() {
+    Map transactionJson = super.toJson();
+    transactionJson['repetitionRule'] = repetitionRule.toJson();
+    return transactionJson;
+  }
+
+  static RecurringTransaction fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = json['tags'];
+    HiveList<Tag> tags = tagsDynamics
+        .map((tagDynamic) => Tag.fromJson(tagDynamic))
+        .toList() as HiveList<Tag>;
+    return RecurringTransaction(
+        json['description'],
+        json['isIncome'],
+        json['amount'],
+        tags,
+        json['date'],
+        Rule.fromJson(json['repetitionRule']));
+  }
 }
 
 @HiveType(typeId: 6)
-class OneTimeTransaction extends Transaction {
+class OneTimeTransaction extends Transaction  {
   OneTimeTransaction(String description, bool isIncome, double amount,
       HiveList<Tag> tags, date)
       : super(description, isIncome, amount, tags, date);
@@ -164,13 +243,41 @@ class OneTimeTransaction extends Transaction {
   bool get isRecurring {
     return false;
   }
+
+  @override
+  Map toJson() {
+    return super.toJson();
+  }
+
+   static OneTimeTransaction fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = json['tags'];
+    HiveList<Tag> tags = tagsDynamics
+        .map((tagDynamic) => Tag.fromJson(tagDynamic))
+        .toList() as HiveList<Tag>;
+    return OneTimeTransaction(json['description'], json['isIncome'],
+        json['amount'], tags, json['date']);
+  }
 }
 
 @HiveType(typeId: 7)
-class BlueprintTransaction extends TransactionBase {
+class BlueprintTransaction extends TransactionBase  {
   BlueprintTransaction(
       String description, bool isIncome, double amount, HiveList<Tag> tags)
       : super(description, isIncome, amount, tags);
 
   BlueprintTransaction.empty() : super.empty();
+
+  @override
+  Map toJson() {
+    return super.toJson();
+  }
+
+  static BlueprintTransaction fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = json['tags'];
+    HiveList<Tag> tags = tagsDynamics
+        .map((tagDynamic) => Tag.fromJson(tagDynamic))
+        .toList() as HiveList<Tag>;
+    return BlueprintTransaction(
+        json['description'], json['isIncome'], json['amount'], tags);
+  }
 }

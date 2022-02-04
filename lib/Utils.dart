@@ -41,6 +41,12 @@ TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
 int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) =>
     t2.date.compareTo(t1.date);
 
+/// Tag Utils
+
+bool tagsAreEqual(Tag t, Tag tag) {
+  return t.isIncomeTag == tag.isIncomeTag && t.name == tag.name;
+}
+
 /// Amount Utils
 
 String getAmountString(double amount) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_tracker/Constants.dart';
-import 'package:money_tracker/models/Models.dart';
 import 'package:money_tracker/models/Transactions.dart';
 import 'models/Transactions.dart';
 import 'pages/home.dart';
@@ -36,8 +35,8 @@ void main() async {
 
   // insert default tags
   if (tags.isEmpty) {
-    tags.add(new Tag("Essen", false, 'lunch', []));
-    tags.add(new Tag("Unterhalt", true, 'euro', []));
+    tags.add(new Tag("Essen", false, 'lunch', inactiveLimits));
+    tags.add(new Tag("Unterhalt", true, 'euro', inactiveLimits));
   }
 
   runApp(MyApp());
