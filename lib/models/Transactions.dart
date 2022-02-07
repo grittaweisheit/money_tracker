@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
 
+import '../Utils.dart';
+
 part 'Transactions.g.dart';
 
 @HiveType(typeId: 0)
@@ -19,7 +21,7 @@ enum Period {
 }
 
 @HiveType(typeId: 1)
-class Rule extends HiveObject  {
+class Rule extends HiveObject {
   @HiveField(0)
   int every;
   @HiveField(1)
@@ -30,13 +32,14 @@ class Rule extends HiveObject  {
   Map toJson() {
     return {'every': every, 'period': period.index};
   }
+
   static Rule fromJson(Map<String, dynamic> json) {
-    return Rule(json['every'], json['period']);
+    return Rule(json['every'], Period.values[json['period']]);
   }
 }
 
 @HiveType(typeId: 2)
-class Tag extends HiveObject  {
+class Tag extends HiveObject {
   @HiveField(0)
   String name;
   @HiveField(1)
@@ -131,7 +134,7 @@ class TransactionBase extends HiveObject {
       'description': description,
       'isIncome': isIncome,
       'amount': amount,
-      'tags': jsonEncode(tags.map((e) => e.name).toList())
+      'tags': jsonEncode(tags.map((e) => e.toJson()).toList())
     };
   }
 
@@ -169,18 +172,18 @@ class Transaction extends TransactionBase {
     return baseJson;
   }
 
-   static Transaction fromJson(Map<String, dynamic> json) {
+  static Transaction fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = json['tags'];
     HiveList<Tag> tags = tagsDynamics
         .map((tagDynamic) => Tag.fromJson(tagDynamic))
         .toList() as HiveList<Tag>;
     return Transaction(json['description'], json['isIncome'], json['amount'],
-        tags, json['date']);
+        tags, DateTime.parse(json['date']));
   }
 }
 
 @HiveType(typeId: 5)
-class RecurringTransaction extends Transaction  {
+class RecurringTransaction extends Transaction {
   @HiveField(5)
   Rule repetitionRule;
 
@@ -213,22 +216,21 @@ class RecurringTransaction extends Transaction  {
   }
 
   static RecurringTransaction fromJson(Map<String, dynamic> json) {
-    List<dynamic> tagsDynamics = json['tags'];
-    HiveList<Tag> tags = tagsDynamics
-        .map((tagDynamic) => Tag.fromJson(tagDynamic))
-        .toList() as HiveList<Tag>;
+    List<dynamic> tagsDynamics = jsonDecode(json['tags']);
+    HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
+
     return RecurringTransaction(
         json['description'],
         json['isIncome'],
         json['amount'],
         tags,
-        json['date'],
+        DateTime.parse(json['date']),
         Rule.fromJson(json['repetitionRule']));
   }
 }
 
 @HiveType(typeId: 6)
-class OneTimeTransaction extends Transaction  {
+class OneTimeTransaction extends Transaction {
   OneTimeTransaction(String description, bool isIncome, double amount,
       HiveList<Tag> tags, date)
       : super(description, isIncome, amount, tags, date);
@@ -249,18 +251,17 @@ class OneTimeTransaction extends Transaction  {
     return super.toJson();
   }
 
-   static OneTimeTransaction fromJson(Map<String, dynamic> json) {
-    List<dynamic> tagsDynamics = json['tags'];
-    HiveList<Tag> tags = tagsDynamics
-        .map((tagDynamic) => Tag.fromJson(tagDynamic))
-        .toList() as HiveList<Tag>;
+  static OneTimeTransaction fromJson(Map<String, dynamic> json) {
+    List<dynamic> tagsDynamics = jsonDecode(json['tags']);
+    HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
+
     return OneTimeTransaction(json['description'], json['isIncome'],
-        json['amount'], tags, json['date']);
+        json['amount'], tags, DateTime.parse(json['date']));
   }
 }
 
 @HiveType(typeId: 7)
-class BlueprintTransaction extends TransactionBase  {
+class BlueprintTransaction extends TransactionBase {
   BlueprintTransaction(
       String description, bool isIncome, double amount, HiveList<Tag> tags)
       : super(description, isIncome, amount, tags);
@@ -273,10 +274,8 @@ class BlueprintTransaction extends TransactionBase  {
   }
 
   static BlueprintTransaction fromJson(Map<String, dynamic> json) {
-    List<dynamic> tagsDynamics = json['tags'];
-    HiveList<Tag> tags = tagsDynamics
-        .map((tagDynamic) => Tag.fromJson(tagDynamic))
-        .toList() as HiveList<Tag>;
+    List<dynamic> tagsDynamics = jsonDecode(json['tags']);
+    HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
     return BlueprintTransaction(
         json['description'], json['isIncome'], json['amount'], tags);
   }

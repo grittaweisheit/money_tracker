@@ -41,10 +41,34 @@ TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
 int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) =>
     t2.date.compareTo(t1.date);
 
+/// Blueprint Utils
+
+bool blueprintsAreEqual(BlueprintTransaction b1, BlueprintTransaction b2) {
+  return b1.isIncome == b2.isIncome && b1.description == b2.description;
+}
+
 /// Tag Utils
 
 bool tagsAreEqual(Tag t, Tag tag) {
   return t.isIncomeTag == tag.isIncomeTag && t.name == tag.name;
+}
+
+HiveList<Tag> addAndGetDynamicTagsToDbIfNeeded(List<dynamic> tagsDynamics) {
+  Box<Tag> box = Hive.box(tagBox);
+  List<Tag> ownTags = [];
+
+  // add Tags if not already there
+  tagsDynamics.forEach((tagDynamic) {
+    Tag currentTag = Tag.fromJson(tagDynamic);
+    var ownTag =
+        box.values.firstWhere((t) => tagsAreEqual(t, currentTag), orElse: () {
+      box.add(currentTag);
+      return currentTag;
+    });
+    ownTags.add(ownTag);
+  });
+
+  return new HiveList<Tag>(box, objects: ownTags);
 }
 
 /// Amount Utils

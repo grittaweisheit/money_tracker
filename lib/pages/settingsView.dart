@@ -14,7 +14,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class SettingsViewState extends State<SettingsView> {
-
   bool cutoffYear = true;
 
   @override
@@ -30,27 +29,27 @@ class SettingsViewState extends State<SettingsView> {
     });
   }
 
-  void setCutoffYear(bool newCutoffYear) async{
+  void setCutoffYear(bool newCutoffYear) async {
     final preferences = await Preferences.getInstance();
     setState(() {
       cutoffYear = newCutoffYear;
     });
     preferences.setCutoffYear(newCutoffYear);
   }
-  
-  void confirmDeletion(BuildContext context) {
+
+  void confirmDeletion(
+      BuildContext context, Function function, Widget content) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text('Please Confirm'),
-            content: Text(
-                'Are you sure you want to delete all your Transfer entries? They can not be recovered afterwards.'),
+            content: content,
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    deleteAllTransfers(context);
+                    function(context);
                   },
                   child: Text('Yes')),
               TextButton(
@@ -69,10 +68,16 @@ class SettingsViewState extends State<SettingsView> {
         .showSnackBar(SnackBar(content: Text("All Transfers deleted."))));
   }
 
+  void deleteEverything(BuildContext context) {
+    Box<OneTimeTransaction> oneTimeTransactions =
+        Hive.box(oneTimeTransactionBox);
+
+    oneTimeTransactions.clear().then((value) => ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Everything deleted."))));
+  }
+
   Widget getContent(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(8),
-      itemExtent: 30,
       children: <Widget>[
         SwitchListTile(
             title: Text('Only consider the current year'),
@@ -80,7 +85,19 @@ class SettingsViewState extends State<SettingsView> {
             onChanged: (value) => setCutoffYear(value)),
         ListTile(
           title: Text('Delete all Transfers'),
-          onTap: () => confirmDeletion(context),
+          onTap: () => confirmDeletion(
+              context,
+              (context) => deleteAllTransfers(context),
+              Text(
+                  'Are you sure you want to delete all your Transfer entries? They can not be recovered afterwards.')),
+        ),
+        ListTile(
+          title: Text('Delete all Data'),
+          onTap: () => confirmDeletion(
+              context,
+              (context) => deleteEverything(context),
+              Text(
+                  'Are you sure you want to delete all of your Date entries? It can not be recovered afterwards.')),
         ),
       ],
     );

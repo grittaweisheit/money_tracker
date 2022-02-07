@@ -70,19 +70,10 @@ class ImportExportView extends StatelessWidget {
     writeRecurringTransactionsFromJsonData(dynamic importedJson) async {
       Box<RecurringTransaction> recurringTransactions =
           Hive.box(recurringTransactionBox);
-      Box<Tag> tags = Hive.box(tagBox);
       List<dynamic> importedDynamics = importedJson["recurringTransactions"];
       List<RecurringTransaction> imported = importedDynamics
           .map((e) => RecurringTransaction.fromJson(e))
           .toList();
-      // add Tags if not already there
-      imported.forEach((recTransaction) {
-        recTransaction.tags.forEach((tag) {
-          if (!tags.values.any((t) => tagsAreEqual(t, tag))) {
-            tags.add(tag);
-          }
-        });
-      });
       recurringTransactions.addAll(imported);
     }
 
@@ -90,27 +81,32 @@ class ImportExportView extends StatelessWidget {
         dynamic importedJson) async {
       Box<OneTimeTransaction> oneTimeTransactions =
           Hive.box(oneTimeTransactionBox);
-      Box<Tag> tags = Hive.box(tagBox);
       List<dynamic> importedDynamics = importedJson["oneTimeTransactions"];
       List<OneTimeTransaction> imported =
           importedDynamics.map((e) => OneTimeTransaction.fromJson(e)).toList();
-      // add Tags if not already there
-      imported.forEach((oneTimeTransaction) {
-        oneTimeTransaction.tags.forEach((tag) {
-          if (!tags.values.any((t) => tagsAreEqual(t, tag))) {
-            tags.add(tag);
-          }
-        });
-      });
       oneTimeTransactions.addAll(imported);
     }
 
     Future<void> writeTagsFromJsonData(dynamic importedJson) async {
       Box<Tag> tags = Hive.box(tagBox);
       List<dynamic> importedDynamics = importedJson["tags"];
-      List<Tag> importedTags =
-          importedDynamics.map((e) => Tag.fromJson(e)).toList();
-      tags.addAll(importedTags);
+      importedDynamics.forEach((e) {
+        Tag tag = Tag.fromJson(e);
+        if (!tags.values.any((t) => tagsAreEqual(t, tag))) {
+          tags.add(tag);
+        }
+      });
+    }
+
+    Future<void> writeBlueprintsFromJsonData(dynamic importedJson) async {
+      Box<BlueprintTransaction> blueprints = Hive.box(blueprintTransactionBox);
+      List<dynamic> importedDynamics = importedJson["blueprintTransactions"];
+      importedDynamics.forEach((e) {
+        BlueprintTransaction blueprint = BlueprintTransaction.fromJson(e);
+        if (!blueprints.values.any((b) => blueprintsAreEqual(b, blueprint))) {
+          blueprints.add(blueprint);
+        }
+      });
     }
 
     importRecurringTransactions() async {
@@ -134,10 +130,18 @@ class ImportExportView extends StatelessWidget {
       });
     }
 
+    Future<void> importBlueprints() async {
+      selectFile((File file) async {
+        var importedJson = decodeJsonFile(file);
+        writeBlueprintsFromJsonData(importedJson);
+      });
+    }
+
     importEverything() async {
       selectFile((File file) async {
         var importedJson = await decodeJsonFile(file);
         writeTagsFromJsonData(importedJson);
+        writeBlueprintsFromJsonData(importedJson);
         writeRecurringTransactionsFromJsonData(importedJson);
         writeOneTimeTransactionsFromJsonData(importedJson);
       });
@@ -205,6 +209,10 @@ class ImportExportView extends StatelessWidget {
             onTap: importRecurringTransactions,
           ),
           ListTile(
+            title: Text('Import Blueprints'),
+            onTap: importBlueprints,
+          ),
+          ListTile(
             title: Text('Import Tags'),
             onTap: importTags,
           ),
@@ -223,6 +231,10 @@ class ImportExportView extends StatelessWidget {
           ListTile(
             title: Text('Export Tags'),
             onTap: () => export<Tag>(tagBox),
+          ),
+          ListTile(
+            title: Text('Export Blueprints'),
+            onTap: () => export<BlueprintTransaction>(blueprintTransactionBox),
           ),
           ListTile(
             title: Text('Export Transfers'),
