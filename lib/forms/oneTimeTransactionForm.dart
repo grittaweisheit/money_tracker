@@ -140,7 +140,14 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
                 ),
                 getDescriptionFormField(),
                 TextButton(
-                    onPressed: _showDatePicker,
+                    onPressed: () async {
+                      DateTime? date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(DateTime.now().year - 100),
+                          lastDate: DateTime(DateTime.now().year + 100));
+                      if (date != null) _saveDate(date);
+                    },
                     child: Text(onlyDate.format(date))),
                 topBottomSpace(5),
                 Expanded(child: TagSelection(_saveTags, tags, isIncome))
