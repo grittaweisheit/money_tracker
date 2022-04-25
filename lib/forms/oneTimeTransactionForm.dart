@@ -41,7 +41,6 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
   @override
   Widget build(BuildContext context) {
     void _saveTags(List<Tag> newTags) {
-      debugPrint("submitted tags $newTags");
       setState(() {
         tags = newTags;
       });

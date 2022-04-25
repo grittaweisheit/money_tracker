@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:money_tracker/components/tagSelectionPopup.dart';
 import 'package:money_tracker/pages/createTagView.dart';
 import '../Constants.dart';
 import '../models/Transactions.dart';
@@ -40,9 +41,14 @@ class _TagListViewState extends State<TagListView> {
   }
 
   Widget getCircleAvatar(Tag tag) {
-    return CircleAvatar(
-        backgroundColor: primaryColorLightTone,
-        child: Icon(allIconDataMap[tag.icon], color: primaryColor));
+    return InkWell(
+        /*      onTap: () async =>
+            (await showDialog(context: context, builder: (BuildContext context) {
+             null ;// open icon selection
+            })),*/
+        child: CircleAvatar(
+            backgroundColor: primaryColorLightTone,
+            child: Icon(allIconDataMap[tag.icon], color: primaryColor)));
   }
 
   Widget getEditButton(Tag tag) {
@@ -110,7 +116,7 @@ class _TagListViewState extends State<TagListView> {
             body: Column(children: [Expanded(child: getTagList())]),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _addTag(),
-              tooltip: 'Add Income Tag',
+              tooltip: 'Add Tag',
               backgroundColor: primaryColor,
               child: Icon(Icons.add),
             )),

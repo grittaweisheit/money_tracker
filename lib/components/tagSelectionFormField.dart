@@ -40,6 +40,7 @@ class _TagSelectionState extends State<TagSelection> {
   }
 
   void _handleSelection(Tag tag) async {
+    debugPrint("selection changed");
     setState(() {
       // select tag if it's not already selected
       if (!selectedTags.remove(tag)) {
@@ -130,6 +131,7 @@ class _TagSelectionState extends State<TagSelection> {
   Widget build(BuildContext context) {
     return FormField(onSaved: (value) {
       widget.onSaved(selectedTags);
+
     }, builder: (FormFieldState state) {
       return Column(children: [
         getChipSection(),

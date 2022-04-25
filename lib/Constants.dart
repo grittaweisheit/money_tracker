@@ -31,6 +31,7 @@ List<double> inactiveLimits = [-1, -1, -1, -1];
 /// Colors
 
 Color primaryColor = Colors.blueGrey.shade900;
+Color primaryColorDarkerMidTone = Colors.blueGrey.shade800;
 Color primaryColorMidTone = Colors.blueGrey;
 Color primaryColorLightTone = Colors.blueGrey.shade100;
 
@@ -57,7 +58,6 @@ String oneTimeTransactionBox = "oneTimeTransaction";
 String blueprintTransactionBox = "bluePrintTransaction";
 String tagBox = "tag";
 String preferencesBox = "preferences";
-
 
 /// Sizes
 

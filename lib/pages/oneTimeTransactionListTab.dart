@@ -1,8 +1,9 @@
-import 'package:flip_card/flip_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/Utils.dart';
+import 'package:money_tracker/components/tagSelectionPopup.dart';
 import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
 import '../Constants.dart';
 import '../models/Transactions.dart';
@@ -77,57 +78,87 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
       margin: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Wrap(children: [
-            Container(
-              child: transaction.getIcon(),
-              width: oneTimeListIconSize,
-              alignment: Alignment.center,
-            ),
-            leftRightSpace(10),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                  width: 220,
-                  child: Text(transaction.description,
-                      style: TextStyle(color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1)),
-              Text(
-                onlyDate.format(transaction.date),
-                style: TextStyle(color: primaryColorLightTone),
-              )
-            ])
-          ]),
-          isFront
-              ? getAmountText(transaction.amount, intensive: true)
-              : getListElementActions(transaction)
-        ]),
+        child: InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditOneTimeTransactionView(transaction)));
+            },
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Wrap(children: [
+                    InkWell(
+                        onTap: () async {
+                          bool? wasChanged = await showDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return TagSelectionPopup(transaction);
+                              });
+                          if (wasChanged ?? false) refresh();
+                        },
+                        child: Container(
+                          child: transaction.getIcon(),
+                          width: oneTimeListIconSize,
+                          alignment: Alignment.center,
+                        )),
+                    leftRightSpace(10),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              width: 220,
+                              child: Text(transaction.description,
+                                  style: TextStyle(color: Colors.white),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1)),
+                          Text(
+                            onlyDate.format(transaction.date),
+                            style: TextStyle(color: primaryColorLightTone),
+                          )
+                        ]),
+                  ]),
+                  isFront
+                      ? getAmountText(transaction.amount, intensive: true)
+                      : getListElementActions(transaction)
+                ])),
       ),
     );
   }
 
   Widget getListElement(OneTimeTransaction transaction) {
-    return FlipCard(
-        direction: FlipDirection.VERTICAL,
-        front: getListElementCard(transaction, true),
-        back: getListElementCard(transaction, false));
+    return getListElementCard(transaction, true);
+  }
+
+  Column getDateHeader(Transaction transaction) {
+    return Column(children: [
+      topBottomSpace(5),
+      Text(DateFormat("MMMM y").format(transaction.date)),
+      topBottomSpace(5)
+    ]);
   }
 
   ListView getTransactionsList() {
-    int? currentMonth;
-    return ListView.builder(
+    Divider nullDivider = Divider(height: 0);
+    return ListView.separated(
       itemCount: count,
+      separatorBuilder: (context, position) {
+        Transaction nextTransaction = this.transactions[position + 1];
+        Transaction transaction = this.transactions[position];
+        if (transaction.date.month != (nextTransaction.date.month)) {
+          return getDateHeader(nextTransaction);
+        }
+        return nullDivider;
+      },
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
-        var children = [];
-        if (transaction.date.month != currentMonth) {
-          currentMonth = transaction.date.month;
-          children.add(Text(DateFormat("MMMM y").format(transaction.date)));
+        var elem = getListElement(transaction);
+        if (position == 0) {
+          return Column(children: [getDateHeader(transaction), elem]);
         }
-        return Column(
-          children: [...children, getListElement(transaction)],
-        );
+        return elem;
       },
     );
   }
