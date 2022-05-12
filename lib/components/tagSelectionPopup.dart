@@ -18,15 +18,16 @@ class TagSelectionPopup extends StatefulWidget {
 
 class _TagSelectionPopupState extends State<TagSelectionPopup> {
   _TagSelectionPopupState();
+  Box<Tag> box = Hive.box(tagBox);
 
   @override
   void initState() {
+
     super.initState();
   }
 
   void onSaved(List<Tag> newTags) {
-    widget.transactionBase.tags = HiveList(Hive.box(tagBox), objects: newTags);
-    debugPrint("sAVED TAGS");
+    widget.transactionBase.tags = HiveList(box, objects: newTags);
     widget.transactionBase.save();
   }
 
@@ -44,7 +45,7 @@ class _TagSelectionPopupState extends State<TagSelectionPopup> {
                 Expanded(child: tagSelection),
                 OutlinedButton(
                     onPressed: () {
-                      tagSelection.onSaved;
+                      onSaved(tagSelection.selectedTags);
                       Navigator.of(context).pop(true);
                     },
                     child: Text("Save"))

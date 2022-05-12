@@ -30,6 +30,7 @@ class _RecurringTransactionListTabState
   }
 
   refresh() async {
+    HomeView.applyRecurringTransactions();
     final Box<RecurringTransaction> box = Hive.box(recurringTransactionBox);
     setState(() {
       transactions = box.values.toList();
@@ -38,12 +39,7 @@ class _RecurringTransactionListTabState
   }
 
   void _addTransaction(bool isIncome) {
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateRecurringTransactionView(isIncome)))
-        .then((value) {
-      HomeView.applyRecurringTransactions();
+    openPage(context, CreateRecurringTransactionView(isIncome)).then((value) {
       refresh();
     });
   }
@@ -59,11 +55,10 @@ class _RecurringTransactionListTabState
     return IconButton(
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      EditRecurringTransactionView(transaction)));
+          openPage(context, EditRecurringTransactionView(transaction))
+              .then((value) {
+            refresh();
+          });
         });
   }
 

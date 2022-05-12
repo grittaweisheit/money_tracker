@@ -131,7 +131,6 @@ class _TagSelectionState extends State<TagSelection> {
   Widget build(BuildContext context) {
     return FormField(onSaved: (value) {
       widget.onSaved(selectedTags);
-
     }, builder: (FormFieldState state) {
       return Column(children: [
         getChipSection(),

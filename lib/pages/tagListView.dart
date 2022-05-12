@@ -1,7 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/components/tagSelectionPopup.dart';
+import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/pages/createTagView.dart';
 import '../Constants.dart';
 import '../models/Transactions.dart';
@@ -36,8 +36,7 @@ class _TagListViewState extends State<TagListView> {
   }
 
   void _addTag() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CreateTagView()));
+    openPage(context, CreateTagView()).then((value) => refresh());
   }
 
   Widget getCircleAvatar(Tag tag) {
@@ -55,8 +54,7 @@ class _TagListViewState extends State<TagListView> {
     return IconButton(
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => EditTagView(tag)));
+          openPage(context, EditTagView(tag)).then((value) => refresh());
         });
   }
 

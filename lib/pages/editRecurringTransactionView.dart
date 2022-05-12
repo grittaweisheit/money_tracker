@@ -30,6 +30,8 @@ class _EditRecurringTransactionViewState
     widget.transaction.nextExecution = nextExecution;
     widget.transaction.tags = tags;
     widget.transaction.isIncome = isIncome;
+    widget.transaction.repetitionRule.every = every;
+    widget.transaction.repetitionRule.period = period;
     widget.transaction.save();
     Navigator.pop(context);
   }

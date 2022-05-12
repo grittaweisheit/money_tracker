@@ -38,11 +38,7 @@ class _BluePrintTransactionListViewState
   }
 
   void _addTransaction(bool isIncome) {
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateBlueprintTransactionView(isIncome)))
-        .then((value) {
+    openPage(context, CreateBlueprintTransactionView(isIncome)).then((value) {
       refresh();
     });
   }
@@ -65,11 +61,7 @@ class _BluePrintTransactionListViewState
     return IconButton(
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      EditBlueprintTransactionView(transaction)));
+          openPage(context, EditBlueprintTransactionView(transaction));
         });
   }
 

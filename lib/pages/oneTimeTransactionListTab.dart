@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -45,11 +44,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      EditOneTimeTransactionView(transaction)));
+          openPage(context, EditOneTimeTransactionView(transaction)).then((value) => refresh());
         });
   }
 
@@ -80,12 +75,9 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: InkWell(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          EditOneTimeTransactionView(transaction)));
+              openPage(context, EditOneTimeTransactionView(transaction)).then((value) => refresh());
             },
+            onLongPress: () {},
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

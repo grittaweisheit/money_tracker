@@ -143,8 +143,11 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           heroTag: "submitTransaction",
           backgroundColor: primaryColor,
           onPressed: () {
+            debugPrint("vorher: $description, $isIncome, $nextExecution, $every, $period");
             formKey.currentState!.save();
+            debugPrint("nachher: $description, $isIncome, $nextExecution, $every, $period");
             if (formKey.currentState!.validate()) {
+              debugPrint(period.toString());
               widget.submitTransaction(description, isIncome, amount, tags,
                   nextExecution, every, period);
             } else {

@@ -30,11 +30,19 @@ class _EditOneTimeTransactionViewState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return Scaffold(
         backgroundColor: primaryColorLightTone,
         appBar: AppBar(
           title: Text("Edit Transaction"),
+          actions: [IconButton(
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+              onPressed: () {
+                widget.transaction.delete();
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.delete_outline, color: primaryColorLightTone))],
         ),
         body: OneTimeTransactionForm(
           formKey,
