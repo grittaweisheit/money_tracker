@@ -23,14 +23,8 @@ class _EditBlueprintTransactionViewState
     super.initState();
   }
 
-  void submitTransaction(
-      String description,
-      bool isIncome,
-      double amount,
-      HiveList<Tag> tags,
-      DateTime nextExecution,
-      int every,
-      Period period) async {
+  void submitBlueprint(String description, bool isIncome, double amount,
+      HiveList<Tag> tags) async {
     widget.transaction.amount = amount;
     widget.transaction.description = description;
     widget.transaction.tags = tags;
@@ -47,6 +41,6 @@ class _EditBlueprintTransactionViewState
           title: Text("Edit Transaction"),
         ),
         body: BlueprintTransactionForm(
-            formKey, widget.transaction, submitTransaction));
+            formKey, widget.transaction, submitBlueprint));
   }
 }
