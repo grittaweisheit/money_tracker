@@ -1,4 +1,3 @@
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Utils.dart';
@@ -71,31 +70,29 @@ class _TagListViewState extends State<TagListView> {
     return Wrap(children: [getEditButton(tag), getDeleteButton(tag)]);
   }
 
-  Widget getListElementCard(Tag tag, bool isFront) {
-    return Card(
-      color: primaryColor,
-      child: ListTile(
+  Widget getListElementCard(Tag tag) {
+    return ListTile(
+        tileColor: primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        onTap: () {
+          openPage(context, EditTagView(tag)).then((value) => refresh());
+        },
         leading: getCircleAvatar(tag),
         title: Text(tag.name, style: TextStyle(color: Colors.white)),
-        trailing: isFront
-            ? (tag.isIncomeTag
-                ? Text("Income", style: TextStyle(color: intensiveGreenColor))
-                : Text("Expense", style: TextStyle(color: intensiveRedColor)))
-            : getListElementActions(tag),
-      ),
-    );
+        trailing: (tag.isIncomeTag
+            ? Text("Income", style: TextStyle(color: intensiveGreenColor))
+            : Text("Expense", style: TextStyle(color: intensiveRedColor))));
   }
 
   Widget getListElement(Tag tag) {
-    return FlipCard(
-        direction: FlipDirection.VERTICAL,
-        front: getListElementCard(tag, true),
-        back: getListElementCard(tag, false));
+    return Padding(
+        padding: EdgeInsets.only(top: 5), child: getListElementCard(tag));
   }
 
   ListView getTagList() {
     return ListView.builder(
       itemCount: count,
+      padding: EdgeInsets.all(5),
       itemBuilder: (BuildContext context, int position) {
         var tag = this.tags[position];
         return getListElement(tag);
