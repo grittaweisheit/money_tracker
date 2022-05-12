@@ -44,7 +44,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          openPage(context, EditOneTimeTransactionView(transaction)).then((value) => refresh());
+          openPage(context, EditOneTimeTransactionView(transaction))
+              .then((value) => refresh());
         });
   }
 
@@ -75,7 +76,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: InkWell(
             onTap: () {
-              openPage(context, EditOneTimeTransactionView(transaction)).then((value) => refresh());
+              openPage(context, EditOneTimeTransactionView(transaction))
+                  .then((value) => refresh());
             },
             onLongPress: () {},
             child: Row(

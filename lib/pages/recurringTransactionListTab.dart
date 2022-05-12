@@ -1,12 +1,13 @@
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Utils.dart';
+import 'package:money_tracker/components/tagSelectionPopup.dart';
 import 'package:money_tracker/pages/createRecurringTransactionView.dart';
 import 'package:money_tracker/pages/editRecurringTransactionView.dart';
 import 'package:money_tracker/pages/home.dart';
 import '../Constants.dart';
 import '../models/Transactions.dart';
+import '../Utils.dart';
 
 class RecurringTransactionListTab extends StatefulWidget {
   RecurringTransactionListTab();
@@ -76,34 +77,49 @@ class _RecurringTransactionListTabState
         children: [getEditButton(transaction), getDeleteButton(transaction)]);
   }
 
-  Widget getListElementCard(RecurringTransaction transaction, bool isFront) {
-    return Card(
-      color: primaryColor,
-      child: ListTile(
-        leading: getCircleAvatar(transaction),
+  Widget getListElementCard(RecurringTransaction transaction) {
+    String periodString = transaction.repetitionRule.every > 1
+        ? periodPluralStrings[transaction.repetitionRule.period.index]
+        : periodSingularStrings[transaction.repetitionRule.period.index];
+    String repeatsEveryString =
+        "${onlyDate.format(transaction.nextExecution)}     every ${transaction.repetitionRule.every} $periodString";
+    return ListTile(
+        tileColor: primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        leading: InkWell(
+          onTap: () async {
+            bool? wasChanged = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return TagSelectionPopup(transaction);
+                });
+            if (wasChanged ?? false) refresh();
+          },
+          child: getCircleAvatar(transaction),
+        ),
         title: Text(transaction.description,
             style: TextStyle(color: Colors.white)),
         subtitle: Text(
-          onlyDate.format(transaction.nextExecution),
+          repeatsEveryString,
           style: TextStyle(color: primaryColorLightTone),
         ),
-        trailing: isFront
-            ? getAmountText(transaction.amount, intensive: true)
-            : getListElementActions(transaction),
-      ),
-    );
+        onTap: () {
+          openPage(context, EditRecurringTransactionView(transaction))
+              .then((value) => refresh());
+        },
+        trailing: getAmountText(transaction.amount, intensive: true));
   }
 
   Widget getListElement(RecurringTransaction transaction) {
-    return FlipCard(
-        direction: FlipDirection.VERTICAL,
-        front: getListElementCard(transaction, true),
-        back: getListElementCard(transaction, false));
+    return Padding(
+        padding: EdgeInsets.only(top: 5),
+        child: getListElementCard(transaction));
   }
 
   ListView getTransactionsList() {
     return ListView.builder(
       itemCount: count,
+      padding: EdgeInsets.all(5),
       itemBuilder: (BuildContext context, int position) {
         var transaction = this.transactions[position];
         return getListElement(transaction);

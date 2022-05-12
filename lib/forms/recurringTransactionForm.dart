@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
@@ -143,9 +142,11 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           heroTag: "submitTransaction",
           backgroundColor: primaryColor,
           onPressed: () {
-            debugPrint("vorher: $description, $isIncome, $nextExecution, $every, $period");
+            debugPrint(
+                "vorher: $description, $isIncome, $nextExecution, $every, $period");
             formKey.currentState!.save();
-            debugPrint("nachher: $description, $isIncome, $nextExecution, $every, $period");
+            debugPrint(
+                "nachher: $description, $isIncome, $nextExecution, $every, $period");
             if (formKey.currentState!.validate()) {
               debugPrint(period.toString());
               widget.submitTransaction(description, isIncome, amount, tags,
