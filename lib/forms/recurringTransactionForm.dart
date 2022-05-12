@@ -155,28 +155,12 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
           child: Icon(Icons.check));
     }
 
-    _showDatePicker() {
-      showCupertinoModalPopup(
+    _showDatePicker() async {
+      return await showDatePicker(
           context: context,
-          builder: (_) => Container(
-                height: 500,
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: Column(
-                  children: [
-                    Container(
-                        height: 400,
-                        child: CupertinoDatePicker(
-                          initialDateTime: nextExecution,
-                          mode: CupertinoDatePickerMode.date,
-                          onDateTimeChanged: _saveNextExecution,
-                        )),
-                    CupertinoButton(
-                      child: Text('OK'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ),
-              ));
+          initialDate: DateTime.now(),
+          firstDate: DateTime(DateTime.now().year - 100),
+          lastDate: DateTime(DateTime.now().year + 100));
     }
 
     return Stack(children: [
@@ -190,7 +174,10 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                         _saveAmount, amount, isIncome, true)),
                 getDescriptionFormField(),
                 TextButton(
-                    onPressed: _showDatePicker,
+                    onPressed: () async {
+                      DateTime? date = await _showDatePicker();
+                      if (date != null) _saveNextExecution(date);
+                    },
                     child: Text(onlyDate.format(nextExecution))),
                 getRepeatsEverySection(),
                 topBottomSpace(5),

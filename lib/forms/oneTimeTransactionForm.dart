@@ -104,28 +104,12 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
           child: Icon(Icons.check));
     }
 
-    _showDatePicker() {
-      showCupertinoModalPopup(
+    _showDatePicker() async {
+      return await showDatePicker(
           context: context,
-          builder: (_) => Container(
-                height: 500,
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: Column(
-                  children: [
-                    Container(
-                        height: 400,
-                        child: CupertinoDatePicker(
-                          initialDateTime: date,
-                          mode: CupertinoDatePickerMode.date,
-                          onDateTimeChanged: _saveDate,
-                        )),
-                    CupertinoButton(
-                      child: Text('OK'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ),
-              ));
+          initialDate: DateTime.now(),
+          firstDate: DateTime(DateTime.now().year - 100),
+          lastDate: DateTime(DateTime.now().year + 100));
     }
 
     return Stack(children: [
@@ -141,11 +125,7 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
                 getDescriptionFormField(),
                 TextButton(
                     onPressed: () async {
-                      DateTime? date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(DateTime.now().year - 100),
-                          lastDate: DateTime(DateTime.now().year + 100));
+                      DateTime? date = await _showDatePicker();
                       if (date != null) _saveDate(date);
                     },
                     child: Text(onlyDate.format(date))),
