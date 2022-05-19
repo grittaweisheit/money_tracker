@@ -23,6 +23,8 @@ class _TagSelectionState extends State<TagSelection> {
   int countSpending = 0;
   int countIncome = 0;
 
+  _TagSelectionState();
+
   void initializeLists() async {
     Box<Tag> box = Hive.box(tagBox);
     var incomeTags =
@@ -40,7 +42,6 @@ class _TagSelectionState extends State<TagSelection> {
   }
 
   void _handleSelection(Tag tag) async {
-    debugPrint("selection changed");
     setState(() {
       // select tag if it's not already selected
       if (!selectedTags.remove(tag)) {
@@ -50,8 +51,6 @@ class _TagSelectionState extends State<TagSelection> {
       }
     });
   }
-
-  _TagSelectionState();
 
   @override
   void initState() {

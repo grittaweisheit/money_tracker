@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Utils.dart';
+import 'package:money_tracker/components/iconSelectionPopup.dart';
 import 'package:money_tracker/pages/createTagView.dart';
 import '../Constants.dart';
 import '../models/Transactions.dart';
@@ -40,10 +41,14 @@ class _TagListViewState extends State<TagListView> {
 
   Widget getCircleAvatar(Tag tag) {
     return InkWell(
-        /*      onTap: () async =>
-            (await showDialog(context: context, builder: (BuildContext context) {
-             null ;// open icon selection
-            })),*/
+        onTap: () async {
+          bool? wasChanged = await showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return IconSelectionPopup(tag);
+              });
+          if (wasChanged ?? false) refresh();
+        },
         child: CircleAvatar(
             backgroundColor: primaryColorLightTone,
             child: Icon(allIconDataMap[tag.icon], color: primaryColor)));
