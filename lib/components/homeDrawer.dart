@@ -37,7 +37,7 @@ class HomeDrawer extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.assignment_outlined),
                   title: Text('Blueprints'),
-                  onTap: () => openPage(context, BluePrintTransactionListView()),
+                  onTap: () => openPage(context, BluePrintTransferListView()),
                 ),
                 ListTile(
                   leading: Icon(Icons.download_outlined),

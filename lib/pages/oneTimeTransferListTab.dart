@@ -3,24 +3,24 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/components/tagSelectionPopup.dart';
-import 'package:money_tracker/pages/editOneTimeTransactionView.dart';
+import 'package:money_tracker/pages/editOneTimeTransferView.dart';
 import '../Constants.dart';
-import '../models/Transactions.dart';
-import '../components/addOneTimeTransactionFloatingButtons.dart';
+import '../models/Transfers.dart';
+import '../components/addOneTimeTransferFloatingButtons.dart';
 
-class OneTimeTransactionListTab extends StatefulWidget {
-  OneTimeTransactionListTab();
+class OneTimeTransferListTab extends StatefulWidget {
+  OneTimeTransferListTab();
 
   @override
-  _OneTimeTransactionListTabState createState() =>
-      _OneTimeTransactionListTabState();
+  _OneTimeTransferListTabState createState() =>
+      _OneTimeTransferListTabState();
 }
 
-class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
-  List<OneTimeTransaction> transactions = [];
+class _OneTimeTransferListTabState extends State<OneTimeTransferListTab> {
+  List<OneTimeTransfer> transfers = [];
   int count = 0;
 
-  _OneTimeTransactionListTabState();
+  _OneTimeTransferListTabState();
 
   @override
   void initState() {
@@ -29,43 +29,43 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   }
 
   refresh() async {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    List<OneTimeTransaction> newTransactions = box.values.toList();
-    newTransactions.sort(sortTransactionsEarliestFirst);
+    Box<OneTimeTransfer> box = Hive.box(oneTimeTransferBox);
+    List<OneTimeTransfer> newTransfers = box.values.toList();
+    newTransfers.sort(sortTransfersEarliestFirst);
     setState(() {
-      transactions = newTransactions;
-      count = transactions.length;
+      transfers = newTransfers;
+      count = transfers.length;
     });
   }
 
-  Widget getEditButton(OneTimeTransaction transaction) {
+  Widget getEditButton(OneTimeTransfer transfer) {
     return IconButton(
         padding: EdgeInsets.zero,
         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          openPage(context, EditOneTimeTransactionView(transaction))
+          openPage(context, EditOneTimeTransferView(transfer))
               .then((value) => refresh());
         });
   }
 
-  Widget getDeleteButton(OneTimeTransaction transaction) {
+  Widget getDeleteButton(OneTimeTransfer transfer) {
     return IconButton(
         padding: EdgeInsets.zero,
         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
         onPressed: () {
-          transaction.delete();
+          transfer.delete();
           refresh();
         },
         icon: Icon(Icons.delete_outline, color: primaryColorLightTone));
   }
 
-  Widget getListElementActions(OneTimeTransaction transaction) {
+  Widget getListElementActions(OneTimeTransfer transfer) {
     return Wrap(
-        children: [getEditButton(transaction), getDeleteButton(transaction)]);
+        children: [getEditButton(transfer), getDeleteButton(transfer)]);
   }
 
-  Widget getListElementCard(OneTimeTransaction transaction, bool isFront) {
+  Widget getListElementCard(OneTimeTransfer transfer, bool isFront) {
     return Container(
       decoration: BoxDecoration(
           color: primaryColor,
@@ -76,7 +76,7 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: InkWell(
             onTap: () {
-              openPage(context, EditOneTimeTransactionView(transaction))
+              openPage(context, EditOneTimeTransferView(transfer))
                   .then((value) => refresh());
             },
             onLongPress: () {},
@@ -89,12 +89,12 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
                           bool? wasChanged = await showDialog<bool>(
                               context: context,
                               builder: (BuildContext context) {
-                                return TagSelectionPopup(transaction);
+                                return TagSelectionPopup(transfer);
                               });
                           if (wasChanged ?? false) refresh();
                         },
                         child: Container(
-                          child: transaction.getIcon(),
+                          child: transfer.getIcon(),
                           width: oneTimeListIconSize,
                           alignment: Alignment.center,
                         )),
@@ -104,53 +104,53 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
                         children: [
                           Container(
                               width: 220,
-                              child: Text(transaction.description,
+                              child: Text(transfer.description,
                                   style: TextStyle(color: Colors.white),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1)),
                           Text(
-                            onlyDate.format(transaction.date),
+                            onlyDate.format(transfer.date),
                             style: TextStyle(color: primaryColorLightTone),
                           )
                         ]),
                   ]),
                   isFront
-                      ? getAmountText(transaction.amount, intensive: true)
-                      : getListElementActions(transaction)
+                      ? getAmountText(transfer.amount, intensive: true)
+                      : getListElementActions(transfer)
                 ])),
       ),
     );
   }
 
-  Widget getListElement(OneTimeTransaction transaction) {
-    return getListElementCard(transaction, true);
+  Widget getListElement(OneTimeTransfer transfer) {
+    return getListElementCard(transfer, true);
   }
 
-  Column getDateHeader(Transaction transaction) {
+  Column getDateHeader(Transfer transfer) {
     return Column(children: [
       topBottomSpace(5),
-      Text(DateFormat("MMMM y").format(transaction.date)),
+      Text(DateFormat("MMMM y").format(transfer.date)),
       topBottomSpace(5)
     ]);
   }
 
-  ListView getTransactionsList() {
+  ListView getTransfersList() {
     Divider nullDivider = Divider(height: 0);
     return ListView.separated(
       itemCount: count,
       separatorBuilder: (context, position) {
-        Transaction nextTransaction = this.transactions[position + 1];
-        Transaction transaction = this.transactions[position];
-        if (transaction.date.month != (nextTransaction.date.month)) {
-          return getDateHeader(nextTransaction);
+        Transfer nextTransfer = this.transfers[position + 1];
+        Transfer transfer = this.transfers[position];
+        if (transfer.date.month != (nextTransfer.date.month)) {
+          return getDateHeader(nextTransfer);
         }
         return nullDivider;
       },
       itemBuilder: (BuildContext context, int position) {
-        var transaction = this.transactions[position];
-        var elem = getListElement(transaction);
+        var transfer = this.transfers[position];
+        var elem = getListElement(transfer);
         if (position == 0) {
-          return Column(children: [getDateHeader(transaction), elem]);
+          return Column(children: [getDateHeader(transfer), elem]);
         }
         return elem;
       },
@@ -160,8 +160,8 @@ class _OneTimeTransactionListTabState extends State<OneTimeTransactionListTab> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      getTransactionsList(),
-      AddOneTimeTransactionFloatingButtons(refresh)
+      getTransfersList(),
+      AddOneTimeTransferFloatingButtons(refresh)
     ]);
   }
 }

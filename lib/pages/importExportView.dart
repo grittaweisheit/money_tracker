@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/Utils.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -18,8 +18,8 @@ class ImportExportView extends StatelessWidget {
       final List<String> rowStrings = await csv.readAsLines();
 
       Box<Tag> tags = Hive.box<Tag>(tagBox);
-      Box<OneTimeTransaction> oneTimeTransactions =
-          Hive.box(oneTimeTransactionBox);
+      Box<OneTimeTransfer> oneTimeTransfers =
+          Hive.box(oneTimeTransferBox);
 
       for (String rowString in rowStrings.skip(1)) {
         List<String> rowArray = rowString.split(';');
@@ -33,8 +33,8 @@ class ImportExportView extends StatelessWidget {
         HiveList<Tag> list = (new HiveList<Tag>(tags));
         list.addAll(
             tags.values.where((t) => t.name == category)); // should only be one
-        oneTimeTransactions.add(
-            OneTimeTransaction(description, amount >= 0, amount, list, date));
+        oneTimeTransfers.add(
+            OneTimeTransfer(description, amount >= 0, amount, list, date));
       }
     }
 
@@ -67,24 +67,24 @@ class ImportExportView extends StatelessWidget {
       return jsonDecode(jsonData);
     }
 
-    writeRecurringTransactionsFromJsonData(dynamic importedJson) async {
-      Box<RecurringTransaction> recurringTransactions =
-          Hive.box(recurringTransactionBox);
-      List<dynamic> importedDynamics = importedJson["recurringTransactions"];
-      List<RecurringTransaction> imported = importedDynamics
-          .map((e) => RecurringTransaction.fromJson(e))
+    writeRecurringTransfersFromJsonData(dynamic importedJson) async {
+      Box<RecurringTransfer> recurringTransfers =
+          Hive.box(recurringTransferBox);
+      List<dynamic> importedDynamics = importedJson["recurringTransfers"];
+      List<RecurringTransfer> imported = importedDynamics
+          .map((e) => RecurringTransfer.fromJson(e))
           .toList();
-      recurringTransactions.addAll(imported);
+      recurringTransfers.addAll(imported);
     }
 
-    Future<void> writeOneTimeTransactionsFromJsonData(
+    Future<void> writeOneTimeTransfersFromJsonData(
         dynamic importedJson) async {
-      Box<OneTimeTransaction> oneTimeTransactions =
-          Hive.box(oneTimeTransactionBox);
-      List<dynamic> importedDynamics = importedJson["oneTimeTransactions"];
-      List<OneTimeTransaction> imported =
-          importedDynamics.map((e) => OneTimeTransaction.fromJson(e)).toList();
-      oneTimeTransactions.addAll(imported);
+      Box<OneTimeTransfer> oneTimeTransfers =
+          Hive.box(oneTimeTransferBox);
+      List<dynamic> importedDynamics = importedJson["oneTimeTransfers"];
+      List<OneTimeTransfer> imported =
+          importedDynamics.map((e) => OneTimeTransfer.fromJson(e)).toList();
+      oneTimeTransfers.addAll(imported);
     }
 
     Future<void> writeTagsFromJsonData(dynamic importedJson) async {
@@ -99,27 +99,27 @@ class ImportExportView extends StatelessWidget {
     }
 
     Future<void> writeBlueprintsFromJsonData(dynamic importedJson) async {
-      Box<BlueprintTransaction> blueprints = Hive.box(blueprintTransactionBox);
-      List<dynamic> importedDynamics = importedJson["blueprintTransactions"];
+      Box<BlueprintTransfer> blueprints = Hive.box(blueprintTransferBox);
+      List<dynamic> importedDynamics = importedJson["blueprintTransfers"];
       importedDynamics.forEach((e) {
-        BlueprintTransaction blueprint = BlueprintTransaction.fromJson(e);
+        BlueprintTransfer blueprint = BlueprintTransfer.fromJson(e);
         if (!blueprints.values.any((b) => blueprintsAreEqual(b, blueprint))) {
           blueprints.add(blueprint);
         }
       });
     }
 
-    importRecurringTransactions() async {
+    importRecurringTransfers() async {
       selectFile((File file) async {
         var importedJson = await decodeJsonFile(file);
-        writeRecurringTransactionsFromJsonData(importedJson);
+        writeRecurringTransfersFromJsonData(importedJson);
       });
     }
 
-    importOneTimeTransactions() async {
+    importOneTimeTransfers() async {
       selectFile((File file) async {
         var importedJson = await decodeJsonFile(file);
-        writeOneTimeTransactionsFromJsonData(importedJson);
+        writeOneTimeTransfersFromJsonData(importedJson);
       });
     }
 
@@ -142,8 +142,8 @@ class ImportExportView extends StatelessWidget {
         var importedJson = await decodeJsonFile(file);
         writeTagsFromJsonData(importedJson);
         writeBlueprintsFromJsonData(importedJson);
-        writeRecurringTransactionsFromJsonData(importedJson);
-        writeOneTimeTransactionsFromJsonData(importedJson);
+        writeRecurringTransfersFromJsonData(importedJson);
+        writeOneTimeTransfersFromJsonData(importedJson);
       });
     }
 
@@ -182,13 +182,13 @@ class ImportExportView extends StatelessWidget {
     Future<void> exportEverything() async {
       List<String> jsonDataArray = await Future.wait([
         jsonDataFor<Tag>(tagBox, onlyList: true),
-        jsonDataFor<RecurringTransaction>(recurringTransactionBox,
+        jsonDataFor<RecurringTransfer>(recurringTransferBox,
             onlyList: true),
-        jsonDataFor<OneTimeTransaction>(oneTimeTransactionBox, onlyList: true)
+        jsonDataFor<OneTimeTransfer>(oneTimeTransferBox, onlyList: true)
       ]);
 
       String jsonData =
-          '{"tags": ${jsonDataArray[0]}, "recurringTransactions": ${jsonDataArray[1]}, "oneTimeTransactions": ${jsonDataArray[2]}}';
+          '{"tags": ${jsonDataArray[0]}, "recurringTransfers": ${jsonDataArray[1]}, "oneTimeTransfers": ${jsonDataArray[2]}}';
       await shareFile(
           jsonData, await jsonFilePathFor('everything'), 'everything exported');
     }
@@ -205,8 +205,8 @@ class ImportExportView extends StatelessWidget {
             onTap: importEverything,
           ),
           ListTile(
-            title: Text('Import Recurring Transactions.'),
-            onTap: importRecurringTransactions,
+            title: Text('Import Recurring Transfers.'),
+            onTap: importRecurringTransfers,
           ),
           ListTile(
             title: Text('Import Blueprints'),
@@ -218,15 +218,15 @@ class ImportExportView extends StatelessWidget {
           ),
           ListTile(
             title: Text('Import Transfers'),
-            onTap: importOneTimeTransactions,
+            onTap: importOneTimeTransfers,
           ),
           ListTile(
             title: Text('Export Everything.'),
             onTap: exportEverything,
           ),
           ListTile(
-            title: Text('Export Recurring Transactions.'),
-            onTap: () => export<RecurringTransaction>(recurringTransactionBox),
+            title: Text('Export Recurring Transfers.'),
+            onTap: () => export<RecurringTransfer>(recurringTransferBox),
           ),
           ListTile(
             title: Text('Export Tags'),
@@ -234,11 +234,11 @@ class ImportExportView extends StatelessWidget {
           ),
           ListTile(
             title: Text('Export Blueprints'),
-            onTap: () => export<BlueprintTransaction>(blueprintTransactionBox),
+            onTap: () => export<BlueprintTransfer>(blueprintTransferBox),
           ),
           ListTile(
             title: Text('Export Transfers'),
-            onTap: () => export<OneTimeTransaction>(oneTimeTransactionBox),
+            onTap: () => export<OneTimeTransfer>(oneTimeTransferBox),
           )
         ],
       );

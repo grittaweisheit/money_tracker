@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/models/Models.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 
 import '../Constants.dart';
 import '../Utils.dart';
 
 class OverviewCard extends StatelessWidget {
-  double getOverlap(Box<OneTimeTransaction> box, DateTime monthYear) {
+  double getOverlap(Box<OneTimeTransfer> box, DateTime monthYear) {
     Preferences preferences = Preferences.getInstance();
     return box.values
-        .where((transaction) => transaction.date.isBefore(monthYear) &&
-        (transaction.date.year >= DateTime.now().year || !preferences.getCutoffYear()))
-        .fold(0, (sum, transaction) => sum + transaction.amount);
+        .where((transfer) => transfer.date.isBefore(monthYear) &&
+        (transfer.date.year >= DateTime.now().year || !preferences.getCutoffYear()))
+        .fold(0, (sum, transfer) => sum + transfer.amount);
   }
 
   @override
@@ -20,7 +20,7 @@ class OverviewCard extends StatelessWidget {
     int currentMonth = DateTime.now().month;
     int currentYear = DateTime.now().year;
     DateTime monthYear = DateTime(currentYear, currentMonth);
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
+    Box<OneTimeTransfer> box = Hive.box(oneTimeTransferBox);
     double overlap = getOverlap(box, monthYear);
     double income = getIncomeOrExpenseForMonth(true, monthYear, box);
     double expenses = getIncomeOrExpenseForMonth(false, monthYear, box);

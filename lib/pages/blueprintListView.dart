@@ -2,26 +2,26 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Utils.dart';
-import 'package:money_tracker/pages/createBlueprintTransactionView.dart';
-import 'package:money_tracker/pages/editBlueprintTransactionView.dart';
+import 'package:money_tracker/pages/createBlueprintTransferView.dart';
+import 'package:money_tracker/pages/editBlueprintTransferView.dart';
 import 'package:money_tracker/pages/home.dart';
 import '../Constants.dart';
-import '../models/Transactions.dart';
+import '../models/Transfers.dart';
 
-class BluePrintTransactionListView extends StatefulWidget {
-  BluePrintTransactionListView();
+class BluePrintTransferListView extends StatefulWidget {
+  BluePrintTransferListView();
 
   @override
-  _BluePrintTransactionListViewState createState() =>
-      _BluePrintTransactionListViewState();
+  _BluePrintTransferListViewState createState() =>
+      _BluePrintTransferListViewState();
 }
 
-class _BluePrintTransactionListViewState
-    extends State<BluePrintTransactionListView> {
-  List<BlueprintTransaction> transactions = [];
+class _BluePrintTransferListViewState
+    extends State<BluePrintTransferListView> {
+  List<BlueprintTransfer> transfers = [];
   int count = 0;
 
-  _BluePrintTransactionListViewState();
+  _BluePrintTransferListViewState();
 
   @override
   void initState() {
@@ -30,82 +30,82 @@ class _BluePrintTransactionListViewState
   }
 
   refresh() async {
-    final Box<BlueprintTransaction> box = Hive.box(blueprintTransactionBox);
+    final Box<BlueprintTransfer> box = Hive.box(blueprintTransferBox);
     setState(() {
-      transactions = box.values.toList();
-      count = transactions.length;
+      transfers = box.values.toList();
+      count = transfers.length;
     });
   }
 
-  void _addTransaction(bool isIncome) {
-    openPage(context, CreateBlueprintTransactionView(isIncome)).then((value) {
+  void _addTransfer(bool isIncome) {
+    openPage(context, CreateBlueprintTransferView(isIncome)).then((value) {
       refresh();
     });
   }
 
-  Widget getCircleAvatar(BlueprintTransaction transaction) {
+  Widget getCircleAvatar(BlueprintTransfer transfer) {
     return CircleAvatar(
       backgroundColor: primaryColorLightTone,
-      child: transaction.tags.length > 0
-          ? Icon(allIconDataMap[transaction.tags.first.icon],
+      child: transfer.tags.length > 0
+          ? Icon(allIconDataMap[transfer.tags.first.icon],
               color: primaryColor)
           : Text(
-              transaction.description.characters.first,
+              transfer.description.characters.first,
               style:
                   TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
             ),
     );
   }
 
-  Widget getEditButton(BlueprintTransaction transaction) {
+  Widget getEditButton(BlueprintTransfer transfer) {
     return IconButton(
         icon: Icon(Icons.edit_outlined, color: primaryColorLightTone),
         onPressed: () {
-          openPage(context, EditBlueprintTransactionView(transaction));
+          openPage(context, EditBlueprintTransferView(transfer));
         });
   }
 
-  Widget getDeleteButton(BlueprintTransaction transaction) {
+  Widget getDeleteButton(BlueprintTransfer transfer) {
     return IconButton(
         onPressed: () {
-          transaction.delete();
+          transfer.delete();
           refresh();
         },
         icon: Icon(Icons.delete_outline, color: primaryColorLightTone));
   }
 
-  Widget getListElementActions(BlueprintTransaction transaction) {
+  Widget getListElementActions(BlueprintTransfer transfer) {
     return Wrap(
-        children: [getEditButton(transaction), getDeleteButton(transaction)]);
+        children: [getEditButton(transfer), getDeleteButton(transfer)]);
   }
 
-  Widget getListElementCard(BlueprintTransaction transaction, bool isFront) {
+  Widget getListElementCard(BlueprintTransfer transfer, bool isFront) {
     return Card(
       color: primaryColor,
       child: ListTile(
-        leading: getCircleAvatar(transaction),
-        title: Text(transaction.description,
+        leading: getCircleAvatar(transfer),
+        title: Text(transfer.description,
             style: TextStyle(color: Colors.white)),
         trailing: isFront
-            ? getAmountText(transaction.amount, intensive: true)
-            : getListElementActions(transaction),
+            ? getAmountText(transfer.amount, intensive: true)
+            : getListElementActions(transfer),
       ),
     );
   }
 
-  Widget getListElement(BlueprintTransaction transaction) {
+  Widget getListElement(BlueprintTransfer transfer) {
     return FlipCard(
         direction: FlipDirection.VERTICAL,
-        front: getListElementCard(transaction, true),
-        back: getListElementCard(transaction, false));
+        front: getListElementCard(transfer, true),
+        back: getListElementCard(transfer, false));
   }
 
-  ListView getTransactionsList() {
+  ListView getTransfersList() {
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
-        var transaction = this.transactions[position];
-        return getListElement(transaction);
+        var transfer = this.transfers[position];
+        return getListElement(transfer);
       },
     );
   }
@@ -118,9 +118,9 @@ class _BluePrintTransactionListViewState
             appBar: AppBar(
               title: Text("Blueprints"),
             ),
-            body: Column(children: [Expanded(child: getTransactionsList())]),
+            body: Column(children: [Expanded(child: getTransfersList())]),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => _addTransaction(true),
+              onPressed: () => _addTransfer(true),
               tooltip: 'Add Blueprint',
               backgroundColor: primaryColor,
               child: Icon(Icons.add),

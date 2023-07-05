@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/models/Models.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 
 class SettingsView extends StatefulWidget {
   SettingsView();
@@ -61,18 +61,18 @@ class SettingsViewState extends State<SettingsView> {
   }
 
   void deleteAllTransfers(BuildContext context) {
-    Box<OneTimeTransaction> oneTimeTransactions =
-        Hive.box(oneTimeTransactionBox);
+    Box<OneTimeTransfer> oneTimeTransfers =
+        Hive.box(oneTimeTransferBox);
 
-    oneTimeTransactions.clear().then((value) => ScaffoldMessenger.of(context)
+    oneTimeTransfers.clear().then((value) => ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("All Transfers deleted."))));
   }
 
   void deleteEverything(BuildContext context) {
-    Box<OneTimeTransaction> oneTimeTransactions =
-        Hive.box(oneTimeTransactionBox);
+    Box<OneTimeTransfer> oneTimeTransfers =
+        Hive.box(oneTimeTransferBox);
 
-    oneTimeTransactions.clear().then((value) => ScaffoldMessenger.of(context)
+    oneTimeTransfers.clear().then((value) => ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("Everything deleted."))));
   }
 

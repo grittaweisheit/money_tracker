@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 
 import '../Constants.dart';
 import '../Utils.dart';
@@ -45,9 +45,9 @@ class StatisticsLineChartCardState extends State<StatisticsLineChartCard> {
   }
 
   List<LineChartBarData> getIncomeAndExpenseLineData() {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    List<OneTimeTransaction> transactions = box.values.toList();
-    transactions.sort(sortTransactionsEarliestFirst);
+    Box<OneTimeTransfer> box = Hive.box(oneTimeTransferBox);
+    List<OneTimeTransfer> transfers = box.values.toList();
+    transfers.sort(sortTransfersEarliestFirst);
 
     DateTime now = getOnlyDate(DateTime.now());
     DateTime earliestMonthYear = DateTime(

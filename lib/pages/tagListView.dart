@@ -4,7 +4,7 @@ import 'package:money_tracker/Utils.dart';
 import 'package:money_tracker/components/iconSelectionPopup.dart';
 import 'package:money_tracker/pages/createTagView.dart';
 import '../Constants.dart';
-import '../models/Transactions.dart';
+import '../models/Transfers.dart';
 import 'editTagView.dart';
 import 'home.dart';
 

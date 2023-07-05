@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'Constants.dart';
-import 'models/Transactions.dart';
+import 'models/Transfers.dart';
 
 /// Data Collection
 
 double getIncomeOrExpenseForMonth(
-    bool getIncome, DateTime monthYear, Box<Transaction> box) {
+    bool getIncome, DateTime monthYear, Box<Transfer> box) {
   monthYear = getMonthYear(monthYear);
 
   DateTime nextMonthYear = monthYear.month == 12
       ? DateTime(monthYear.year + 1, 1)
       : DateTime(monthYear.year, monthYear.month + 1);
   return box.values
-      .where((transaction) =>
-          transaction.isIncome == getIncome &&
-          !transaction.date.isBefore(monthYear) &&
-          transaction.date.isBefore(nextMonthYear))
-      .fold(0.0, (sum, transaction) => sum + transaction.amount);
+      .where((transfer) =>
+          transfer.isIncome == getIncome &&
+          !transfer.date.isBefore(monthYear) &&
+          transfer.date.isBefore(nextMonthYear))
+      .fold(0.0, (sum, transfer) => sum + transfer.amount);
 }
 
 /// TextStyle Utils
@@ -36,14 +36,14 @@ TextStyle getLightRedGreenTextStyle(double amount, {bool zeroRed = false}) {
   return TextStyle(color: color, fontWeight: FontWeight.bold);
 }
 
-/// Transaction Utils
+/// Transfer Utils
 
-int sortTransactionsEarliestFirst(Transaction t1, Transaction t2) =>
+int sortTransfersEarliestFirst(Transfer t1, Transfer t2) =>
     t2.date.compareTo(t1.date);
 
 /// Blueprint Utils
 
-bool blueprintsAreEqual(BlueprintTransaction b1, BlueprintTransaction b2) {
+bool blueprintsAreEqual(BlueprintTransfer b1, BlueprintTransfer b2) {
   return b1.isIncome == b2.isIncome && b1.description == b2.description;
 }
 

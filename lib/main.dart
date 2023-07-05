@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_tracker/Constants.dart';
-import 'package:money_tracker/models/Transactions.dart';
-import 'models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
+import 'models/Transfers.dart';
 import 'pages/home.dart';
 
 const bool RESET = false;
 
 void main() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(RecurringTransactionAdapter());
-  Hive.registerAdapter(OneTimeTransactionAdapter());
-  Hive.registerAdapter(BlueprintTransactionAdapter());
+  Hive.registerAdapter(RecurringTransferAdapter());
+  Hive.registerAdapter(OneTimeTransferAdapter());
+  Hive.registerAdapter(BlueprintTransferAdapter());
   Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(RuleAdapter());
   Hive.registerAdapter(PeriodAdapter());
   Box tags = await Hive.openBox<Tag>(tagBox);
-  Box oneTimeTransactions =
-      await Hive.openBox<OneTimeTransaction>(oneTimeTransactionBox);
-  Box recurringTransactions =
-      await Hive.openBox<RecurringTransaction>(recurringTransactionBox);
-  Box bluePrintTransactions =
-      await Hive.openBox<BlueprintTransaction>(blueprintTransactionBox);
+  Box oneTimeTransfers =
+      await Hive.openBox<OneTimeTransfer>(oneTimeTransferBox);
+  Box recurringTransfers =
+      await Hive.openBox<RecurringTransfer>(recurringTransferBox);
+  Box bluePrintTransfers =
+      await Hive.openBox<BlueprintTransfer>(blueprintTransferBox);
   Box preferences =
       await Hive.openBox<dynamic>(preferencesBox);
 
   if (RESET) {
     tags.clear();
-    oneTimeTransactions.clear();
-    recurringTransactions.clear();
-    bluePrintTransactions.clear();
+    oneTimeTransfers.clear();
+    recurringTransfers.clear();
+    bluePrintTransfers.clear();
     preferences.clear();
   }
 

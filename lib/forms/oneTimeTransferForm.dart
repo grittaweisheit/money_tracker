@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../Utils.dart';
-import '../models/Transactions.dart';
+import '../models/Transfers.dart';
 import '../Constants.dart';
 
-class OneTimeTransactionForm extends StatefulWidget {
+class OneTimeTransferForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final OneTimeTransaction startingTransaction;
-  final submitTransaction;
+  final OneTimeTransfer startingTransfer;
+  final submitTransfer;
 
-  OneTimeTransactionForm(this.formKey,
-      {required this.startingTransaction, required this.submitTransaction});
+  OneTimeTransferForm(this.formKey,
+      {required this.startingTransfer, required this.submitTransfer});
 
   @override
-  _CreateOneTimeTransactionViewState createState() =>
-      _CreateOneTimeTransactionViewState();
+  _CreateOneTimeTransferViewState createState() =>
+      _CreateOneTimeTransferViewState();
 }
 
-class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
+class _CreateOneTimeTransferViewState extends State<OneTimeTransferForm> {
   late GlobalKey<FormState> formKey;
   late String description;
   late bool isIncome;
@@ -30,11 +30,11 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
   @override
   void initState() {
     formKey = widget.formKey;
-    description = widget.startingTransaction.description;
-    isIncome = widget.startingTransaction.isIncome;
-    amount = widget.startingTransaction.amount;
-    tags = widget.startingTransaction.tags;
-    date = widget.startingTransaction.date;
+    description = widget.startingTransfer.description;
+    isIncome = widget.startingTransfer.isIncome;
+    amount = widget.startingTransfer.amount;
+    tags = widget.startingTransfer.tags;
+    date = widget.startingTransfer.date;
     super.initState();
   }
 
@@ -89,16 +89,16 @@ class _CreateOneTimeTransactionViewState extends State<OneTimeTransactionForm> {
 
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
-          heroTag: "submitTransaction",
+          heroTag: "submitTransfer",
           backgroundColor: primaryColor,
           onPressed: () {
             formKey.currentState!.save();
             if (formKey.currentState!.validate()) {
-              widget.submitTransaction(
+              widget.submitTransfer(
                   description, isIncome, amount, tags, date);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Could not submit Transaction.")));
+                  SnackBar(content: Text("Could not submit Transfer.")));
             }
           },
           child: Icon(Icons.check));

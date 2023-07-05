@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/Constants.dart';
-import 'package:money_tracker/components/addOneTimeTransactionFloatingButtons.dart';
+import 'package:money_tracker/components/addOneTimeTransferFloatingButtons.dart';
 import 'package:money_tracker/components/overviewCard.dart';
 
 import '../Utils.dart';
@@ -38,7 +38,7 @@ class OverviewTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       getContent(),
-      AddOneTimeTransactionFloatingButtons(() => build(context))
+      AddOneTimeTransferFloatingButtons(() => build(context))
     ]);
   }
 }

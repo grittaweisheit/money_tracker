@@ -6,7 +6,7 @@ import 'package:money_tracker/Constants.dart';
 
 import '../Utils.dart';
 
-part 'Transactions.g.dart';
+part 'Transfers.g.dart';
 
 @HiveType(typeId: 0)
 enum Period {
@@ -77,7 +77,7 @@ class Tag extends HiveObject {
 }
 
 @HiveType(typeId: 3)
-class TransactionBase extends HiveObject {
+class TransferBase extends HiveObject {
   @HiveField(0)
   String description;
   @HiveField(1)
@@ -87,9 +87,9 @@ class TransactionBase extends HiveObject {
   @HiveField(3)
   HiveList<Tag> tags;
 
-  TransactionBase(this.description, this.isIncome, this.amount, this.tags);
+  TransferBase(this.description, this.isIncome, this.amount, this.tags);
 
-  TransactionBase.empty()
+  TransferBase.empty()
       : this.description = '',
         this.isIncome = true,
         this.amount = 0.00,
@@ -138,26 +138,26 @@ class TransactionBase extends HiveObject {
     };
   }
 
-  static TransactionBase fromJson(Map<String, dynamic> json) {
+  static TransferBase fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = json['tags'];
     HiveList<Tag> tags = tagsDynamics
         .map((tagDynamic) => Tag.fromJson(tagDynamic))
         .toList() as HiveList<Tag>;
-    return TransactionBase(
+    return TransferBase(
         json['description'], json['isIncome'], json['amount'], tags);
   }
 }
 
 @HiveType(typeId: 4)
-class Transaction extends TransactionBase {
+class Transfer extends TransferBase {
   @HiveField(4)
   DateTime date;
 
-  Transaction(String description, bool isIncome, double amount,
+  Transfer(String description, bool isIncome, double amount,
       HiveList<Tag> tags, this.date)
       : super(description, isIncome, amount, tags);
 
-  Transaction.empty()
+  Transfer.empty()
       : date = DateTime.now(),
         super.empty();
 
@@ -172,26 +172,26 @@ class Transaction extends TransactionBase {
     return baseJson;
   }
 
-  static Transaction fromJson(Map<String, dynamic> json) {
+  static Transfer fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = json['tags'];
     HiveList<Tag> tags = tagsDynamics
         .map((tagDynamic) => Tag.fromJson(tagDynamic))
         .toList() as HiveList<Tag>;
-    return Transaction(json['description'], json['isIncome'], json['amount'],
+    return Transfer(json['description'], json['isIncome'], json['amount'],
         tags, DateTime.parse(json['date']));
   }
 }
 
 @HiveType(typeId: 5)
-class RecurringTransaction extends Transaction {
+class RecurringTransfer extends Transfer {
   @HiveField(5)
   Rule repetitionRule;
 
-  RecurringTransaction(String description, bool isIncome, double amount,
+  RecurringTransfer(String description, bool isIncome, double amount,
       HiveList<Tag> tags, DateTime date, this.repetitionRule)
       : super(description, isIncome, amount, tags, date);
 
-  RecurringTransaction.empty()
+  RecurringTransfer.empty()
       : repetitionRule = Rule(1, Period.month),
         super.empty();
 
@@ -210,16 +210,16 @@ class RecurringTransaction extends Transaction {
 
   @override
   Map toJson() {
-    Map transactionJson = super.toJson();
-    transactionJson['repetitionRule'] = repetitionRule.toJson();
-    return transactionJson;
+    Map transferJson = super.toJson();
+    transferJson['repetitionRule'] = repetitionRule.toJson();
+    return transferJson;
   }
 
-  static RecurringTransaction fromJson(Map<String, dynamic> json) {
+  static RecurringTransfer fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = jsonDecode(json['tags']);
     HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
 
-    return RecurringTransaction(
+    return RecurringTransfer(
         json['description'],
         json['isIncome'],
         json['amount'],
@@ -230,14 +230,14 @@ class RecurringTransaction extends Transaction {
 }
 
 @HiveType(typeId: 6)
-class OneTimeTransaction extends Transaction {
-  OneTimeTransaction(String description, bool isIncome, double amount,
+class OneTimeTransfer extends Transfer {
+  OneTimeTransfer(String description, bool isIncome, double amount,
       HiveList<Tag> tags, date)
       : super(description, isIncome, amount, tags, date);
 
-  OneTimeTransaction.empty() : super.empty();
+  OneTimeTransfer.empty() : super.empty();
 
-  OneTimeTransaction.fromBlueprint(BlueprintTransaction blueprint)
+  OneTimeTransfer.fromBlueprint(BlueprintTransfer blueprint)
       : super(blueprint.description, blueprint.isIncome, blueprint.amount,
             blueprint.tags, DateTime.now());
 
@@ -251,32 +251,32 @@ class OneTimeTransaction extends Transaction {
     return super.toJson();
   }
 
-  static OneTimeTransaction fromJson(Map<String, dynamic> json) {
+  static OneTimeTransfer fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = jsonDecode(json['tags']);
     HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
 
-    return OneTimeTransaction(json['description'], json['isIncome'],
+    return OneTimeTransfer(json['description'], json['isIncome'],
         json['amount'], tags, DateTime.parse(json['date']));
   }
 }
 
 @HiveType(typeId: 7)
-class BlueprintTransaction extends TransactionBase {
-  BlueprintTransaction(
+class BlueprintTransfer extends TransferBase {
+  BlueprintTransfer(
       String description, bool isIncome, double amount, HiveList<Tag> tags)
       : super(description, isIncome, amount, tags);
 
-  BlueprintTransaction.empty() : super.empty();
+  BlueprintTransfer.empty() : super.empty();
 
   @override
   Map toJson() {
     return super.toJson();
   }
 
-  static BlueprintTransaction fromJson(Map<String, dynamic> json) {
+  static BlueprintTransfer fromJson(Map<String, dynamic> json) {
     List<dynamic> tagsDynamics = jsonDecode(json['tags']);
     HiveList<Tag> tags = addAndGetDynamicTagsToDbIfNeeded(tagsDynamics);
-    return BlueprintTransaction(
+    return BlueprintTransfer(
         json['description'], json['isIncome'], json['amount'], tags);
   }
 }

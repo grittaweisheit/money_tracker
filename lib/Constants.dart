@@ -24,7 +24,7 @@ DateFormat fullDateDateFormat = DateFormat(fullDateDateFormatString);
 String monthYearOnlyFormatString = ("MMM yy");
 DateFormat monthYearOnlyFormat = DateFormat(monthYearOnlyFormatString);
 
-/// Transaction stuff
+/// Transfer stuff
 
 List<double> inactiveLimits = [-1, -1, -1, -1];
 
@@ -53,9 +53,9 @@ TextStyle intensiveRedTextStyle = TextStyle(color: intensiveRedColor);
 TextStyle appBarTitleTextStyle = lightTextStyle.merge(TextStyle(fontSize: 22));
 
 /// Boxes
-String recurringTransactionBox = "recurringTransaction";
-String oneTimeTransactionBox = "oneTimeTransaction";
-String blueprintTransactionBox = "bluePrintTransaction";
+String recurringTransferBox = "recurringTransfer";
+String oneTimeTransferBox = "oneTimeTransfer";
+String blueprintTransferBox = "bluePrintTransfer";
 String tagBox = "tag";
 String preferencesBox = "preferences";
 

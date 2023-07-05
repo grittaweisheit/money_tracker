@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../Utils.dart';
-import '../models/Transactions.dart';
+import '../models/Transfers.dart';
 import '../Constants.dart';
 
-class RecurringTransactionForm extends StatefulWidget {
+class RecurringTransferForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final RecurringTransaction startingTransaction;
-  final submitTransaction;
+  final RecurringTransfer startingTransfer;
+  final submitTransfer;
 
-  RecurringTransactionForm(
-      this.formKey, this.startingTransaction, this.submitTransaction)
+  RecurringTransferForm(
+      this.formKey, this.startingTransfer, this.submitTransfer)
       : super();
 
   @override
-  RecurringTransactionFormState createState() =>
-      RecurringTransactionFormState();
+  RecurringTransferFormState createState() =>
+      RecurringTransferFormState();
 }
 
-class RecurringTransactionFormState extends State<RecurringTransactionForm> {
+class RecurringTransferFormState extends State<RecurringTransferForm> {
   late String description;
   late bool isIncome;
   late double amount;
@@ -32,13 +32,13 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
   @override
   void initState() {
     formKey = widget.formKey;
-    description = widget.startingTransaction.description;
-    isIncome = widget.startingTransaction.isIncome;
-    amount = widget.startingTransaction.amount;
-    tags = widget.startingTransaction.tags;
-    nextExecution = widget.startingTransaction.nextExecution;
-    every = widget.startingTransaction.repetitionRule.every;
-    period = widget.startingTransaction.repetitionRule.period;
+    description = widget.startingTransfer.description;
+    isIncome = widget.startingTransfer.isIncome;
+    amount = widget.startingTransfer.amount;
+    tags = widget.startingTransfer.tags;
+    nextExecution = widget.startingTransfer.nextExecution;
+    every = widget.startingTransfer.repetitionRule.every;
+    period = widget.startingTransfer.repetitionRule.period;
     super.initState();
   }
 
@@ -139,7 +139,7 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
 
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
-          heroTag: "submitTransaction",
+          heroTag: "submitTransfer",
           backgroundColor: primaryColor,
           onPressed: () {
             debugPrint(
@@ -149,11 +149,11 @@ class RecurringTransactionFormState extends State<RecurringTransactionForm> {
                 "nachher: $description, $isIncome, $nextExecution, $every, $period");
             if (formKey.currentState!.validate()) {
               debugPrint(period.toString());
-              widget.submitTransaction(description, isIncome, amount, tags,
+              widget.submitTransfer(description, isIncome, amount, tags,
                   nextExecution, every, period);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Could not create Transaction.")));
+                  SnackBar(content: Text("Could not create Transfer.")));
             }
           },
           child: Icon(Icons.check));

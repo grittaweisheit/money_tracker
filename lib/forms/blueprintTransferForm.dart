@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/components/amountInputFormField.dart';
 import 'package:money_tracker/components/tagSelectionFormField.dart';
 import '../Utils.dart';
-import '../models/Transactions.dart';
+import '../models/Transfers.dart';
 import '../Constants.dart';
 
-class BlueprintTransactionForm extends StatefulWidget {
+class BlueprintTransferForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final BlueprintTransaction startingBlueprint;
+  final BlueprintTransfer startingBlueprint;
   final submitBlueprint;
 
-  BlueprintTransactionForm(
+  BlueprintTransferForm(
       this.formKey, this.startingBlueprint, this.submitBlueprint)
       : super();
 
   @override
-  BlueprintTransactionFormState createState() =>
-      BlueprintTransactionFormState();
+  BlueprintTransferFormState createState() =>
+      BlueprintTransferFormState();
 }
 
-class BlueprintTransactionFormState extends State<BlueprintTransactionForm> {
+class BlueprintTransferFormState extends State<BlueprintTransferForm> {
   late String description;
   late bool isIncome;
   late double amount;
@@ -81,7 +81,7 @@ class BlueprintTransactionFormState extends State<BlueprintTransactionForm> {
 
     FloatingActionButton getSubmitButton() {
       return FloatingActionButton(
-          heroTag: "submitTransaction",
+          heroTag: "submitTransfer",
           backgroundColor: primaryColor,
           onPressed: () {
             formKey.currentState!.save();

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/models/Transactions.dart';
-import 'package:money_tracker/pages/createOneTimeTransactionView.dart';
+import 'package:money_tracker/models/Transfers.dart';
+import 'package:money_tracker/pages/createOneTimeTransferView.dart';
 
 import '../Constants.dart';
 import '../Utils.dart';
 
-class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
+class AddOneTimeTransferFloatingButtons extends StatelessWidget {
   final onNavigatedTo;
 
-  AddOneTimeTransactionFloatingButtons(this.onNavigatedTo);
+  AddOneTimeTransferFloatingButtons(this.onNavigatedTo);
 
   @override
   Widget build(BuildContext context) {
-    void addTransaction(bool isIncome) {
-      openPage(context, CreateOneTimeTransactionView())
+    void addTransfer(bool isIncome) {
+      openPage(context, CreateOneTimeTransferView())
           .then((value) => onNavigatedTo());
     }
 
     void _selectBlueprint() {
-      Box<BlueprintTransaction> box = Hive.box(blueprintTransactionBox);
-      List<BlueprintTransaction> blueprints = box.values.toList();
-      showDialog<BlueprintTransaction>(
+      Box<BlueprintTransfer> box = Hive.box(blueprintTransferBox);
+      List<BlueprintTransfer> blueprints = box.values.toList();
+      showDialog<BlueprintTransfer>(
           context: context,
           builder: (BuildContext context) {
             return SimpleDialog(
@@ -51,8 +51,8 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
         if (selectedBlueprint != null) {
           openPage(
                   context,
-                  CreateOneTimeTransactionView(
-                      blueprintTransaction: selectedBlueprint))
+                  CreateOneTimeTransferView(
+                      blueprintTransfer: selectedBlueprint))
               .then((value) => onNavigatedTo());
         }
       });
@@ -73,7 +73,7 @@ class AddOneTimeTransactionFloatingButtons extends StatelessWidget {
             FloatingActionButton(
               heroTag: "addIncome",
               backgroundColor: primaryColorDarkerMidTone,
-              onPressed: () => addTransaction(true),
+              onPressed: () => addTransfer(true),
               child: Icon(Icons.add),
             )
           ],

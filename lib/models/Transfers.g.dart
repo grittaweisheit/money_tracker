@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'Transactions.dart';
+part of 'Transfers.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -86,17 +86,17 @@ class TagAdapter extends TypeAdapter<Tag> {
           typeId == other.typeId;
 }
 
-class TransactionBaseAdapter extends TypeAdapter<TransactionBase> {
+class TransferBaseAdapter extends TypeAdapter<TransferBase> {
   @override
   final int typeId = 3;
 
   @override
-  TransactionBase read(BinaryReader reader) {
+  TransferBase read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TransactionBase(
+    return TransferBase(
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
@@ -105,7 +105,7 @@ class TransactionBaseAdapter extends TypeAdapter<TransactionBase> {
   }
 
   @override
-  void write(BinaryWriter writer, TransactionBase obj) {
+  void write(BinaryWriter writer, TransferBase obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -124,22 +124,22 @@ class TransactionBaseAdapter extends TypeAdapter<TransactionBase> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TransactionBaseAdapter &&
+      other is TransferBaseAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class TransactionAdapter extends TypeAdapter<Transaction> {
+class TransferAdapter extends TypeAdapter<Transfer> {
   @override
   final int typeId = 4;
 
   @override
-  Transaction read(BinaryReader reader) {
+  Transfer read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Transaction(
+    return Transfer(
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
@@ -149,7 +149,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
   }
 
   @override
-  void write(BinaryWriter writer, Transaction obj) {
+  void write(BinaryWriter writer, Transfer obj) {
     writer
       ..writeByte(5)
       ..writeByte(4)
@@ -170,22 +170,22 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TransactionAdapter &&
+      other is TransferAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
+class RecurringTransferAdapter extends TypeAdapter<RecurringTransfer> {
   @override
   final int typeId = 5;
 
   @override
-  RecurringTransaction read(BinaryReader reader) {
+  RecurringTransfer read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return RecurringTransaction(
+    return RecurringTransfer(
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
@@ -196,7 +196,7 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
   }
 
   @override
-  void write(BinaryWriter writer, RecurringTransaction obj) {
+  void write(BinaryWriter writer, RecurringTransfer obj) {
     writer
       ..writeByte(6)
       ..writeByte(5)
@@ -219,22 +219,22 @@ class RecurringTransactionAdapter extends TypeAdapter<RecurringTransaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RecurringTransactionAdapter &&
+      other is RecurringTransferAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
+class OneTimeTransferAdapter extends TypeAdapter<OneTimeTransfer> {
   @override
   final int typeId = 6;
 
   @override
-  OneTimeTransaction read(BinaryReader reader) {
+  OneTimeTransfer read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return OneTimeTransaction(
+    return OneTimeTransfer(
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
@@ -244,7 +244,7 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   }
 
   @override
-  void write(BinaryWriter writer, OneTimeTransaction obj) {
+  void write(BinaryWriter writer, OneTimeTransfer obj) {
     writer
       ..writeByte(5)
       ..writeByte(4)
@@ -265,22 +265,22 @@ class OneTimeTransactionAdapter extends TypeAdapter<OneTimeTransaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OneTimeTransactionAdapter &&
+      other is OneTimeTransferAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class BlueprintTransactionAdapter extends TypeAdapter<BlueprintTransaction> {
+class BlueprintTransferAdapter extends TypeAdapter<BlueprintTransfer> {
   @override
   final int typeId = 7;
 
   @override
-  BlueprintTransaction read(BinaryReader reader) {
+  BlueprintTransfer read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BlueprintTransaction(
+    return BlueprintTransfer(
       fields[0] as String,
       fields[1] as bool,
       fields[2] as double,
@@ -289,7 +289,7 @@ class BlueprintTransactionAdapter extends TypeAdapter<BlueprintTransaction> {
   }
 
   @override
-  void write(BinaryWriter writer, BlueprintTransaction obj) {
+  void write(BinaryWriter writer, BlueprintTransfer obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -308,7 +308,7 @@ class BlueprintTransactionAdapter extends TypeAdapter<BlueprintTransaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BlueprintTransactionAdapter &&
+      other is BlueprintTransferAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

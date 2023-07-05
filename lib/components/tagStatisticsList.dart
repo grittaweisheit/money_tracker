@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/Utils.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 
 class TagStatisticsList extends StatefulWidget {
   final bool thisMonthOnly;
@@ -14,7 +14,7 @@ class TagStatisticsList extends StatefulWidget {
 }
 
 class _TagStatisticsListState extends State<TagStatisticsList> {
-  List<OneTimeTransaction> transactions = [];
+  List<OneTimeTransfer> transfers = [];
   late Map<Tag, List<double>> tagsData;
   late DateTime currentMonthYear =
       DateTime(DateTime.now().year, DateTime.now().month);
@@ -27,10 +27,10 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
   }
 
   refresh() {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
-    List<OneTimeTransaction> newTransactions = box.values
-        .where((transaction) =>
-            !transaction.date.isBefore(currentMonthYear) ||
+    Box<OneTimeTransfer> box = Hive.box(oneTimeTransferBox);
+    List<OneTimeTransfer> newTransfers = box.values
+        .where((transfer) =>
+            !transfer.date.isBefore(currentMonthYear) ||
             !widget.thisMonthOnly)
         .toList();
 
@@ -40,7 +40,7 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
         Map.fromEntries(tags.map((tag) => MapEntry(tag, [0, 0])));
 
     // generate tag list data
-    newTransactions.forEach((trans) {
+    newTransfers.forEach((trans) {
       trans.tags.forEach((tag) {
         tagData.update(tag, (values) {
           values[trans.isIncome ? 0 : 1] += trans.amount;
@@ -50,7 +50,7 @@ class _TagStatisticsListState extends State<TagStatisticsList> {
     });
 
     setState(() {
-      transactions = newTransactions;
+      transfers = newTransfers;
       tagCount = tags.length;
       tagsData = tagData;
     });

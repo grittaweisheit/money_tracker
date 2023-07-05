@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:money_tracker/models/Transactions.dart';
+import 'package:money_tracker/models/Transfers.dart';
 
 import '../Constants.dart';
 import '../Utils.dart';
@@ -25,17 +25,17 @@ class StatisticsPieChartCard extends StatelessWidget{
   }
 
   PieChartData getOverallPieChartData(
-      List<OneTimeTransaction> newTransactions) {
-    double totalIncome = newTransactions
+      List<OneTimeTransfer> newTransfers) {
+    double totalIncome = newTransfers
         .where((t) => t.isIncome)
         .fold(0, (previousValue, element) => previousValue + element.amount);
-    double totalExpense = newTransactions
+    double totalExpense = newTransfers
         .where((t) => !t.isIncome)
         .fold(0, (previousValue, element) => previousValue + element.amount);
     return getPieChartData(totalIncome, totalExpense);
   }
 
-  PieChartData getMonthlyPieChartData(Box<OneTimeTransaction> box) {
+  PieChartData getMonthlyPieChartData(Box<OneTimeTransfer> box) {
     DateTime currentMonthYear =
     DateTime(DateTime.now().year, DateTime.now().month);
     double monthlyIncome = getIncomeOrExpenseForMonth(true, currentMonthYear, box);
@@ -46,7 +46,7 @@ class StatisticsPieChartCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    Box<OneTimeTransaction> box = Hive.box(oneTimeTransactionBox);
+    Box<OneTimeTransfer> box = Hive.box(oneTimeTransferBox);
     PieChartData overallPieChartData = getOverallPieChartData(box.values.toList());
     PieChartData monthlyPieChartData = getMonthlyPieChartData(box);
     return Container(
