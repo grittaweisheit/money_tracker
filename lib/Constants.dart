@@ -18,7 +18,7 @@ Map<String, bool> defaultBoolPreferences = {'cutoff_year': true};
 DateFormat onlyDate = DateFormat("dd.MM.y");
 DateFormat onlyTime = DateFormat("HH:mm");
 
-String fullDateDateFormatString = ("dd. MMMM y");
+String fullDateDateFormatString = ("dd MMMM y");
 DateFormat fullDateDateFormat = DateFormat(fullDateDateFormatString);
 
 String monthYearOnlyFormatString = ("MMM yy");

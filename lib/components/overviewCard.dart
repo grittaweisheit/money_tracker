@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:money_tracker/Constants.dart';
 import 'package:money_tracker/models/Models.dart';
 import 'package:money_tracker/models/Transfers.dart';
 
-import '../Constants.dart';
 import '../Utils.dart';
 
 class OverviewCard extends StatelessWidget {
